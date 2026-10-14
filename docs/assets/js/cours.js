@@ -15,7 +15,7 @@ window.COURS = {
       couleur: "#34d399",
       description: "Comprendre le web, installer ses outils, afficher sa première page.",
       chapitres: [
-        { id: "01-comment-marche-le-web", titre: "Comment marche le web", dispo: false },
+        { id: "01-comment-marche-le-web", titre: "Comment marche le web", dispo: true },
         { id: "02-installer-ses-outils",  titre: "Installer ses outils",  dispo: false },
         { id: "03-premiere-page",         titre: "Ta première page",      dispo: false }
       ]

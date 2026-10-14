@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comment marche le web · Cours Web Fullstack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="../assets/css/main.css">
+
+  <style>
+    /* Styles spécifiques à ce chapitre */
+
+    /* Métaphore : les 3 rôles du web */
+    .roles{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:1rem;margin:1.4rem 0;
+    }
+    .role{
+      background:var(--panel);border:1px solid var(--line);
+      border-top:4px solid var(--rc,var(--cyan));
+      border-radius:14px;padding:1.1rem;
+    }
+    .role .ico{font-size:2rem;line-height:1;margin-bottom:.5rem;display:block}
+    .role h4{color:var(--rc,var(--cyan));font-size:1rem;margin-bottom:.3rem}
+    .role p{font-size:.88rem;color:#cdd6f8}
+    .role.client{--rc:var(--cyan)}
+    .role.serveur{--rc:var(--violet)}
+    .role.visiteur{--rc:var(--green)}
+
+    /* Frise : le voyage d'une requête */
+    .voyage{
+      display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;
+      margin:1.5rem 0;padding:1.2rem;background:var(--panel);
+      border:1px solid var(--line);border-radius:14px;
+    }
+    .voyage>div{text-align:center}
+    .voyage .pc{font-size:2.4rem;line-height:1;display:block;margin-bottom:.4rem}
+    .voyage .lbl{font-size:.82rem;color:var(--muted)}
+    .voyage .arrow{
+      font-size:1.4rem;color:var(--cyan);
+      animation:slide 1.5s ease-in-out infinite;
+    }
+    @keyframes slide{
+      0%,100%{transform:translateX(0)}
+      50%{transform:translateX(6px)}
+    }
+    @media(max-width:520px){
+      .voyage{grid-template-columns:1fr;text-align:center}
+      .voyage .arrow{transform:rotate(90deg)}
+    }
+
+    /* Les 3 langages */
+    .langages{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:1rem;margin:1.2rem 0;
+    }
+    .lang{
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:14px;padding:1.1rem;position:relative;
+      overflow:hidden;
+    }
+    .lang::before{
+      content:"";position:absolute;top:0;left:0;right:0;height:4px;
+      background:var(--lc,var(--cyan));
+    }
+    .lang.html{--lc:var(--cyan)}
+    .lang.css{--lc:var(--violet)}
+    .lang.js{--lc:var(--yellow)}
+    .lang h4{font-size:1rem;margin-bottom:.2rem;color:var(--lc)}
+    .lang .rôle{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;font-family:'JetBrains Mono',monospace}
+    .lang p{font-size:.88rem;color:#cdd6f8}
+
+    /* Analogie du restaurant */
+    .analogie{
+      background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(168,85,247,.08));
+      border:1px solid rgba(56,189,248,.35);
+      border-radius:16px;padding:1.2rem;margin:1.5rem 0;
+    }
+    .analogie h4{color:var(--cyan);font-size:1rem;margin-bottom:.7rem}
+    .analogie ul{list-style:none;padding:0;display:grid;gap:.5rem}
+    .analogie li{
+      display:grid;grid-template-columns:auto 1fr;gap:.7rem;align-items:start;
+      font-size:.9rem;color:#cdd6f8;
+    }
+    .analogie li::before{
+      content:attr(data-emoji);
+      font-size:1.1rem;
+    }
+    .analogie code{
+      background:rgba(255,255,255,.06);color:#ffd479;
+      padding:.05em .4em;font-size:.85em;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="progress"></div>
+  <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+  <div class="shell">
+    <aside class="side" id="side">
+      <a class="brand" href="../">
+        <div class="logo"><i></i><i></i><i></i></div>
+        <div>
+          <b>Cours Web Fullstack</b>
+          <small>Du premier fichier HTML à l'app complète</small>
+        </div>
+      </a>
+      <nav id="nav"></nav>
+    </aside>
+
+    <main>
+
+      <header class="chap-hero">
+        <p class="eyebrow">Module 0 · Découverte</p>
+        <h1>Comment marche le web ?</h1>
+        <p class="lead">
+          Avant d'écrire une seule ligne de code, il faut comprendre <b>ce qui se passe</b>
+          quand on ouvre un site. Une fois que tu as cette image en tête, tout le reste devient logique.
+        </p>
+      </header>
+
+      <!-- ============================================================
+           1. LA QUESTION DE DÉPART
+           ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">1</span> Que se passe-t-il quand tu ouvres un site ?</h3>
+        <p>
+          Tu tapes <code>github.com</code> dans ton navigateur. Une seconde plus tard, une page apparaît.
+          Magique ? Pas du tout. C'est juste <b>un voyage</b> qui se répète des milliards de fois par jour.
+        </p>
+        <p>
+          Imagine que tu commandes un plat au restaurant. Tu ne vas pas en cuisine voir le cuisinier :
+          tu donnes ta commande à un serveur, il la transmet, la cuisine prépare, et ton plat arrive.
+          Le web fonctionne <b>exactement</b> pareil.
+        </p>
+
+        <div class="voyage">
+          <div>
+            <span class="pc">💻</span>
+            <div class="lbl"><b>Toi</b><br>avec ton navigateur</div>
+          </div>
+          <div class="arrow">➜</div>
+          <div>
+            <span class="pc">🖥️</span>
+            <div class="lbl"><b>Le serveur</b><br>quelque part dans le monde</div>
+          </div>
+        </div>
+
+        <p>
+          Ton navigateur <b>envoie une demande</b> (on dit une <b>requête</b>). Un ordinateur très puissant,
+          appelé <b>serveur</b>, la reçoit, prépare une réponse, et la renvoie. Ton navigateur affiche la page.
+          C'est tout. Le web, c'est ça : <b>des demandes et des réponses</b>.
+        </p>
+      </article>
+
+      <!-- ============================================================
+           2. LES 3 RÔLES
+           ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">2</span> Les 3 rôles du web</h3>
+
+        <div class="roles">
+          <div class="role visiteur">
+            <span class="ico">👤</span>
+            <h4>Le visiteur</h4>
+            <p>C'est toi. Tu cliques, tu tapes une adresse, tu remplis un formulaire. Ton navigateur traduit tout ça en demandes.</p>
+          </div>
+          <div class="role client">
+            <span class="ico">🌐</span>
+            <h4>Le navigateur</h4>
+            <p>Chrome, Firefox, Safari… C'est le <b>traducteur</b>. Il transforme le code qu'on lui envoie en une page visuelle.</p>
+          </div>
+          <div class="role serveur">
+            <span class="ico">🖥️</span>
+            <h4>Le serveur</h4>
+            <p>Un ordinateur allumé en permanence. Il <b>stocke les fichiers</b> d'un site et les envoie quand on les demande.</p>
+          </div>
+        </div>
+
+        <div class="box info">
+          <span class="t">À retenir</span>
+          Quand tu « visites un site », tu ne vois en réalité <b>jamais</b> le serveur. Tu vois des fichiers
+          (HTML, CSS, JS, images) que le serveur t'a envoyés, et que ton navigateur assemble.
+        </div>
+      </article>
+
+      <!-- ============================================================
+           3. LES 3 LANGAGES
+           ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">3</span> Les 3 langages du web</h3>
+        <p>
+          Un site, c'est <b>trois langages</b> qui travaillent ensemble. Chacun a un rôle précis. Ne les
+          confonds jamais, c'est la base de tout.
+        </p>
+
+        <div class="langages">
+          <div class="lang html">
+            <h4>HTML</h4>
+            <div class="rôle">Le contenu · La structure</div>
+            <p>Décrit <b>ce qu'il y a</b> sur la page : un titre, un paragraphe, une image, un bouton. C'est le squelette.</p>
+          </div>
+          <div class="lang css">
+            <h4>CSS</h4>
+            <div class="rôle">L'apparence · Le style</div>
+            <p>Décide <b>à quoi ça ressemble</b> : couleurs, tailles, espacements, animations. C'est la décoration.</p>
+          </div>
+          <div class="lang js">
+            <h4>JavaScript</h4>
+            <div class="rôle">Le comportement · L'interaction</div>
+            <p>Rend la page <b>vivante</b> : réagit aux clics, calcule, modifie le contenu. C'est le cerveau.</p>
+          </div>
+        </div>
+
+        <div class="analogie">
+          <h4>🍽️ L'analogie du restaurant</h4>
+          <ul>
+            <li data-emoji="📋"><span><b>HTML</b> = la <b>carte du restaurant</b>. Elle liste les plats : entrée, plat, dessert. Elle décrit <em>ce qui existe</em>.</span></li>
+            <li data-emoji="🎨"><span><b>CSS</b> = la <b>présentation du plat</b>. Comment il est dressé dans l'assiette, les couleurs, la vaisselle. C'est <em>l'apparence</em>.</span></li>
+            <li data-emoji="⚡"><span><b>JavaScript</b> = le <b>serveur qui s'anime</b>. Il apporte le plat, retire les assiettes, propose le dessert. C'est <em>l'action</em>.</span></li>
+          </ul>
+        </div>
+
+        <div class="box tip">
+          <span class="t">La formule magique</span>
+          <b>HTML</b> = <em>quoi</em> · <b>CSS</b> = <em>comment ça se présente</em> · <b>JS</b> = <em>ce qui se passe</em>.
+          Répète-la, tu vas la réutiliser tout le temps.
+        </div>
+      </article>
+
+      <!-- ============================================================
+           4. LE VOYAGE D'UNE PAGE
+           ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">4</span> Le voyage d'une page, étape par étape</h3>
+        <p>Quand tu tapes une adresse, voici ce qui se passe en une fraction de seconde :</p>
+        <ol>
+          <li><b>Tu tapes une adresse</b> (une <em>URL</em>). Exemple : <code>github.com</code>.</li>
+          <li><b>Ton navigateur cherche le serveur</b> qui héberge ce site. Il demande l'adresse exacte (l'IP) à un annuaire géant appelé DNS.</li>
+          <li><b>Il envoie une requête</b> à ce serveur : « donne-moi la page d'accueil ».</li>
+          <li><b>Le serveur répond</b> en envoyant les fichiers : HTML, CSS, JS, images.</li>
+          <li><b>Ton navigateur assemble le tout</b> et affiche la page. C'est ce que tu vois à l'écran.</li>
+        </ol>
+
+        <div class="box info">
+          <span class="t">Tu n'as pas besoin de tout retenir</span>
+          Retiens juste : <b>demande → serveur → réponse → affichage</b>. Le reste, tu le verras quand on fera du backend.
+        </div>
+      </article>
+
+      <!-- ============================================================
+           5. TON RÔLE
+           ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">5</span> Et toi, dans tout ça ?</h3>
+        <p>
+          Ton métier, en tant que développeur web, c'est d'écrire <b>les fichiers</b> que le serveur va envoyer.
+          Tu n'as pas besoin de gérer des serveurs pour commencer : on écrira des fichiers sur ton ordinateur,
+          on les ouvrira dans ton navigateur, et ça marchera tout de suite.
+        </p>
+        <p>
+          Le serveur, on s'en occupera plus tard. Aujourd'hui, tu écris. Le navigateur lit.
+        </p>
+
+        <div class="box fun">
+          <span class="t">Un secret bien gardé</span>
+          Tu peux voir le code de <b>n'importe quel site</b> que tu visites. Fais un clic droit sur une page
+          → <em>« Afficher le code source »</em>. Ce que tu vois là, c'est le HTML + CSS + JS que le serveur
+          a envoyé au navigateur. C'est exactement ce que tu vas apprendre à écrire.
+        </div>
+      </article>
+
+      <!-- ============================================================
+           QUIZ
+           ============================================================ -->
+      <div class="quiz" data-answer="b">
+        <div class="quiz-head">Quiz · Question 1/3</div>
+        <p class="quiz-q">
+          Quel langage décide de <b>l'apparence</b> d'une page (couleurs, tailles, mise en page) ?
+        </p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">HTML</button>
+          <button class="quiz-opt" data-opt="b" data-l="B">CSS</button>
+          <button class="quiz-opt" data-opt="c" data-l="C">JavaScript</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz" data-answer="c">
+        <div class="quiz-head">Quiz · Question 2/3</div>
+        <p class="quiz-q">
+          Tu veux qu'un bouton <b>réagisse à un clic</b>. Quel langage utilises-tu ?
+        </p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">HTML</button>
+          <button class="quiz-opt" data-opt="b" data-l="B">CSS</button>
+          <button class="quiz-opt" data-opt="c" data-l="C">JavaScript</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz" data-answer="a">
+        <div class="quiz-head">Quiz · Question 3/3</div>
+        <p class="quiz-q">
+          À quoi sert un <b>serveur</b> dans le fonctionnement du web ?
+        </p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">Il stocke les fichiers d'un site et les envoie quand on les demande.</button>
+          <button class="quiz-opt" data-opt="b" data-l="B">Il affiche la page à l'écran.</button>
+          <button class="quiz-opt" data-opt="c" data-l="C">Il écrit le code à la place du développeur.</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <!-- ============================================================
+           DÉFI
+           ============================================================ -->
+      <div class="challenge">
+        <b>🎯 Défi — L'espion du web</b>
+        <ul>
+          <li>Ouvre trois de tes sites préférés dans un nouvel onglet.</li>
+          <li>Sur chacun, fais un <b>clic droit → Afficher le code source</b> (ou <kbd>Ctrl+U</kbd>).</li>
+          <li>Observe : est-ce que tu repères des <code>&lt;h1&gt;</code>, des <code>&lt;p&gt;</code>, des couleurs en hexadécimal comme <code>#ff0000</code> ?</li>
+          <li>Essaie de deviner : quelle partie est du HTML ? Du CSS ? Du JavaScript ?</li>
+        </ul>
+        <details><summary>Indice pour t'orienter</summary>
+<pre><code class="language-markup">&lt;!-- HTML : des balises entre chevrons --&gt;
+&lt;h1&gt;Mon titre&lt;/h1&gt;
+&lt;p&gt;Un paragraphe&lt;/p&gt;
+
+/* CSS : dans un &lt;style&gt; ou un fichier .css */
+h1 { color: #38bdf8; font-size: 2rem; }
+
+// JavaScript : dans un &lt;script&gt; ou un fichier .js
+document.querySelector("button").addEventListener("click", () =&gt; {
+  alert("Bonjour !");
+});</code></pre>
+        </details>
+      </div>
+
+      <!-- Bouton "terminé" + navigation prev/next -->
+      <div class="mark-done" id="mark-done"></div>
+      <div class="chap-nav" id="chap-nav"></div>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+  <script>
+    window.BASE_URL = window.location.hostname.includes('github.io')
+      ? '/CoursWebFullstack/'
+      : '../';
+  </script>
+  <script src="../assets/js/cours.js"></script>
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/resize.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+  <script src="../assets/js/demo.js"></script>
+</body>
+</html>
