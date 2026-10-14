@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Grid · Cours Web Fullstack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+
+  <style>
+    /* ============================================================
+       Styles spécifiques au chapitre Grid
+       ============================================================ */
+
+    /* Niveaux (couleurs progressives) */
+    .l1{--lv:var(--green)}
+    .l2{--lv:var(--cyan)}
+    .l3{--lv:var(--violet)}
+    .l4{--lv:var(--orange)}
+    .l5{--lv:var(--pink)}
+    .ess{--lv:var(--yellow)}
+    .lab{--lv:var(--yellow)}
+
+    .level{margin-top:3.5rem}
+
+    /* Bannière de niveau */
+    .banner{
+      display:grid;grid-template-columns:auto 1fr auto;gap:1.3rem;align-items:center;
+      padding:1.4rem 1.7rem;border-radius:20px;
+      background:linear-gradient(135deg,color-mix(in srgb,var(--lv) 24%,#0d1430),#0d1430 70%);
+      border:1px solid color-mix(in srgb,var(--lv) 55%,transparent);
+      margin-bottom:1.5rem;
+    }
+    .banner .big{font-size:3.6rem;font-weight:700;color:var(--lv);line-height:1}
+    .banner h2{font-size:1.6rem;line-height:1.15}
+    .banner p{color:#cdd6f8;font-size:.95rem;margin-top:.2rem}
+    .dots span{display:inline-block;width:11px;height:11px;border-radius:50%;background:#26346b;margin-left:4px}
+    .dots .on{background:var(--lv)}
+    .dots small{display:block;text-align:right;color:var(--muted);font-size:.72rem;margin-bottom:.2rem}
+
+    /* Flex vs Grid (comparatif visuel) */
+    .vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1rem 0}
+    .vs>div{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:1rem}
+    .vs h4{margin-bottom:.5rem}
+    .vs p{font-size:.88rem;color:#cdd6f8;margin-top:.6rem}
+    .mini-f{display:flex;gap:6px}
+    .mini-f i{flex:1;height:34px;border-radius:6px;background:var(--cyan)}
+    .mini-f i:nth-child(2){background:var(--violet);flex:2}
+    .mini-g{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,34px);gap:6px}
+    .mini-g i{border-radius:6px;background:var(--pink)}
+    .mini-g i:nth-child(2){background:var(--yellow);grid-column:span 2}
+    .mini-g i:nth-child(4){background:var(--green)}
+
+    /* Définitions */
+    .defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.9rem;margin:1rem 0}
+    .defs div{
+      background:var(--panel);border:1px solid var(--line);
+      border-left:4px solid var(--lv);border-radius:0 14px 14px 0;
+      padding:.8rem 1rem;font-size:.9rem;color:#cdd6f8;
+    }
+    .defs h4{color:#fff;margin-bottom:.15rem;font-size:1rem}
+
+    /* Bannière "essentiel" */
+    .ess-banner{
+      display:flex;gap:1rem;align-items:center;
+      padding:1.3rem 1.5rem;border-radius:18px;margin-bottom:1.6rem;
+      border:1px solid rgba(251,191,36,.45);
+      background:linear-gradient(120deg,rgba(251,191,36,.14),rgba(244,114,182,.08));
+    }
+    .ess-banner .icn{
+      width:54px;height:54px;border-radius:14px;
+      background:linear-gradient(135deg,var(--yellow),var(--pink));
+      display:grid;place-items:center;font-size:1.7rem;flex:0 0 auto;
+    }
+    .ess-banner h3{font-size:1.15rem;color:#fff}
+    .ess-banner p{font-size:.88rem;color:#fde68a}
+
+    /* Pattern hero */
+    .pattern-hero{
+      border:1px solid rgba(56,189,248,.4);
+      background:linear-gradient(135deg,rgba(56,189,248,.09),rgba(168,85,247,.08));
+      border-radius:16px;padding:1.2rem;margin-bottom:1.5rem;
+    }
+    .pattern-hero pre{background:#061019!important;border:1px solid rgba(56,189,248,.35)!important}
+    .pattern-label{
+      display:inline-block;font-size:.7rem;font-weight:800;
+      letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);
+      background:rgba(56,189,248,.14);border:1px solid rgba(56,189,248,.35);
+      padding:.25rem .65rem;border-radius:999px;margin-bottom:.7rem;
+    }
+
+    /* Dual (comparaison) */
+    .dual{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    @media(max-width:620px){.dual{grid-template-columns:1fr}}
+    .dual-lbl{
+      font-size:.72rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem;
+      font-family:'JetBrains Mono',monospace;
+    }
+    .dual-lbl.ok{color:var(--green)}
+    .dual-lbl.ko{color:#f43f5e}
+    .dual .demo{margin:0;min-height:80px}
+
+    /* Calendrier */
+    .cal>*{min-height:30px;font-size:.76rem;padding:3px}
+    .cal .ent{background:transparent;box-shadow:none;color:var(--muted);min-height:auto;font-size:.7rem;padding:0}
+    .cal .we{--c:#f472b6}
+    .cal .vide{visibility:hidden}
+
+    /* Cartes de démo Subgrid */
+    .cardsdemo>*{
+      --c:#18235a!important;color:var(--text);font-weight:400;
+      align-items:stretch;justify-content:normal;text-align:left;padding:10px;
+    }
+    .cardsdemo h4{color:var(--cyan);font-size:.9rem;margin-bottom:4px}
+    .cardsdemo p{font-size:.76rem;color:#cdd6f8}
+    .cardsdemo button{
+      margin-top:6px;background:var(--pink);border:0;border-radius:6px;
+      font-weight:700;color:#07101f;padding:4px;font-family:inherit;cursor:pointer;
+    }
+
+    /* Layouts spécifiques (dash, gallery, article, stats) */
+    .dash{
+      grid-template-columns:180px 1fr;
+      grid-template-rows:56px 1fr;
+      grid-template-areas:"side top" "side body";
+      gap:10px;min-height:220px;
+    }
+    .dash .side{grid-area:side}
+    .dash .top{grid-area:top}
+    .dash .body{grid-area:body}
+
+    .gallery{grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:10px}
+    .gallery .cell{aspect-ratio:1;font-size:1.4rem}
+
+    .article{
+      grid-template-columns:1fr 1fr 1fr;
+      grid-template-rows:40px 80px 60px;
+      grid-template-areas:
+        "titre titre titre"
+        "img   img   texte"
+        "img   img   texte";
+      gap:8px;
+    }
+    .article .titre{grid-area:titre}
+    .article .img{grid-area:img}
+    .article .texte{grid-area:texte}
+
+    .stats{grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+    .stats>*{padding:1rem .6rem;font-size:.8rem}
+    .stats b{display:block;font-size:1.4rem;margin-bottom:.1rem}
+  </style>
+</head>
+<body>
+
+  <div id="progress"></div>
+  <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+  <div class="shell">
+    <aside class="side" id="side">
+      <a class="brand" href="../../">
+        <div class="logo"><i></i><i></i><i></i></div>
+        <div>
+          <b>Cours Web Fullstack</b>
+          <small>Du premier fichier HTML à l'app complète</small>
+        </div>
+      </a>
+      <nav id="nav"></nav>
+    </aside>
+
+    <main>
+
+      <header class="chap-hero">
+        <p class="eyebrow">Module 2 · CSS</p>
+        <h1>CSS Grid — le guide complet</h1>
+        <p class="lead">
+          Des premières colonnes jusqu'à <code>subgrid</code> et <code>auto-fit</code> :
+          tout ce qu'il faut savoir sur le système de mise en page 2D du CSS.
+          Le code affiché à côté des démos est exactement le CSS appliqué.
+        </p>
+      </header>
+
+      <!-- ============================================================
+           NIVEAU 1
+           ============================================================ -->
+      <section class="level l1" id="n1">
+        <div class="banner">
+          <div class="big">1</div>
+          <div>
+            <h2>Découverte</h2>
+            <p>Aucun prérequis. On comprend à quoi ça sert, le vocabulaire, et on crée notre première grille.</p>
+          </div>
+          <div class="dots">
+            <small>Difficulté</small>
+            <span class="on"></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <article class="lesson">
+          <h3><span class="num">1.1</span> Pourquoi CSS Grid ?</h3>
+          <p>Imagine une <b>feuille quadrillée</b> : tu choisis combien de colonnes et de lignes elle a, puis tu poses tes éléments dedans. Voilà CSS Grid. C'est le premier système de CSS pensé pour la mise en page <b>en deux dimensions</b> (horizontal <em>et</em> vertical en même temps).</p>
+          <div class="vs">
+            <div>
+              <h4 style="color:var(--cyan)">Flexbox = 1 dimension</h4>
+              <div class="mini-f"><i></i><i></i><i></i></div>
+              <p>Aligne des éléments sur <b>un seul axe</b> à la fois. Idéal pour une barre de navigation, un groupe de boutons.</p>
+            </div>
+            <div>
+              <h4 style="color:var(--pink)">Grid = 2 dimensions</h4>
+              <div class="mini-g"><i></i><i></i><i></i><i></i></div>
+              <p>Contrôle <b>lignes et colonnes ensemble</b>. Idéal pour la structure d'une page, une galerie, un dashboard.</p>
+            </div>
+          </div>
+          <div class="box tip">
+            <span class="t">Règle simple</span>
+            Grid pour la <b>structure</b>, Flexbox pour le <b>contenu à l'intérieur des blocs</b>.
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">1.2</span> Le vocabulaire à connaître</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 60px);
+  gap: 10px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div>Cellule</div><div>Cellule</div><div>Cellule</div>
+                  <div>Cellule</div><div>Cellule</div><div>Cellule</div>
+                </div>
+              </div>
+              <p class="cap">Les pastilles numérotent les <b>lignes</b>, pas les cases. 3 colonnes → 4 lignes verticales.</p>
+            </div>
+          </div>
+          <div class="defs">
+            <div><h4>Grid Container</h4>Le parent qui porte <code>display: grid</code>.</div>
+            <div><h4>Grid Item</h4>Un <b>enfant direct</b> du conteneur.</div>
+            <div><h4>Grid Line</h4>Les séparateurs numérotés à partir de 1.</div>
+            <div><h4>Grid Track</h4>Une colonne ou une rangée entière.</div>
+            <div><h4>Grid Cell</h4>L'intersection d'une colonne et d'une rangée.</div>
+            <div><h4>Grid Area</h4>Un rectangle formé de plusieurs cellules.</div>
+            <div><h4>Gap</h4>L'espace entre les pistes, jamais sur les bords.</div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">1.3</span> Activer la grille</h3>
+          <div class="try">
+            <div class="codes">
+<pre><code class="language-css live">.container {
+  display: grid;
+}</code></pre>
+<pre><code class="language-markup">&lt;div class="container"&gt;
+  &lt;div&gt;Élément 1&lt;/div&gt;
+  &lt;div&gt;Élément 2&lt;/div&gt;
+  &lt;div&gt;Élément 3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>Élément 1</div><div>Élément 2</div><div>Élément 3</div>
+                </div>
+              </div>
+              <p class="cap">Une seule colonne, trois rangées automatiques.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">1.4</span> Créer des colonnes</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: 90px 140px 90px;
+  gap: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div>90px</div><div>140px</div><div>90px</div>
+                  <div>Passe à la ligne</div>
+                </div>
+              </div>
+              <p class="cap">↔ Glisse la barre pour rétrécir et voir le débordement.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">1.5</span> Fixer les rangées</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 50px 90px;
+  gap: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div>50px</div><div>50px</div>
+                  <div>90px</div><div>90px</div>
+                  <div class="imp">Rangée implicite (auto)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">1.6</span> Espacer avec <code>gap</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 22px;
+  column-gap: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>1</div><div>2</div><div>3</div>
+                  <div>4</div><div>5</div><div>6</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="box warn">
+            <span class="t">Ordre à retenir</span>
+            Dans <code>gap: A B</code>, <b>A = rangées</b>, <b>B = colonnes</b>.
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">1.7</span> L'unité <code>fr</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.egal, .double {
+  display: grid;
+  gap: 8px;
+}
+.egal   { grid-template-columns: 1fr 1fr 1fr; }
+.double { grid-template-columns: 1fr 2fr 1fr; }</code></pre></div>
+            <div class="stage">
+              <p class="cap" style="margin-top:0">1fr 1fr 1fr</p>
+              <div class="sizer rs"><div class="demo egal"><div>1fr</div><div>1fr</div><div>1fr</div></div></div>
+              <p class="cap sp">1fr 2fr 1fr</p>
+              <div class="sizer rs"><div class="demo double"><div>1fr</div><div>2fr</div><div>1fr</div></div></div>
+            </div>
+          </div>
+        </article>
+
+        <div class="challenge">
+          <b>🎯 Défi</b>
+          <ul><li>Crée une grille de <b>4 colonnes égales</b> avec <b>12px</b> d'écart contenant 8 cartes.</li></ul>
+          <details><summary>Voir une solution</summary>
+<pre><code class="language-css">.grille {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}</code></pre></details>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Niveau 1</div>
+          <p class="quiz-q">Sur quel élément faut-il appliquer <code>display: grid</code> ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">Sur chaque enfant (item).</button>
+            <button class="quiz-opt" data-opt="b" data-l="B">Sur le parent (conteneur).</button>
+            <button class="quiz-opt" data-opt="c" data-l="C">Sur <code>&lt;body&gt;</code>.</button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Niveau 1 (2/2)</div>
+          <p class="quiz-q">Dans <code>grid-template-columns: 1fr 3fr;</code>, quelle proportion reçoit la 2ᵉ colonne ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">Trois quarts (3/4).</button>
+            <button class="quiz-opt" data-opt="b" data-l="B">Un tiers (1/3).</button>
+            <button class="quiz-opt" data-opt="c" data-l="C">Elle fait 3× la première.</button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           NIVEAU 2
+           ============================================================ -->
+      <section class="level l2" id="n2">
+        <div class="banner">
+          <div class="big">2</div>
+          <div>
+            <h2>Bases solides</h2>
+            <p><code>repeat()</code>, placement par numéro, grille implicite, flux automatique, alignements.</p>
+          </div>
+          <div class="dots">
+            <small>Difficulté</small>
+            <span class="on"></span><span class="on"></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <article class="lesson">
+          <h3><span class="num">2.1</span> Éviter la répétition : <code>repeat()</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>1</div><div>2</div><div>3</div><div>4</div>
+                  <div>5</div><div>6</div><div>7</div><div>8</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">2.2</span> Mélanger les unités</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: 90px 20% auto 1fr;
+  gap: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>90px</div><div>20%</div>
+                  <div>auto</div><div>1fr</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">2.3</span> Placer par numéros de lignes</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 44px);
+  gap: 8px;
+}
+.cible {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div>A</div>
+                  <div class="cible pk">.cible : col 2→4 · lig 1→3</div>
+                  <div>B</div><div>C</div><div>D</div><div>E</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="box warn">
+            <span class="t">Piège classique</span>
+            On cite des <b>lignes</b>, pas des cases. « de 2 à 4 » occupe les colonnes 2 <em>et</em> 3.
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">2.4</span> Raccourcis <code>grid-column</code> et <code>span</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 40px;
+  gap: 8px;
+}
+.full { grid-column: 1 / -1; }
+.deux { grid-column: span 2; }
+.haut { grid-row: span 2; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div class="full">1 / -1</div>
+                  <div class="deux">span 2</div>
+                  <div>auto</div>
+                  <div class="haut pk">span 2</div>
+                  <div>auto</div><div>auto</div><div>auto</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">2.5</span> Grille explicite vs implicite</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 50px;
+  grid-auto-rows: 36px;
+  gap: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div>Explicite</div><div>Explicite</div>
+                  <div class="imp">Implicite</div><div class="imp">Implicite</div>
+                  <div class="imp">Implicite</div><div class="imp">Implicite</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">2.6</span> <code>grid-auto-flow</code></h3>
+          <div class="try">
+            <div class="codes">
+<pre><code class="language-css live">.sans, .avec {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 36px;
+  gap: 6px;
+}
+.large { grid-column: span 3; }
+.avec { grid-auto-flow: dense; }</code></pre>
+            </div>
+            <div class="stage">
+              <p class="cap" style="margin-top:0"><b>row</b> (défaut) : des trous restent</p>
+              <div class="sizer rs"><div class="demo sans"><div>1</div><div>2</div><div class="large pk">3 (span 3)</div><div>4</div><div>5</div></div></div>
+              <p class="cap sp"><b>dense</b> : 4 et 5 remontent combler</p>
+              <div class="sizer rs"><div class="demo avec"><div>1</div><div>2</div><div class="large pk">3 (span 3)</div><div>4</div><div>5</div></div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">2.7</span> Aligner le contenu des cellules</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 70px;
+  gap: 8px;
+  justify-items: stretch;
+  align-items: stretch;
+}</code></pre></div>
+            <div class="stage">
+              <div class="tog" data-target=".container" data-prop="justify-items" data-values="stretch start center end"></div>
+              <div class="tog" data-target=".container" data-prop="align-items" data-values="stretch start center end"></div>
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div>A</div><div>B</div><div>C</div>
+                  <div>D</div><div>E</div><div>F</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">2.8</span> Aligner un seul item</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 100px;
+  gap: 8px;
+}
+.moi {
+  justify-self: stretch;
+  align-self: stretch;
+}</code></pre></div>
+            <div class="stage">
+              <div class="tog" data-target=".moi" data-prop="justify-self" data-values="stretch start center end"></div>
+              <div class="tog" data-target=".moi" data-prop="align-self" data-values="stretch start center end"></div>
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>1</div><div class="moi pk">.moi</div><div>3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Niveau 2</div>
+          <p class="quiz-q">Pour qu'un élément occupe toute la largeur quelle que soit la grille :</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A"><code>grid-column: span 100;</code></button>
+            <button class="quiz-opt" data-opt="b" data-l="B"><code>grid-column: full;</code></button>
+            <button class="quiz-opt" data-opt="c" data-l="C"><code>grid-column: 1 / -1;</code></button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           NIVEAU 3
+           ============================================================ -->
+      <section class="level l3" id="n3">
+        <div class="banner">
+          <div class="big">3</div>
+          <div>
+            <h2>Intermédiaire</h2>
+            <p>Zones nommées, lignes nommées, <code>minmax()</code>, <code>auto-fill</code> vs <code>auto-fit</code>, raccourcis.</p>
+          </div>
+          <div class="dots">
+            <small>Difficulté</small>
+            <span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span>
+          </div>
+        </div>
+
+        <article class="lesson">
+          <h3><span class="num">3.1</span> Dessiner sa page : <code>grid-template-areas</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  grid-template-rows: 44px 1fr 44px;
+  grid-template-areas:
+    "entete  entete"
+    "menu    contenu"
+    "pied    pied";
+  gap: 8px;
+  height: 240px;
+}
+.entete  { grid-area: entete; }
+.menu    { grid-area: menu; }
+.contenu { grid-area: contenu; }
+.pied    { grid-area: pied; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div class="entete">entete</div>
+                  <div class="menu">menu</div>
+                  <div class="contenu">contenu</div>
+                  <div class="pied">pied</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="box tip">
+            <span class="t">Le truc génial</span>
+            En responsive, tu <b>redessines</b> juste les chaînes dans une media query. Aucun enfant ne bouge dans le HTML.
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">3.2</span> Nommer les lignes <code>[nom]</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: [a] 1fr [b] 1fr [c] 1fr [d];
+  gap: 8px;
+}
+.x { grid-column: a / c; }
+.y { grid-column: b / d; }
+.z { grid-column: a / -1; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div class="x">.x (a / c)</div>
+                  <div class="y">.y (b / d)</div>
+                  <div class="z">.z (a / -1)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">3.3</span> Tailles bornées : <code>minmax()</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(120px, 1fr) minmax(120px, 2fr);
+  grid-auto-rows: minmax(60px, auto);
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>≥ 120px</div><div>≥ 120px · 2fr</div>
+                  <div>Rangée qui grandit</div><div>60px mini</div>
+                </div>
+              </div>
+              <p class="cap">↔ Rétrécis : les colonnes s'arrêtent à <b>120px</b>.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">3.4</span> <code>auto-fill</code> vs <code>auto-fit</code></h3>
+          <p>La grille calcule toute seule le nombre de colonnes qui rentrent. La différence se voit quand il y a <b>peu d'items</b>.</p>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.fill, .fit { display: grid; gap: 8px; }
+.fill { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+.fit  { grid-template-columns: repeat(auto-fit,  minmax(90px, 1fr)); }</code></pre></div>
+            <div class="stage">
+              <p class="cap" style="margin-top:0"><b>auto-fill</b> — 2 items + colonnes vides</p>
+              <div class="sizer rs"><div class="demo fill lines"><div>1</div><div>2</div></div></div>
+              <p class="cap sp"><b>auto-fit</b> — les colonnes vides s'écrasent</p>
+              <div class="sizer rs"><div class="demo fit lines"><div>1</div><div>2</div></div></div>
+              <p class="cap">↔ Étire les deux : <b>fill</b> garde ses colonnes fantômes, <b>fit</b> les replie à 0.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">3.5</span> Tailles intrinsèques</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.a, .b { display: grid; gap: 8px; }
+.a { grid-template-columns: min-content 1fr max-content; }
+.b { grid-template-columns: fit-content(120px) 1fr; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo a">
+                  <div>Serre</div><div>1fr</div>
+                  <div style="white-space:nowrap">Jamais à la ligne</div>
+                </div>
+                <p class="cap sp">fit-content(120px)</p>
+                <div class="demo b">
+                  <div>Un texte long plafonné à 120px</div><div>1fr</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">3.6</span> Aligner LA grille</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  grid-template-rows: repeat(2, 50px);
+  gap: 8px;
+  height: 230px;
+  justify-content: start;
+  align-content: start;
+}</code></pre></div>
+            <div class="stage">
+              <div class="tog" data-target=".container" data-prop="justify-content" data-values="start center end space-between space-around space-evenly"></div>
+              <div class="tog" data-target=".container" data-prop="align-content" data-values="start center end space-between space-around space-evenly"></div>
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>1</div><div>2</div><div>3</div>
+                  <div>4</div><div>5</div><div>6</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">3.7</span> Raccourcis : <code>grid-template</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  gap: 8px;
+  height: 200px;
+  grid-template:
+    "logo  nav"  44px
+    "menu  main" 1fr
+    / 90px 1fr;
+}
+.lg   { grid-area: logo; }
+.nav  { grid-area: nav; }
+.menu { grid-area: menu; }
+.main { grid-area: main; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div class="lg">logo</div><div class="nav">nav</div>
+                  <div class="menu">menu</div><div class="main">main</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">3.8</span> Superposer, réordonner</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 48px);
+  gap: 8px;
+}
+.a { grid-area: 1 / 1 / 3 / 3; }
+.b { grid-area: 2 / 2 / 4 / 4; z-index: 2; opacity: .88; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container lines">
+                  <div class="a">A</div>
+                  <div class="b pk">B (z-index: 2)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <div class="challenge">
+          <b>🎯 Défi du niveau 3</b>
+          <ul><li>Reprends le layout 3.1, avec le menu <b>à droite</b> et un pied qui n'occupe que la colonne du contenu.</li></ul>
+          <details><summary>Voir une solution</summary>
+<pre><code class="language-css">.container {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  grid-template-areas:
+    "entete  entete"
+    "contenu menu"
+    "pied    .";
+}</code></pre></details>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Niveau 3</div>
+          <p class="quiz-q">Dans <code>grid-template-areas: "a a b" "c d d";</code>, que représente le mot <code>a</code> répété deux fois ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">Deux zones distinctes nommées <code>a</code>.</button>
+            <button class="quiz-opt" data-opt="b" data-l="B">Une seule zone <code>a</code> qui s'étale sur 2 colonnes.</button>
+            <button class="quiz-opt" data-opt="c" data-l="C">Une erreur de syntaxe.</button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Niveau 3 (2/2)</div>
+          <p class="quiz-q">Centrer horizontalement <strong>un seul</strong> item dans sa cellule ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A"><code>justify-self: center;</code></button>
+            <button class="quiz-opt" data-opt="b" data-l="B"><code>justify-items: center;</code></button>
+            <button class="quiz-opt" data-opt="c" data-l="C"><code>justify-content: center;</code></button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           NIVEAU 4 — AVANCÉ
+           ============================================================ -->
+      <section class="level l4" id="n4">
+        <div class="banner">
+          <div class="big">4</div>
+          <div>
+            <h2>Avancé</h2>
+            <p>Responsive sans media query, container queries, subgrid, grilles imbriquées, pièges classiques.</p>
+          </div>
+          <div class="dots">
+            <small>Difficulté</small>
+            <span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span>
+          </div>
+        </div>
+
+        <article class="lesson">
+          <h3><span class="num">4.1</span> Responsive sans media query</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.cartes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 110px), 1fr));
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo cartes">
+                  <div>1</div><div>2</div><div>3</div>
+                  <div>4</div><div>5</div><div>6</div>
+                </div>
+              </div>
+              <p class="cap">↔ Tire : de 4 colonnes à 1, sans media query.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">4.2</span> Changer de layout : container queries</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 90px 1fr;
+  grid-template-areas:
+    "hd hd"
+    "mn ct"
+    "ft ft";
+}
+.hd { grid-area: hd; } .mn { grid-area: mn; }
+.ct { grid-area: ct; } .ft { grid-area: ft; }
+
+@container (max-width: 380px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-areas: "hd" "mn" "ct" "ft";
+  }
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs cq">
+                <div class="demo container">
+                  <div class="hd">hd</div><div class="mn">mn</div>
+                  <div class="ct">ct</div><div class="ft">ft</div>
+                </div>
+              </div>
+              <p class="cap">↔ Passe sous <b>380px</b> : bascule en une colonne.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">4.3</span> <code>subgrid</code> : aligner les cartes</h3>
+          <div class="box info">
+            <span class="t">Le problème</span>
+            Trois cartes côte à côte avec un titre, un texte et un bouton. Les titres ont des hauteurs différentes → les boutons ne s'alignent pas. <b>subgrid</b> résout ça : la carte <em>hérite</em> des rangées du parent.
+          </div>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.cartes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: 0 10px;
+}
+.carte {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+}</code></pre></div>
+            <div class="stage">
+              <div class="tog" data-target=".carte" data-prop="grid-template-rows" data-values="subgrid none"></div>
+              <div class="sizer rs">
+                <div class="demo cartes cardsdemo">
+                  <div class="carte"><h4>Court</h4><p>Un texte bref.</p><button>OK</button></div>
+                  <div class="carte"><h4>Un titre bien plus long</h4><p>Un texte beaucoup plus long qui occupe plusieurs lignes.</p><button>OK</button></div>
+                  <div class="carte"><h4>Moyen</h4><p>Un texte de longueur moyenne.</p><button>OK</button></div>
+                </div>
+              </div>
+              <p class="cap">Bascule <b>subgrid / none</b> : les boutons s'alignent ou pas.</p>
+            </div>
+          </div>
+          <div class="box tip">
+            <span class="t">À retenir</span>
+            <code>subgrid</code> n'est pas un <code>inherit</code> — c'est une <b>relation vivante</b> : l'enfant pointe sur les pistes du parent. Si le parent change, l'enfant suit.
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">4.4</span> Grilles imbriquées</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+}
+.parent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: #1b2760;
+  padding: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div class="parent">
+                    <span class="in">1</span><span class="in">2</span>
+                    <span class="in">3</span><span class="in">4</span>
+                  </div>
+                  <div>item 2</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">4.5</span> Bento et galeries : <code>span</code> + <code>dense</code></h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.bento {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 58px;
+  grid-auto-flow: dense;
+}
+.grand { grid-column: span 2; grid-row: span 2; }
+.large { grid-column: span 2; }
+.haut  { grid-row: span 2; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo bento">
+                  <div class="grand">grand</div>
+                  <div>1</div>
+                  <div class="haut">haut</div>
+                  <div>2</div>
+                  <div class="large">large</div>
+                  <div>3</div><div>4</div>
+                  <div class="large">large</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">4.6</span> Fonctions mathématiques</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: clamp(90px, 25%, 160px) 1fr;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div>clamp(90, 25%, 160)</div>
+                  <div>1fr</div><div>suite</div><div>suite</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">4.7</span> Piège du <code>1fr</code> qui déborde</h3>
+          <div class="box warn">
+            <span class="t">À connaître</span>
+            <code>1fr</code> est en réalité <code>minmax(auto, 1fr)</code> : la colonne refuse de rétrécir sous son contenu. Solution : <code>minmax(0, 1fr)</code>.
+          </div>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.casse, .ok { display: grid; gap: 8px; }
+.casse { grid-template-columns: 1fr 1fr; }
+.ok    { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.ok > * { min-width: 0; overflow: hidden; text-overflow: ellipsis; }</code></pre></div>
+            <div class="stage">
+              <p class="cap" style="margin-top:0"><b>1fr 1fr</b> → déborde</p>
+              <div class="sizer rs">
+                <div class="demo casse nowrap">
+                  <div>Supercalifragilisticexpialidocious</div><div>2</div>
+                </div>
+              </div>
+              <p class="cap sp"><b>minmax(0, 1fr)</b> → coupé proprement</p>
+              <div class="sizer rs">
+                <div class="demo ok nowrap">
+                  <div>Supercalifragilisticexpialidocious</div><div>2</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Niveau 4</div>
+          <p class="quiz-q">Meilleure façon de créer une grille responsive sans media query ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A"><code>repeat(3, 1fr)</code></button>
+            <button class="quiz-opt" data-opt="b" data-l="B"><code>repeat(auto-fill, 240px)</code></button>
+            <button class="quiz-opt" data-opt="c" data-l="C"><code>repeat(auto-fit, minmax(min(100%, 240px), 1fr))</code></button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           L'ESSENTIEL
+           ============================================================ -->
+      <section class="level ess" id="ess">
+        <div class="ess-banner">
+          <div class="icn">⭐</div>
+          <div>
+            <h3>L'essentiel à connaître absolument</h3>
+            <p>Si tu ne devais retenir qu'UNE seule ligne de CSS Grid, ce serait celle-ci.</p>
+          </div>
+        </div>
+
+        <div class="pattern-hero">
+          <span class="pattern-label">Le pattern responsive auto</span>
+          <pre><code class="language-css">.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1rem;
+}</code></pre>
+        </div>
+
+        <article class="lesson">
+          <h3><span class="num">⭐</span> La démo à manipuler</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.cartes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr));
+  gap: 12px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo cartes">
+                  <div>Carte 1</div><div>Carte 2</div><div>Carte 3</div>
+                  <div>Carte 4</div><div>Carte 5</div><div>Carte 6</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">⚠️</span> auto-fill vs auto-fit : LA différence</h3>
+          <p>Pour bien voir la différence, il faut <strong>moins d'items que de colonnes possibles</strong>. Ici : 2 items dans un conteneur qui peut en contenir 4 ou 5.</p>
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ko">auto-fill → colonnes vides gardées</div>
+              <div class="demo" style="grid-template-columns:repeat(auto-fill, minmax(80px, 1fr))">
+                <div>1</div><div>2</div>
+              </div>
+            </div>
+            <div>
+              <div class="dual-lbl ok">auto-fit → colonnes vides écrasées</div>
+              <div class="demo" style="grid-template-columns:repeat(auto-fit, minmax(80px, 1fr))">
+                <div>1</div><div>2</div>
+              </div>
+            </div>
+          </div>
+          <div class="box info">
+            <span class="t">Dans 95% des cas</span>
+            Tu voudras <code>auto-fit</code>. <code>auto-fill</code> sert quand tu veux garder des cellules vides alignées (calendrier, planning).
+          </div>
+        </article>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · L'essentiel</div>
+          <p class="quiz-q">Une grille qui s'adapte automatiquement à partir de 200px, sans media query ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A"><code>repeat(3, 200px)</code></button>
+            <button class="quiz-opt" data-opt="b" data-l="B"><code>repeat(auto-fit, minmax(200px, 1fr))</code></button>
+            <button class="quiz-opt" data-opt="c" data-l="C"><code>200px auto 1fr</code></button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           NIVEAU 5 — RECETTES
+           ============================================================ -->
+      <section class="level l5" id="n5">
+        <div class="banner">
+          <div class="big">5</div>
+          <div>
+            <h2>Recettes prêtes à l'emploi</h2>
+            <p>Les patterns qu'on retrouve dans presque tous les projets. À copier, comprendre, adapter.</p>
+          </div>
+          <div class="dots">
+            <small>Difficulté</small>
+            <span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span>
+          </div>
+        </div>
+
+        <article class="lesson">
+          <h3><span class="num">5.1</span> Centrer parfaitement (2 lignes)</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container"><div>Centré !</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">5.2</span> « Holy Grail »</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.container {
+  display: grid;
+  gap: 8px;
+  height: 260px;
+  grid-template-columns: 80px 1fr 80px;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "hd hd hd"
+    "nv mn as"
+    "ft ft ft";
+}
+.hd{grid-area:hd} .nv{grid-area:nv} .mn{grid-area:mn}
+.as{grid-area:as} .ft{grid-area:ft}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo container">
+                  <div class="hd">header</div><div class="nv">nav</div>
+                  <div class="mn">main</div><div class="as">aside</div>
+                  <div class="ft">footer</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">5.3</span> Tableau de bord 12 colonnes</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.dash {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 50px;
+}
+.kpi   { grid-column: span 3; }
+.graph { grid-column: span 8; grid-row: span 3; }
+.liste { grid-column: span 4; grid-row: span 3; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo dash">
+                  <div class="kpi">KPI</div><div class="kpi">KPI</div>
+                  <div class="kpi">KPI</div><div class="kpi">KPI</div>
+                  <div class="graph pk">Graphique 8×3</div>
+                  <div class="liste vi">Liste 4×3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">5.4</span> Superposer texte et image</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.carte {
+  display: grid;
+  height: 180px;
+}
+.carte > * { grid-area: 1 / 1; }
+.legende   { align-self: end; background: #07101fcc; color: #fff; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo carte">
+                  <div class="fond">Image de fond</div>
+                  <div class="legende">Légende en bas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">5.5</span> Sticky footer</h3>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.page {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  height: 230px;
+  gap: 8px;
+}</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo page">
+                  <div>header</div>
+                  <div>Contenu court</div>
+                  <div>footer</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <h3><span class="num">5.6</span> Calendrier (octobre 2026)</h3>
+          <p>7 colonnes pour 7 jours. Le 1ᵉʳ octobre 2026 tombe un <b>jeudi</b>. On insère 3 cellules vides avant pour décaler.</p>
+          <div class="try">
+            <div class="codes"><pre><code class="language-css live">.calendrier {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.calendrier .vide { visibility: hidden; }</code></pre></div>
+            <div class="stage">
+              <div class="sizer rs">
+                <div class="demo calendrier cal" data-cal="1" data-offset="3"></div>
+              </div>
+            </div>
+          </div>
+          <div class="box warn">
+            <span class="t">Piège</span>
+            On ne peut pas utiliser <code>.jour-1 { grid-column-start: 4; }</code> seul : l'auto-placement remet le curseur au début. Solution : cellules vides.
+          </div>
+        </article>
+
+        <div class="challenge">
+          <b>🎯 Défi final</b>
+          <ul><li>Une page complète : en-tête, menu latéral, contenu en grille responsive, sticky footer. Utilise <code>grid-template-areas</code> + <code>repeat(auto-fit, minmax())</code> + une grille imbriquée.</li></ul>
+          <details><summary>Structure de départ</summary>
+<pre><code class="language-css">.site {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "hd hd" "nv mn" "ft ft";
+}
+.mn {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+@media (max-width: 700px) {
+  .site { grid-template-columns: 1fr; grid-template-areas: "hd" "nv" "mn" "ft"; }
+}</code></pre></details>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Niveau 5</div>
+          <p class="quiz-q">Un pied de page collé en bas même quand le contenu est court ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A"><code>grid-template-rows: auto 1fr auto;</code> sur <code>min-height: 100vh</code>.</button>
+            <button class="quiz-opt" data-opt="b" data-l="B"><code>position: fixed</code> sur le footer.</button>
+            <button class="quiz-opt" data-opt="c" data-l="C">Une media query pour la hauteur.</button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           BOUTON "TERMINÉ" + NAV
+           ============================================================ -->
+      <div class="mark-done" id="mark-done"></div>
+      <div class="chap-nav" id="chap-nav"></div>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+  <script>window.BASE_URL = "../../";</script>
+  <script src="../../assets/js/cours.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script src="../../assets/js/resize.js"></script>
+  <script src="../../assets/js/quiz.js"></script>
+  <script src="../../assets/js/demo.js"></script>
+</body>
+</html>
