@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Structure d'une page · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* Diagramme poupées russes */
+      .poupees {
+        display: grid;
+        gap: 0.5rem;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.2rem;
+        margin: 1.5rem 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        line-height: 1.7;
+        color: #cdd6f8;
+      }
+      .poupees .lvl {
+        padding-left: 1.2rem;
+        border-left: 2px solid var(--pc, var(--line));
+      }
+      .poupees .html {
+        --pc: var(--cyan);
+      }
+      .poupees .head {
+        --pc: var(--violet);
+      }
+      .poupees .body {
+        --pc: var(--pink);
+      }
+      .poupees .content {
+        --pc: var(--green);
+      }
+      .poupees .label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--pc, var(--muted));
+        margin-left: 0.5rem;
+      }
+
+      /* Anatomie ligne par ligne */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+      .anatomy-line p b {
+        color: #fff;
+      }
+
+      /* Aperçu navigateur (mini-fenêtre) */
+      .browser {
+        background: #1a1a1a;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        margin: 1rem 0;
+      }
+      .browser-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.8rem;
+        background: #2a2a2a;
+        border-bottom: 1px solid #333;
+      }
+      .browser-dots {
+        display: flex;
+        gap: 0.35rem;
+      }
+      .browser-dots i {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        display: block;
+      }
+      .browser-dots i:nth-child(1) {
+        background: #ff5f57;
+      }
+      .browser-dots i:nth-child(2) {
+        background: #febc2e;
+      }
+      .browser-dots i:nth-child(3) {
+        background: #28c840;
+      }
+      .browser-url {
+        flex: 1;
+        background: #1a1a1a;
+        border-radius: 6px;
+        padding: 0.2rem 0.7rem;
+        font-size: 0.72rem;
+        color: #888;
+        font-family: "JetBrains Mono", monospace;
+        margin-left: 0.5rem;
+      }
+      .browser-view {
+        background: #fff;
+        color: #111;
+        padding: 1.2rem;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+      .browser-view h1 {
+        color: #111;
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+        font-family: inherit;
+      }
+      .browser-view p {
+        color: #333;
+        font-size: 0.95rem;
+        font-family: inherit;
+        margin: 0;
+      }
+
+      /* Étapes */
+      .steps {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+        counter-reset: step;
+      }
+      .step {
+        counter-increment: step;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.1rem;
+      }
+      .step::before {
+        content: counter(step);
+        width: 38px;
+        height: 38px;
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        background: linear-gradient(135deg, var(--cyan), var(--violet));
+        color: #06121f;
+        font-weight: 800;
+        font-size: 1.1rem;
+      }
+      .step h4 {
+        color: #fff;
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+      }
+      .step p {
+        font-size: 0.9rem;
+        color: #cdd6f8;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 1 · HTML</p>
+          <h1>Structure d'une page</h1>
+          <p class="lead">
+            Toute page HTML du monde a la <b>même structure de base</b>. Une
+            fois que tu la connais, tu peux reconnaître n'importe quel site. On
+            va la décortiquer ligne par ligne, et voir <b>où va quoi</b>.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> Une page, c'est une poupée russe</h3>
+          <p>
+            Souviens-toi du chapitre précédent : une page HTML est faite de
+            <b>balises</b> qui s'emboîtent. Une balise
+            <em>contient</em> d'autres balises, qui en contiennent d'autres,
+            etc. Exactement comme des poupées russes.
+          </p>
+
+          <div class="poupees">
+            <div class="lvl html">
+              &lt;html&gt; <span class="label">la boîte de tout</span>
+              <div class="lvl head" style="margin-top: 0.4rem">
+                &lt;head&gt; <span class="label">informations invisibles</span>
+                <div class="lvl" style="margin-top: 0.4rem">
+                  &lt;title&gt;…&lt;/title&gt;
+                  <span class="label">titre de l'onglet</span>
+                </div>
+              </div>
+              <div class="lvl body" style="margin-top: 0.4rem">
+                &lt;body&gt; <span class="label">tout ce qui s'affiche</span>
+                <div class="lvl content" style="margin-top: 0.4rem">
+                  &lt;h1&gt;…&lt;/h1&gt;
+                  <span class="label">titre visible</span>
+                </div>
+                <div class="lvl content" style="margin-top: 0.4rem">
+                  &lt;p&gt;…&lt;/p&gt; <span class="label">paragraphe</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">À retenir</span>
+            <b>&lt;html&gt;</b> contient <b>&lt;head&gt;</b> et
+            <b>&lt;body&gt;</b>. Le <b>head</b>, c'est ce qu'on ne voit pas. Le
+            <b>body</b>, c'est ce qu'on voit.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">2</span> Le squelette minimal</h3>
+          <p>
+            Voici la plus petite page HTML valide possible. Neuf lignes. Tu peux
+            la copier telle quelle à chaque nouveau projet.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Titre de l'onglet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Le contenu visible va ici --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="browser">
+                <div class="browser-bar">
+                  <div class="browser-dots"><i></i><i></i><i></i></div>
+                  <div class="browser-url">ma-page.html</div>
+                </div>
+                <div class="browser-view">
+                  <p style="color: #999; font-style: italic">
+                    (page vide — rien n'est encore écrit dans le body)
+                  </p>
+                </div>
+              </div>
+              <p class="cap">
+                Le navigateur affiche une page blanche : c'est normal, on n'a
+                rien mis dans le body.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">3</span> Chaque ligne, expliquée</h3>
+          <p>
+            Reprenons le squelette, ligne par ligne. Aucune n'est là par hasard.
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;!DOCTYPE html&gt;</code>
+              <p>
+                <b>La déclaration de type.</b> Elle dit au navigateur : « Ceci
+                est une page HTML moderne ». Toujours la première ligne. Elle
+                n'a pas de balise fermante.
+              </p>
+            </div>
+
+            <div class="anatomy-line">
+              <code>&lt;html lang="fr"&gt;</code>
+              <p>
+                <b>La racine.</b> Tout est dedans. L'attribut
+                <code>lang="fr"</code> indique la langue de la page. Utile pour
+                les moteurs de recherche et la synthèse vocale.
+              </p>
+            </div>
+
+            <div class="anatomy-line">
+              <code>&lt;head&gt;</code>
+              <p>
+                <b>La tête.</b> Contient les <em>informations</em> sur la page :
+                son titre, son encodage, ses styles, etc. Rien d'ici ne
+                s'affiche directement à l'écran.
+              </p>
+            </div>
+
+            <div class="anatomy-line">
+              <code>&lt;meta charset="UTF-8"&gt;</code>
+              <p>
+                <b>L'encodage des caractères.</b> Sans cette ligne, les accents
+                (é, à, ç) s'affichent comme des symboles bizarres. À mettre
+                <b>toujours</b>, en premier dans le head.
+              </p>
+            </div>
+
+            <div class="anatomy-line">
+              <code>&lt;title&gt;…&lt;/title&gt;</code>
+              <p>
+                <b>Le titre de l'onglet.</b> C'est ce qui s'affiche dans
+                l'onglet du navigateur et dans les résultats Google. Change-le à
+                chaque page.
+              </p>
+            </div>
+
+            <div class="anatomy-line">
+              <code>&lt;body&gt;</code>
+              <p>
+                <b>Le corps.</b> Tout ce que tu vois à l'écran est ici : textes,
+                images, boutons, tout. C'est la partie qu'on va remplir pendant
+                tout le cours.
+              </p>
+            </div>
+
+            <div class="anatomy-line">
+              <code>&lt;!-- commentaire --&gt;</code>
+              <p>
+                <b>Un commentaire.</b> Invisible dans le navigateur. Sert à
+                laisser des notes à toi-même ou à d'autres développeurs. Le
+                navigateur les ignore.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">4</span> L'indentation : range ton code</h3>
+          <p>
+            Tu remarques que certaines lignes sont
+            <b>décalées vers la droite</b>. C'est l'<b>indentation</b>. Elle
+            n'est pas obligatoire pour le navigateur, mais elle rend ton code
+            <b>lisible</b>.
+          </p>
+
+          <p>
+            Compare les deux versions : même code, mais l'un est impossible à
+            lire.
+          </p>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ko">❌ Sans indentation</div>
+              <pre><code class="language-markup">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Ma page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Salut&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+            <div>
+              <div class="dual-lbl ok">✅ Avec indentation</div>
+              <pre><code class="language-markup">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Ma page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Salut&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Astuce VS Code</span>
+            Pas besoin de ranger l'indentation à la main. Sélectionne tout (<kbd
+              >Ctrl</kbd
+            >
+            + <kbd>A</kbd>), puis ouvre la <b>palette de commandes</b> avec
+            <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> et tape
+            <b>Format Document</b>. Ton code se range automatiquement.
+            <br /><br />
+            <b>Encore mieux :</b> installe l'extension <b>Prettier</b> et active
+            l'option <b>Format On Save</b>. À chaque sauvegarde, ton code sera
+            rangé sans que tu y penses.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">5</span> Deux pièges classiques</h3>
+
+          <p><b>Piège n°1 : oublier la balise fermante.</b></p>
+          <p>
+            Si tu ouvres une balise et que tu ne la fermes pas, le navigateur
+            essaie de deviner où elle se termine. Résultat : ta page s'affiche
+            bizarrement. <b>Chaque ouverture doit avoir sa fermeture.</b>
+          </p>
+
+          <pre><code class="language-markup">&lt;!-- ❌ Mauvais --&gt;
+&lt;p&gt;Bonjour, je suis un paragraphe.
+
+&lt;!-- ✅ Bon --&gt;
+&lt;p&gt;Bonjour, je suis un paragraphe.&lt;/p&gt;</code></pre>
+
+          <p style="margin-top: 1.4rem">
+            <b>Piège n°2 : croiser les balises.</b>
+          </p>
+          <p>
+            Les balises doivent s'emboîter <b>proprement</b>. Si tu ouvres A
+            puis B, tu dois fermer B puis A. Comme des parenthèses en maths.
+          </p>
+
+          <pre><code class="language-markup">&lt;!-- ❌ Mauvais : les balises se croisent --&gt;
+&lt;p&gt;Un texte &lt;strong&gt;en gras&lt;/p&gt;&lt;/strong&gt;
+
+&lt;!-- ✅ Bon : les balises s'emboîtent --&gt;
+&lt;p&gt;Un texte &lt;strong&gt;en gras&lt;/strong&gt;&lt;/p&gt;</code></pre>
+
+          <div class="box warn">
+            <span class="t">Comment repérer une erreur ?</span>
+            Si ta page s'affiche bizarrement, ou si un style ne s'applique pas
+            comme prévu,
+            <b>la première chose à vérifier</b>, c'est qu'il n'y a pas une
+            balise non fermée ou mal emboîtée. C'est l'erreur n°1 des débutants.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">6</span> À toi de jouer</h3>
+          <p>
+            Crée un nouveau fichier <code>structure.html</code> dans ton dossier
+            <code>01-html</code>, et écris <b>de mémoire</b> le squelette
+            complet d'une page. Ne regarde pas l'exemple ci-dessus !
+          </p>
+
+          <div class="steps">
+            <div class="step">
+              <div>
+                <h4>Ouvre VS Code dans ton dossier <code>cours-web</code></h4>
+                <p>Crée le dossier <code>01-html</code> s'il n'existe pas.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div>
+                <h4>Crée un fichier <code>structure.html</code></h4>
+                <p>Clic droit sur <code>01-html</code> → New File.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div>
+                <h4>Écris le squelette de mémoire</h4>
+                <p>
+                  Commence par <code>&lt;!DOCTYPE html&gt;</code>, ouvre
+                  <code>&lt;html&gt;</code>, mets le
+                  <code>&lt;head&gt;</code> avec <code>charset</code> et
+                  <code>title</code>, puis le <code>&lt;body&gt;</code> vide.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div>
+                <h4>Vérifie avec la solution</h4>
+                <p>
+                  Compare avec le squelette du point 2. Une ligne oubliée ?
+                  Corrige.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            <b>Répète l'exercice deux ou trois fois</b> en effaçant ton fichier
+            à chaque fois. Tu verras qu'après trois essais, tu le connaîtras par
+            cœur. C'est le genre de chose qu'on tape <b>tous les jours</b> en
+            tant que développeur.
+          </p>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 1/3</div>
+          <p class="quiz-q">
+            Que doit-on mettre <b>en premier</b> dans un fichier HTML ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;html&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;head&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;!DOCTYPE html&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 2/3</div>
+          <p class="quiz-q">
+            Quelle balise contient tout ce qui s'affiche à l'écran ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;head&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;body&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;title&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/3</div>
+          <p class="quiz-q">
+            Parmi ces extraits, lequel est correctement écrit ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code
+                >&lt;p&gt;Un texte
+                &lt;strong&gt;important&lt;/strong&gt;&lt;/p&gt;</code
+              >
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code
+                >&lt;p&gt;Un texte
+                &lt;strong&gt;important&lt;/p&gt;&lt;/strong&gt;</code
+              >
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;p&gt;Un texte &lt;strong&gt;important&lt;p&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Ton modèle de départ</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée un fichier <code>modele.html</code> dans ton dossier
+            <code>01-html</code>. Ce fichier servira de <b>modèle</b> pour tous
+            tes futurs projets HTML.
+          </p>
+          <ul>
+            <li>Écris le squelette complet.</li>
+            <li>
+              Dans le <code>&lt;title&gt;</code>, mets <code>Mon site</code>.
+            </li>
+            <li>
+              Dans le <code>&lt;body&gt;</code>, ajoute un
+              <code>&lt;h1&gt;</code> avec <code>Bienvenue</code> et un
+              <code>&lt;p&gt;</code> avec
+              <code>Ceci est mon modèle de départ.</code>
+            </li>
+            <li>
+              Ajoute un <b>commentaire</b> au-dessus du
+              <code>&lt;h1&gt;</code> :
+              <code>&lt;!-- Contenu principal --&gt;</code>.
+            </li>
+            <li>Sauvegarde, ouvre avec Live Server, vérifie l'affichage.</li>
+          </ul>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 Garde ce fichier. Chaque fois que tu commenceras un nouveau
+            projet HTML, tu pourras le <b>dupliquer</b> et partir de là.
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mon site&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Contenu principal --&gt;
+  &lt;h1&gt;Bienvenue&lt;/h1&gt;
+  &lt;p&gt;Ceci est mon modèle de départ.&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>

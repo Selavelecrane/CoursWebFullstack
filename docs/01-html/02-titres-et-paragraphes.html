@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Titres et paragraphes · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* ---- Comparatif visuel des 6 niveaux de titres ---- */
+      .levels-demo {
+        display: grid;
+        gap: 0.6rem;
+        padding: 1.2rem;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        margin: 1.5rem 0;
+      }
+      .level-row {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: baseline;
+        border-bottom: 1px dashed #26346a;
+        padding-bottom: 0.5rem;
+      }
+      .level-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .level-row code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        align-self: start;
+      }
+      .level-row .preview {
+        color: #e8ecff;
+        font-family: Georgia, serif;
+        line-height: 1.2;
+      }
+      .level-row .preview.h1 {
+        font-size: 2rem;
+        font-weight: 800;
+      }
+      .level-row .preview.h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+      }
+      .level-row .preview.h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+      .level-row .preview.h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+      .level-row .preview.h5 {
+        font-size: 1rem;
+        font-weight: 700;
+      }
+      .level-row .preview.h6 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      /* ---- Balises inline : strong / em ---- */
+      .inline-demo {
+        padding: 1.4rem;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        margin: 1.2rem 0;
+        font-family: Georgia, serif;
+        color: #e8ecff;
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+      .inline-demo .big {
+        font-size: 1.15rem;
+      }
+      .inline-demo p {
+        margin: 0 0 0.8rem;
+      }
+      .inline-demo p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ---- Fausse page d'article ---- */
+      .article-preview {
+        background: #fff;
+        color: #111;
+        padding: 1.5rem 1.8rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        font-family: Georgia, "Times New Roman", serif;
+        line-height: 1.7;
+      }
+      .article-preview h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.4rem;
+        color: #111;
+        font-family: inherit;
+      }
+      .article-preview h2 {
+        font-size: 1.35rem;
+        margin: 1.2rem 0 0.4rem;
+        color: #111;
+        font-family: inherit;
+      }
+      .article-preview p {
+        font-size: 0.98rem;
+        color: #333;
+        margin-bottom: 0.8rem;
+        font-family: inherit;
+      }
+      .article-preview hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 1.2rem 0;
+      }
+      .article-preview em {
+        color: #555;
+      }
+      .article-preview strong {
+        color: #000;
+      }
+
+      /* ---- Anatomie ligne par ligne ---- */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* ---- Étapes ---- */
+      .steps {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+        counter-reset: step;
+      }
+      .step {
+        counter-increment: step;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.1rem;
+      }
+      .step::before {
+        content: counter(step);
+        width: 38px;
+        height: 38px;
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        background: linear-gradient(135deg, var(--cyan), var(--violet));
+        color: #06121f;
+        font-weight: 800;
+        font-size: 1.1rem;
+      }
+      .step h4 {
+        color: #fff;
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+      }
+      .step p {
+        font-size: 0.9rem;
+        color: #cdd6f8;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 1 · HTML</p>
+          <h1>Titres et paragraphes</h1>
+          <p class="lead">
+            Les balises <code>&lt;h1&gt;</code> à <code>&lt;h6&gt;</code> et
+            <code>&lt;p&gt;</code> couvrent <b>90 % du texte</b> que tu écriras
+            dans ta vie de développeur. On va les maîtriser, plus les balises
+            qui mettent <em>en valeur</em> un mot dans une phrase.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> À quoi ça sert ?</h3>
+          <p>
+            Un texte sans structure, c'est comme un livre sans chapitres :
+            illisible. Les balises de texte servent à <b>donner un sens</b> aux
+            morceaux de contenu.
+          </p>
+          <p>HTML propose <b>deux grandes familles</b> de balises de texte :</p>
+          <ul>
+            <li>
+              <b>Les titres</b> — <code>&lt;h1&gt;</code> à
+              <code>&lt;h6&gt;</code> — qui organisent le contenu en sections de
+              différents niveaux.
+            </li>
+            <li>
+              <b>Les paragraphes</b> — <code>&lt;p&gt;</code> — qui contiennent
+              le texte normal.
+            </li>
+          </ul>
+
+          <div class="box tip">
+            <span class="t">La règle mentale</span>
+            Un titre dit <b>« voici un nouveau sujet »</b>. Un paragraphe dit
+            <b>« voici une idée sur ce sujet »</b>.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">2</span> Les 6 niveaux de titres</h3>
+          <p>
+            HTML propose <b>6 niveaux</b> de titres, de
+            <code>&lt;h1&gt;</code> (le plus important) à
+            <code>&lt;h6&gt;</code> (le moins important). Le navigateur les
+            affiche avec une taille décroissante par défaut — mais l'important
+            n'est pas la taille, c'est le <b>sens</b>.
+          </p>
+
+          <div class="levels-demo">
+            <div class="level-row">
+              <code>&lt;h1&gt;</code>
+              <div class="preview h1">Titre de niveau 1</div>
+            </div>
+            <div class="level-row">
+              <code>&lt;h2&gt;</code>
+              <div class="preview h2">Titre de niveau 2</div>
+            </div>
+            <div class="level-row">
+              <code>&lt;h3&gt;</code>
+              <div class="preview h3">Titre de niveau 3</div>
+            </div>
+            <div class="level-row">
+              <code>&lt;h4&gt;</code>
+              <div class="preview h4">Titre de niveau 4</div>
+            </div>
+            <div class="level-row">
+              <code>&lt;h5&gt;</code>
+              <div class="preview h5">Titre de niveau 5</div>
+            </div>
+            <div class="level-row">
+              <code>&lt;h6&gt;</code>
+              <div class="preview h6">Titre de niveau 6</div>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Le piège à éviter</span>
+            Beaucoup de débutants choisissent un niveau
+            <b>parce que « la taille leur plaît »</b>. C'est faux. On choisit le
+            niveau selon la <b>position dans le contenu</b>, pas selon
+            l'apparence. La taille, on la changera plus tard avec du CSS.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">3</span> Comment organiser ses titres</h3>
+          <p>
+            Imagine une page qui présente trois animaux. Voici comment
+            structurer correctement avec les titres :
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;h1&gt;Les animaux de la forêt&lt;/h1&gt;
+
+&lt;h2&gt;Le renard&lt;/h2&gt;
+&lt;p&gt;Un mammifère rusé de la famille des canidés.&lt;/p&gt;
+
+&lt;h2&gt;Le hibou&lt;/h2&gt;
+&lt;p&gt;Un oiseau nocturne aux grands yeux.&lt;/p&gt;
+
+&lt;h2&gt;Le cerf&lt;/h2&gt;
+&lt;p&gt;Un grand mammifère aux bois impressionnants.&lt;/p&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="article-preview">
+                <h1>Les animaux de la forêt</h1>
+                <h2>Le renard</h2>
+                <p>Un mammifère rusé de la famille des canidés.</p>
+                <h2>Le hibou</h2>
+                <p>Un oiseau nocturne aux grands yeux.</p>
+                <h2>Le cerf</h2>
+                <p>Un grand mammifère aux bois impressionnants.</p>
+              </div>
+              <p class="cap">
+                Un seul <code>h1</code> (le titre principal) et plusieurs
+                <code>h2</code> (les sous-sections).
+              </p>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Règle d'or</span>
+            <b>Un seul <code>&lt;h1&gt;</code> par page.</b> Toujours. Ensuite
+            autant de <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>… que
+            nécessaire, dans l'ordre. On saute rarement un niveau (on ne passe
+            pas de <code>h1</code> à <code>h4</code> sans <code>h2</code>,
+            <code>h3</code> entre les deux).
+          </div>
+
+          <p>
+            <b>Pourquoi cette règle ?</b> Parce que les moteurs de recherche et
+            les lecteurs d'écran (pour les malvoyants) utilisent cette
+            hiérarchie pour comprendre la structure de ta page. Si tu mets dix
+            <code>h1</code>, c'est comme si tu criais dix titres en même temps.
+          </p>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">4</span> Les paragraphes : <code>&lt;p&gt;</code>
+          </h3>
+          <p>
+            La balise <code>&lt;p&gt;</code> est
+            <b>la plus utilisée du HTML</b>. Elle contient un bloc de texte :
+            une idée, une explication, une description. Le navigateur ajoute
+            automatiquement un peu d'espace avant et après.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;p&gt;Voici mon premier paragraphe.&lt;/p&gt;
+&lt;p&gt;Voici mon deuxième paragraphe.&lt;/p&gt;
+&lt;p&gt;Et un troisième.&lt;/p&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="article-preview">
+                <p>Voici mon premier paragraphe.</p>
+                <p>Voici mon deuxième paragraphe.</p>
+                <p>Et un troisième.</p>
+              </div>
+              <p class="cap">
+                Le navigateur espace automatiquement les paragraphes.
+              </p>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Piège classique</span>
+            Le navigateur <b>ne respecte pas les sauts de ligne</b> que tu tapes
+            dans ton fichier. Si tu écris ton texte sur 10 lignes dans VS Code,
+            il s'affiche sur une seule ligne à l'écran.
+            <b
+              >Pour créer un nouveau paragraphe, il faut une nouvelle balise
+              <code>&lt;p&gt;</code>.</b
+            >
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;!-- ❌ Mauvais : 3 phrases, 1 seul paragraphe --&gt;
+&lt;p&gt;Je m'appelle Alex.
+J'ai 12 ans.
+J'adore les mangas.&lt;/p&gt;
+
+&lt;!-- ✅ Bon : 1 balise par idée --&gt;
+&lt;p&gt;Je m'appelle Alex.&lt;/p&gt;
+&lt;p&gt;J'ai 12 ans.&lt;/p&gt;
+&lt;p&gt;J'adore les mangas.&lt;/p&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <p class="cap" style="margin-top: 0"><b>Rendu du mauvais :</b></p>
+              <div class="article-preview" style="padding: 0.9rem 1.2rem">
+                <p style="margin: 0">
+                  Je m'appelle Alex. J'ai 12 ans. J'adore les mangas.
+                </p>
+              </div>
+              <p class="cap sp"><b>Rendu du bon :</b></p>
+              <div class="article-preview" style="padding: 0.9rem 1.2rem">
+                <p>Je m'appelle Alex.</p>
+                <p>J'ai 12 ans.</p>
+                <p style="margin: 0">J'adore les mangas.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> Mettre en valeur :
+            <code>&lt;strong&gt;</code> et <code>&lt;em&gt;</code>
+          </h3>
+          <p>
+            Parfois, dans un paragraphe, tu veux insister sur
+            <b>un mot important</b> ou <em>attirer l'attention</em> sur une
+            nuance. Deux balises servent à ça, et elles se placent
+            <b>à l'intérieur</b> d'un paragraphe :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;strong&gt;…&lt;/strong&gt;</code>
+              <p>
+                <b>Important, sérieux.</b> S'affiche en
+                <strong>gras</strong> par défaut. À utiliser quand le mot
+                <em>compte vraiment</em> : un avertissement, une règle, une
+                information clé.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;em&gt;…&lt;/em&gt;</code>
+              <p>
+                <b>Emphase, insistance.</b> S'affiche en <em>italique</em> par
+                défaut. À utiliser quand tu veux mettre l'accent sur une nuance,
+                un mot étranger, un titre de livre.
+              </p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;p&gt;Attention : &lt;strong&gt;ne sautez jamais d'un h1 à un h4&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Il a dit qu'il viendrait &lt;em&gt;peut-être&lt;/em&gt; demain.&lt;/p&gt;
+
+&lt;p&gt;Ce mot &lt;strong&gt;vraiment&lt;/strong&gt; &lt;em&gt;très&lt;/em&gt; important.&lt;/p&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="article-preview">
+                <p>
+                  Attention : <strong>ne sautez jamais d'un h1 à un h4</strong>.
+                </p>
+                <p>Il a dit qu'il viendrait <em>peut-être</em> demain.</p>
+                <p>Ce mot <strong>vraiment</strong> <em>très</em> important.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">On peut les imbriquer</span>
+            <code>&lt;strong&gt;&lt;em&gt;mot&lt;/em&gt;&lt;/strong&gt;</code>
+            donne un mot à la fois <strong><em>gras et italique</em></strong
+            >. Pratique pour insister très fort.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">6</span> Deux balises utiles :
+            <code>&lt;br&gt;</code> et <code>&lt;hr&gt;</code>
+          </h3>
+          <p>
+            Ces deux balises sont <b>auto-fermantes</b> : elles n'ont pas de
+            balise de fermeture.
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;br&gt;</code>
+              <p>
+                <b>Un saut de ligne.</b> Force un retour à la ligne
+                <em>à l'intérieur</em> d'un même bloc de texte. Utile pour une
+                adresse postale, un poème, un numéro de téléphone.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;hr&gt;</code>
+              <p>
+                <b>Une ligne de séparation.</b> Trace un trait horizontal pour
+                marquer un changement de sujet. Signifie « on passe à autre
+                chose ».
+              </p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;p&gt;
+  12 rue des Érables&lt;br&gt;
+  75001 Paris&lt;br&gt;
+  France
+&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;On change complètement de sujet.&lt;/p&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="article-preview">
+                <p>
+                  12 rue des Érables<br />
+                  75001 Paris<br />
+                  France
+                </p>
+                <hr />
+                <p>On change complètement de sujet.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">À utiliser avec modération</span>
+            <code>&lt;br&gt;</code> est <b>souvent mal utilisé</b> par les
+            débutants pour espacer des blocs. Si tu veux de l'espace entre deux
+            paragraphes, ce n'est pas <code>&lt;br&gt;</code> qu'il faut — c'est
+            du CSS, qu'on verra plus tard. <code>&lt;br&gt;</code> sert
+            <b>uniquement</b> pour un saut de ligne au sein d'un même texte.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">7</span> Tout assembler : une mini-page</h3>
+          <p>
+            Voici une page complète qui utilise tout ce qu'on a vu. Elle raconte
+            un truc, comme un vrai article de blog.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mon carnet d'animaux&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Mon carnet d'animaux&lt;/h1&gt;
+  &lt;p&gt;Petit guide des animaux que j'ai vus cet été.&lt;/p&gt;
+
+  &lt;hr&gt;
+
+  &lt;h2&gt;Le hérisson&lt;/h2&gt;
+  &lt;p&gt;Un petit mammifère &lt;strong&gt;couvert de piquants&lt;/strong&gt;.&lt;/p&gt;
+  &lt;p&gt;Il sort surtout &lt;em&gt;la nuit&lt;/em&gt; pour chercher à manger.&lt;/p&gt;
+
+  &lt;h2&gt;La pie&lt;/h2&gt;
+  &lt;p&gt;Un oiseau noir et blanc, &lt;em&gt;très bavard&lt;/em&gt;.&lt;/p&gt;
+  &lt;p&gt;Elle adore les objets brillants : &lt;strong&gt;ne laissez pas traîner vos bijoux !&lt;/strong&gt;&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="article-preview">
+                <h1>Mon carnet d'animaux</h1>
+                <p>Petit guide des animaux que j'ai vus cet été.</p>
+                <hr />
+                <h2>Le hérisson</h2>
+                <p>Un petit mammifère <strong>couvert de piquants</strong>.</p>
+                <p>Il sort surtout <em>la nuit</em> pour chercher à manger.</p>
+                <h2>La pie</h2>
+                <p>Un oiseau noir et blanc, <em>très bavard</em>.</p>
+                <p>
+                  Elle adore les objets brillants :
+                  <strong>ne laissez pas traîner vos bijoux !</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Combien de <code>&lt;h1&gt;</code> peut-on mettre sur
+            <b>une seule page</b> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Autant qu'on veut.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">Un seul.</button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Exactement deux.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Tu écris un texte sur <b>3 lignes</b> dans VS Code, à l'intérieur
+            d'un seul <code>&lt;p&gt;</code>. Que voit-on dans le navigateur ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Trois paragraphes séparés.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Les trois lignes avec leur retour à la ligne.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Une seule ligne continue : le navigateur ignore les sauts de ligne
+              du code.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Quelle balise utilises-tu pour insister sur un mot
+            <b>important</b> dans une phrase ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;strong&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;h2&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;hr&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Parmi ces extraits, lequel est correctement écrit ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code
+                >&lt;p&gt;Voici &lt;strong&gt;un
+                mot&lt;/p&gt;&lt;/strong&gt;</code
+              >
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code
+                >&lt;p&gt;Voici &lt;strong&gt;un
+                mot&lt;/strong&gt;.&lt;/p&gt;</code
+              >
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;p&gt;Voici &lt;strong&gt;un mot&lt;p&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Ta page de recettes</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée un fichier <code>recettes.html</code> dans ton dossier
+            <code>01-html</code>, avec :
+          </p>
+          <ul>
+            <li>
+              Un <code>&lt;h1&gt;</code> : <code>Mes recettes préférées</code>
+            </li>
+            <li>Un <code>&lt;p&gt;</code> court qui présente la page.</li>
+            <li>Un <code>&lt;hr&gt;</code> pour séparer.</li>
+            <li>
+              Trois recettes, chacune structurée ainsi :
+              <ul>
+                <li>Un <code>&lt;h2&gt;</code> avec le nom de la recette.</li>
+                <li>
+                  Un <code>&lt;p&gt;</code> qui décrit la recette en une phrase.
+                </li>
+                <li>
+                  Un <code>&lt;p&gt;</code> où tu mets
+                  <b>en gras</b> l'ingrédient principal avec
+                  <code>&lt;strong&gt;</code>.
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 Tu peux t'inspirer de la structure des « Animaux de la forêt » du
+            chapitre. L'important est de respecter : <b>un seul h1</b>, des h2
+            pour chaque recette, et le bon usage des balises dans les
+            paragraphes.
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mes recettes&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Mes recettes préférées&lt;/h1&gt;
+  &lt;p&gt;Trois recettes simples que je sais faire tout seul.&lt;/p&gt;
+
+  &lt;hr&gt;
+
+  &lt;h2&gt;Pâtes au pesto&lt;/h2&gt;
+  &lt;p&gt;Un plat rapide pour les soirs pressés.&lt;/p&gt;
+  &lt;p&gt;L'ingrédient clé, c'est le &lt;strong&gt;basilic frais&lt;/strong&gt;.&lt;/p&gt;
+
+  &lt;h2&gt;Omelette aux champignons&lt;/h2&gt;
+  &lt;p&gt;Parfait pour le petit-déjeuner.&lt;/p&gt;
+  &lt;p&gt;Il faut des &lt;strong&gt;champignons de Paris&lt;/strong&gt;, bien frais.&lt;/p&gt;
+
+  &lt;h2&gt;Salade de fruits&lt;/h2&gt;
+  &lt;p&gt;Une recette &lt;em&gt;très&lt;/em&gt; facile, idéale en été.&lt;/p&gt;
+  &lt;p&gt;Avec de la &lt;strong&gt;pastèque&lt;/strong&gt; bien mûre.&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>
