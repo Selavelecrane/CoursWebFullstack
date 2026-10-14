@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulaires — champs avancés · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* Aperçu formulaire */
+      .preview-form {
+        background: #fff;
+        color: #111;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        font-size: 0.92rem;
+      }
+      .preview-form h3 {
+        font-size: 1rem;
+        margin: 0 0 1rem;
+        color: #111;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.6rem;
+      }
+      .preview-form label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.3rem;
+      }
+      .preview-form input[type="text"],
+      .preview-form input[type="email"] {
+        width: 100%;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: #fff;
+        color: #111;
+      }
+      .preview-form input:focus,
+      .preview-form textarea:focus,
+      .preview-form select:focus {
+        outline: none;
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+      }
+      .preview-form textarea {
+        width: 100%;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: #fff;
+        color: #111;
+        resize: vertical;
+        min-height: 90px;
+      }
+      .preview-form select {
+        width: 100%;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: #fff;
+        color: #111;
+      }
+      .preview-form .field {
+        margin-bottom: 1rem;
+      }
+      .preview-form .btn {
+        background: linear-gradient(135deg, #38bdf8, #a78bfa);
+        color: #06121f;
+        border: none;
+        border-radius: 10px;
+        padding: 0.7rem 1.3rem;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      /* Groupe de choix (radio/checkbox) */
+      .choice-group {
+        display: grid;
+        gap: 0.5rem;
+        margin: 0.4rem 0 1rem;
+      }
+      .choice {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.88rem;
+        color: #333;
+        cursor: pointer;
+        padding: 0.4rem 0.6rem;
+        border-radius: 8px;
+        border: 1px solid #e5e5e5;
+        transition: background 0.15s;
+      }
+      .choice:hover {
+        background: #f9f9f9;
+      }
+      .choice input {
+        margin: 0;
+        cursor: pointer;
+      }
+
+      /* Fieldset visuel */
+      .fieldset-demo {
+        border: 1px solid #d0d0d0;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        margin-bottom: 1rem;
+      }
+      .fieldset-demo legend {
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: #333;
+        padding: 0 0.5rem;
+      }
+
+      /* Anatomie */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* Tableau validation */
+      .val-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+        background: var(--panel2);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .val-table th,
+      .val-table td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .val-table th {
+        background: #141d47;
+        color: var(--cyan);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .val-table td:first-child code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.82em;
+      }
+      .val-table td:nth-child(2) {
+        color: #cdd6f8;
+      }
+      .val-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 1 · HTML</p>
+          <h1>Formulaires — champs avancés</h1>
+          <p class="lead">
+            Les cases à cocher, les boutons radio, les listes déroulantes, les
+            zones de texte… Plus la <b>validation intégrée</b> qui vérifie la
+            saisie de l'utilisateur sans une ligne de JavaScript. C'est la
+            partie <b>confortable</b> et <b>puissante</b> des formulaires.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">1</span> Les cases à cocher :
+            <code>checkbox</code>
+          </h3>
+          <p>
+            Une case à cocher laisse l'utilisateur
+            <b>sélectionner plusieurs options</b>
+            indépendamment les unes des autres. Comme des interrupteurs.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;fieldset&gt;
+  &lt;legend&gt;Tes langages préférés&lt;/legend&gt;
+
+  &lt;label&gt;
+    &lt;input type="checkbox" name="html" value="oui"&gt;
+    HTML
+  &lt;/label&gt;
+
+  &lt;label&gt;
+    &lt;input type="checkbox" name="css" value="oui"&gt;
+    CSS
+  &lt;/label&gt;
+
+  &lt;label&gt;
+    &lt;input type="checkbox" name="js" value="oui"&gt;
+    JavaScript
+  &lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <fieldset class="fieldset-demo">
+                  <legend>Tes langages préférés</legend>
+                  <div class="choice-group">
+                    <label class="choice"
+                      ><input type="checkbox" name="demo-lang" value="html" />
+                      HTML</label
+                    >
+                    <label class="choice"
+                      ><input type="checkbox" name="demo-lang" value="css" />
+                      CSS</label
+                    >
+                    <label class="choice"
+                      ><input type="checkbox" name="demo-lang" value="js" />
+                      JavaScript</label
+                    >
+                  </div>
+                </fieldset>
+              </div>
+              <p class="cap">
+                Tu peux cocher <b>autant de cases</b> que tu veux.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t"
+              >Astuce : plusieurs <code>name</code> identiques</span
+            >
+            Ici, les trois cases ont le
+            <b>même <code>name</code></b> (<code>langages</code>). C'est
+            volontaire : côté serveur, on récupère
+            <b>toutes les valeurs cochées</b> de ce groupe. Si tu veux des cases
+            indépendantes, utilise des <code>name</code> différents.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> Les boutons radio : <code>radio</code>
+          </h3>
+          <p>
+            Un bouton radio ressemble à une case à cocher, mais avec une règle
+            différente :
+            <b>un seul choix possible</b> dans un groupe. Comme un questionnaire
+            à choix unique.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;fieldset&gt;
+  &lt;legend&gt;Ton niveau en code&lt;/legend&gt;
+
+  &lt;label&gt;
+    &lt;input type="radio" name="niveau" value="debutant"&gt;
+    Débutant
+  &lt;/label&gt;
+
+  &lt;label&gt;
+    &lt;input type="radio" name="niveau" value="intermediaire"&gt;
+    Intermédiaire
+  &lt;/label&gt;
+
+  &lt;label&gt;
+    &lt;input type="radio" name="niveau" value="avance"&gt;
+    Avancé
+  &lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <fieldset class="fieldset-demo">
+                  <legend>Ton niveau en code</legend>
+                  <div class="choice-group">
+                    <label class="choice"
+                      ><input
+                        type="radio"
+                        name="demo-niveau"
+                        value="debutant"
+                      />
+                      Débutant</label
+                    >
+                    <label class="choice"
+                      ><input
+                        type="radio"
+                        name="demo-niveau"
+                        value="intermediaire"
+                      />
+                      Intermédiaire</label
+                    >
+                    <label class="choice"
+                      ><input type="radio" name="demo-niveau" value="avance" />
+                      Avancé</label
+                    >
+                  </div>
+                </fieldset>
+              </div>
+              <p class="cap">
+                Clique sur les trois : <b>un seul</b> reste sélectionné.
+              </p>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">La règle du radio</span>
+            Pour qu'un groupe de boutons radio fonctionne (un seul choix à la
+            fois), ils doivent partager <b>le même <code>name</code></b
+            >. C'est le <code>name</code> qui forme le groupe. <br /><br />
+            Si tu donnes des <code>name</code> différents, tous les boutons
+            s'activent en même temps.
+          </div>
+
+          <div class="box info">
+            <span class="t"><code>value</code> : à quoi ça sert ?</span>
+            Le <code>value</code> est la valeur qui sera envoyée au serveur.
+            Pour HTML, on enverra <code>html</code>. Mais à l'écran,
+            l'utilisateur voit « HTML » (le texte du label). <br /><br />
+            C'est pour ça qu'on met toujours un <code>value</code> en
+            minuscules, court, technique.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">3</span> La liste déroulante :
+            <code>&lt;select&gt;</code>
+          </h3>
+          <p>
+            Le <code>&lt;select&gt;</code> affiche une liste de choix dans un
+            menu déroulant. Chaque option est un <code>&lt;option&gt;</code>.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;label for="pays"&gt;Ton pays&lt;/label&gt;
+&lt;select id="pays" name="pays"&gt;
+  &lt;option value=""&gt;— Choisis —&lt;/option&gt;
+  &lt;option value="fr"&gt;France&lt;/option&gt;
+  &lt;option value="be"&gt;Belgique&lt;/option&gt;
+  &lt;option value="ch"&gt;Suisse&lt;/option&gt;
+  &lt;option value="ca"&gt;Canada&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <label for="demo-pays">Ton pays</label>
+                <select id="demo-pays" name="demo-pays">
+                  <option value="">— Choisis —</option>
+                  <option value="fr">France</option>
+                  <option value="be">Belgique</option>
+                  <option value="ch">Suisse</option>
+                  <option value="ca">Canada</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;select&gt;</code>
+              <p>Le conteneur de la liste déroulante.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;option&gt;</code>
+              <p>
+                Une option parmi les choix. Le <code>value</code> est ce qui est
+                envoyé au serveur ; le texte entre les balises est ce qui est
+                affiché.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>selected</code>
+              <p>
+                Attribut optionnel sur une <code>&lt;option&gt;</code> pour la
+                pré-sélectionner au chargement.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;optgroup&gt;</code>
+              <p>
+                Permet de regrouper des options par catégorie, avec un label.
+                Utile quand il y a beaucoup de choix.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Le truc du « — Choisis — »</span>
+            On met souvent une première option vide (ou « Choisis ») pour que
+            l'utilisateur doive
+            <b>sélectionner activement</b> quelque chose. Sinon, la première
+            valeur est choisie par défaut, sans que l'utilisateur s'en rende
+            compte.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">4</span> La zone de texte :
+            <code>&lt;textarea&gt;</code>
+          </h3>
+          <p>
+            Pour un <b>long message</b> (commentaire, biographie, description),
+            le champ d'une ligne ne suffit pas. On utilise
+            <code>&lt;textarea&gt;</code>.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;label for="message"&gt;Ton message&lt;/label&gt;
+&lt;textarea id="message"
+          name="message"
+          rows="5"
+          placeholder="Écris ici…"&gt;&lt;/textarea&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <label for="demo-msg">Ton message</label>
+                <textarea
+                  id="demo-msg"
+                  name="demo-msg"
+                  rows="5"
+                  placeholder="Écris ici…"
+                ></textarea>
+              </div>
+              <p class="cap">
+                La hauteur se règle avec <code>rows="5"</code> (5 lignes
+                visibles).
+              </p>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t"
+              >Particularité du <code>&lt;textarea&gt;</code></span
+            >
+            Contrairement à l'<code>input</code>, ce n'est <b>pas</b> une balise
+            auto-fermante. On la ferme avec <code>&lt;/textarea&gt;</code>. Ne
+            pas oublier !
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> Grouper les champs :
+            <code>&lt;fieldset&gt;</code> et <code>&lt;legend&gt;</code>
+          </h3>
+          <p>
+            Quand un formulaire commence à avoir beaucoup de champs, on les
+            <b>regroupe</b> avec <code>&lt;fieldset&gt;</code> et on donne un
+            titre au groupe avec <code>&lt;legend&gt;</code>. Visuellement, ça
+            dessine un cadre.
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;fieldset&gt;</code>
+              <p>
+                Le conteneur du groupe. Dessine un cadre autour de ses champs.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;legend&gt;</code>
+              <p>
+                Le titre du groupe. Le navigateur le place dans le bord
+                supérieur du cadre.
+              </p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Tes infos&lt;/legend&gt;
+
+    &lt;label for="nom"&gt;Nom&lt;/label&gt;
+    &lt;input type="text" id="nom" name="nom"&gt;
+
+    &lt;label for="prenom"&gt;Prénom&lt;/label&gt;
+    &lt;input type="text" id="prenom" name="prenom"&gt;
+  &lt;/fieldset&gt;
+
+  &lt;fieldset&gt;
+    &lt;legend&gt;Ton compte&lt;/legend&gt;
+
+    &lt;label for="email2"&gt;Email&lt;/label&gt;
+    &lt;input type="email" id="email2" name="email2"&gt;
+
+    &lt;label for="mdp2"&gt;Mot de passe&lt;/label&gt;
+    &lt;input type="password" id="mdp2" name="mdp2"&gt;
+  &lt;/fieldset&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <fieldset class="fieldset-demo">
+                  <legend>Tes infos</legend>
+                  <div class="field">
+                    <label for="demo-f-nom">Nom</label>
+                    <input type="text" id="demo-f-nom" name="demo-f-nom" />
+                  </div>
+                  <div class="field" style="margin-bottom: 0">
+                    <label for="demo-f-prenom">Prénom</label>
+                    <input
+                      type="text"
+                      id="demo-f-prenom"
+                      name="demo-f-prenom"
+                    />
+                  </div>
+                </fieldset>
+                <fieldset class="fieldset-demo" style="margin-bottom: 0">
+                  <legend>Ton compte</legend>
+                  <div class="field">
+                    <label for="demo-f-email2">Email</label>
+                    <input
+                      type="email"
+                      id="demo-f-email2"
+                      name="demo-f-email2"
+                    />
+                  </div>
+                  <div class="field" style="margin-bottom: 0">
+                    <label for="demo-f-mdp2">Mot de passe</label>
+                    <input
+                      type="password"
+                      id="demo-f-mdp2"
+                      name="demo-f-mdp2"
+                    />
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Un <code>fieldset</code> = un thème</span>
+            <b>Infos personnelles</b>, <b>Adresse de livraison</b>,
+            <b>Paiement</b>… Un formulaire long est toujours découpé en
+            sections. Ça aide l'utilisateur à ne pas se perdre, et c'est
+            essentiel pour l'accessibilité.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">6</span> La validation intégrée : le HTML qui
+            vérifie tout seul
+          </h3>
+          <p>
+            Le HTML moderne peut vérifier la saisie de l'utilisateur
+            <b>sans JavaScript</b>. Il suffit d'ajouter un attribut au champ.
+          </p>
+
+          <table class="val-table">
+            <thead>
+              <tr>
+                <th>Attribut</th>
+                <th>Ce qu'il vérifie</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>required</code></td>
+                <td>
+                  Le champ doit être rempli. Sinon, le navigateur bloque
+                  l'envoi.
+                </td>
+              </tr>
+              <tr>
+                <td><code>minlength="3"</code></td>
+                <td>Au moins 3 caractères.</td>
+              </tr>
+              <tr>
+                <td><code>maxlength="20"</code></td>
+                <td>Au plus 20 caractères.</td>
+              </tr>
+              <tr>
+                <td><code>min="1"</code> / <code>max="100"</code></td>
+                <td>Pour les nombres : valeur minimale / maximale.</td>
+              </tr>
+              <tr>
+                <td><code>pattern="..."</code></td>
+                <td>Une expression régulière que la valeur doit respecter.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;label for="pseudo3"&gt;Pseudo (3 à 15 caractères)&lt;/label&gt;
+  &lt;input type="text"
+         id="pseudo3"
+         name="pseudo3"
+         required
+         minlength="3"
+         maxlength="15"&gt;
+
+  &lt;label for="age3"&gt;Âge (entre 5 et 120)&lt;/label&gt;
+  &lt;input type="number"
+         id="age3"
+         name="age3"
+         min="5"
+         max="120"&gt;
+
+  &lt;button type="submit"&gt;Envoyer&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <div class="field">
+                  <label for="demo-req"
+                    >Pseudo (3 à 15 caractères, obligatoire)</label
+                  >
+                  <input
+                    type="text"
+                    id="demo-req"
+                    name="demo-req"
+                    required
+                    minlength="3"
+                    maxlength="15"
+                  />
+                </div>
+                <div class="field">
+                  <label for="demo-age">Âge (entre 5 et 120)</label>
+                  <input
+                    type="number"
+                    id="demo-age"
+                    name="demo-age"
+                    min="5"
+                    max="120"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="btn"
+                  onclick="event.preventDefault()"
+                >
+                  Envoyer
+                </button>
+                <p style="font-size: 0.78rem; color: #888; margin: 0.8rem 0 0">
+                  💡 Essaie de cliquer sur « Envoyer » sans remplir le pseudo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Essaie vraiment !</span>
+            Clique sur « Envoyer » avec le pseudo vide : le navigateur affiche
+            une bulle
+            <b>« Veuillez remplir ce champ »</b>. Tape un pseudo d'une seule
+            lettre : il refuse aussi. Tape un pseudo de 3 lettres minimum : là
+            ça passe. <br /><br />
+            Et tu n'as écrit <b>aucun JavaScript</b>. C'est ça, la validation
+            HTML5.
+          </div>
+
+          <div class="box warn">
+            <span class="t">Attention, ce n'est pas suffisant</span>
+            La validation HTML est <b>côté client</b> : elle aide l'utilisateur,
+            mais un petit malin peut la contourner (en désactivant JavaScript,
+            ou en envoyant une requête directe). La <b>vraie</b> validation se
+            fera <b>côté serveur</b> (en PHP), plus tard dans le cours. Les deux
+            se complètent : HTML pour l'expérience, serveur pour la sécurité.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">7</span> Le grand formulaire : on met tout
+            ensemble
+          </h3>
+          <p>
+            Voici un formulaire complet qui combine <b>tout</b> ce qu'on a vu
+            dans les deux chapitres.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Tes infos&lt;/legend&gt;
+
+    &lt;label for="pseudo4"&gt;Pseudo&lt;/label&gt;
+    &lt;input type="text" id="pseudo4" name="pseudo"
+           required minlength="3"&gt;
+
+    &lt;label for="email4"&gt;Email&lt;/label&gt;
+    &lt;input type="email" id="email4" name="email" required&gt;
+
+    &lt;label for="pays4"&gt;Pays&lt;/label&gt;
+    &lt;select id="pays4" name="pays" required&gt;
+      &lt;option value=""&gt;— Choisis —&lt;/option&gt;
+      &lt;option value="fr"&gt;France&lt;/option&gt;
+      &lt;option value="be"&gt;Belgique&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/fieldset&gt;
+
+  &lt;fieldset&gt;
+    &lt;legend&gt;Ton niveau&lt;/legend&gt;
+
+    &lt;label&gt;
+      &lt;input type="radio" name="niveau" value="debutant"&gt;
+      Débutant
+    &lt;/label&gt;
+
+    &lt;label&gt;
+      &lt;input type="radio" name="niveau" value="avance"&gt;
+      Avancé
+    &lt;/label&gt;
+  &lt;/fieldset&gt;
+
+  &lt;fieldset&gt;
+    &lt;legend&gt;Tes intérêts&lt;/legend&gt;
+
+    &lt;label&gt;
+      &lt;input type="checkbox" name="interets" value="web"&gt;
+      Web
+    &lt;/label&gt;
+
+    &lt;label&gt;
+      &lt;input type="checkbox" name="interets" value="jeux"&gt;
+      Jeux vidéo
+    &lt;/label&gt;
+
+    &lt;label&gt;
+      &lt;input type="checkbox" name="interets" value="musique"&gt;
+      Musique
+    &lt;/label&gt;
+  &lt;/fieldset&gt;
+
+  &lt;label for="bio"&gt;Parle-nous de toi&lt;/label&gt;
+  &lt;textarea id="bio" name="bio" rows="4"&gt;&lt;/textarea&gt;
+
+  &lt;button type="submit"&gt;Envoyer&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <fieldset class="fieldset-demo">
+                  <legend>Tes infos</legend>
+                  <div class="field">
+                    <label for="demo-all-pseudo">Pseudo</label>
+                    <input
+                      type="text"
+                      id="demo-all-pseudo"
+                      name="demo-all-pseudo"
+                      required
+                      minlength="3"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="demo-all-email">Email</label>
+                    <input
+                      type="email"
+                      id="demo-all-email"
+                      name="demo-all-email"
+                      required
+                    />
+                  </div>
+                  <div class="field" style="margin-bottom: 0">
+                    <label for="demo-all-pays">Pays</label>
+                    <select id="demo-all-pays" name="demo-all-pays" required>
+                      <option value="">— Choisis —</option>
+                      <option value="fr">France</option>
+                      <option value="be">Belgique</option>
+                    </select>
+                  </div>
+                </fieldset>
+
+                <fieldset class="fieldset-demo">
+                  <legend>Ton niveau</legend>
+                  <div class="choice-group" style="margin: 0">
+                    <label class="choice"
+                      ><input
+                        type="radio"
+                        name="demo-all-niveau"
+                        value="debutant"
+                      />
+                      Débutant</label
+                    >
+                    <label class="choice"
+                      ><input
+                        type="radio"
+                        name="demo-all-niveau"
+                        value="avance"
+                      />
+                      Avancé</label
+                    >
+                  </div>
+                </fieldset>
+
+                <fieldset class="fieldset-demo">
+                  <legend>Tes intérêts</legend>
+                  <div class="choice-group" style="margin: 0">
+                    <label class="choice"
+                      ><input type="checkbox" name="demo-all-int" value="web" />
+                      Web</label
+                    >
+                    <label class="choice"
+                      ><input
+                        type="checkbox"
+                        name="demo-all-int"
+                        value="jeux"
+                      />
+                      Jeux vidéo</label
+                    >
+                    <label class="choice"
+                      ><input
+                        type="checkbox"
+                        name="demo-all-int"
+                        value="musique"
+                      />
+                      Musique</label
+                    >
+                  </div>
+                </fieldset>
+
+                <div class="field">
+                  <label for="demo-all-bio">Parle-nous de toi</label>
+                  <textarea
+                    id="demo-all-bio"
+                    name="demo-all-bio"
+                    rows="4"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn"
+                  onclick="event.preventDefault()"
+                >
+                  Envoyer
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Tu maîtrises maintenant les formulaires</span>
+            Ce formulaire est <b>complet</b> : champs simples, listes, boutons
+            radio, cases à cocher, zones de texte, validation HTML5,
+            regroupement accessible. C'est exactement ce que tu retrouveras sur
+            un vrai site.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Pour un groupe de boutons radio où <b>un seul</b> choix est
+            possible, que doivent partager les boutons ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Le même <code>id</code>.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Le même <code>name</code>.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Le même <code>value</code>.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Quelle balise permet de saisir un long message dans un formulaire ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;input type="text"&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;longtext&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;textarea&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            À quoi sert l'attribut <code>required</code> sur un champ ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Le navigateur bloque l'envoi si le champ est vide.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Il met le champ en rouge.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Il rend le champ obligatoire côté serveur.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Pourquoi utiliser <code>&lt;fieldset&gt;</code> et
+            <code>&lt;legend&gt;</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Pour dessiner un joli cadre autour des champs.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Pour regrouper logiquement des champs et aider l'accessibilité.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Pour envoyer les données groupées au serveur.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Formulaire de contact complet</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée un fichier <code>contact.html</code> dans ton dossier
+            <code>01-html</code>, avec :
+          </p>
+          <ul>
+            <li>Un <code>&lt;h1&gt;</code> : <code>Nous contacter</code></li>
+            <li>Un <code>&lt;p&gt;</code> de présentation.</li>
+            <li>
+              Un formulaire contenant deux <code>&lt;fieldset&gt;</code> :
+              <ul>
+                <li>
+                  <b>Fieldset 1 : « Vos coordonnées »</b><br />
+                  <code>nom</code> (text, required), <code>email</code> (email,
+                  required), <code>téléphone</code> (tel, optionnel)
+                </li>
+                <li>
+                  <b>Fieldset 2 : « Votre demande »</b><br />
+                  Un <code>select</code> « Sujet » avec 3 options (Question,
+                  Suggestion, Bug), une série de 3 boutons radio « Urgence »
+                  (Basse, Moyenne, Haute), et un <code>textarea</code> « Votre
+                  message » (required)
+                </li>
+              </ul>
+            </li>
+            <li>Un bouton <b>« Envoyer ma demande »</b>.</li>
+          </ul>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 Chaque champ doit avoir : <code>type</code>, <code>id</code>,
+            <code>name</code>, et un <code>&lt;label for="..."&gt;</code>.
+            Utilise la validation HTML (<code>required</code>,
+            <code>minlength</code>) sur les champs importants.
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Contact&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Nous contacter&lt;/h1&gt;
+  &lt;p&gt;Remplis le formulaire, on te répond sous 24h.&lt;/p&gt;
+
+  &lt;form&gt;
+    &lt;fieldset&gt;
+      &lt;legend&gt;Vos coordonnées&lt;/legend&gt;
+
+      &lt;label for="nom"&gt;Nom&lt;/label&gt;
+      &lt;input type="text" id="nom" name="nom"
+             required minlength="2"&gt;
+
+      &lt;label for="email"&gt;Email&lt;/label&gt;
+      &lt;input type="email" id="email" name="email" required&gt;
+
+      &lt;label for="tel"&gt;Téléphone (optionnel)&lt;/label&gt;
+      &lt;input type="tel" id="tel" name="tel"&gt;
+    &lt;/fieldset&gt;
+
+    &lt;fieldset&gt;
+      &lt;legend&gt;Votre demande&lt;/legend&gt;
+
+      &lt;label for="sujet"&gt;Sujet&lt;/label&gt;
+      &lt;select id="sujet" name="sujet" required&gt;
+        &lt;option value=""&gt;— Choisis —&lt;/option&gt;
+        &lt;option value="question"&gt;Question&lt;/option&gt;
+        &lt;option value="suggestion"&gt;Suggestion&lt;/option&gt;
+        &lt;option value="bug"&gt;Bug&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;p&gt;Urgence :&lt;/p&gt;
+      &lt;label&gt;
+        &lt;input type="radio" name="urgence" value="basse" checked&gt;
+        Basse
+      &lt;/label&gt;
+      &lt;label&gt;
+        &lt;input type="radio" name="urgence" value="moyenne"&gt;
+        Moyenne
+      &lt;/label&gt;
+      &lt;label&gt;
+        &lt;input type="radio" name="urgence" value="haute"&gt;
+        Haute
+      &lt;/label&gt;
+
+      &lt;label for="message"&gt;Votre message&lt;/label&gt;
+      &lt;textarea id="message" name="message"
+                rows="5" required&gt;&lt;/textarea&gt;
+    &lt;/fieldset&gt;
+
+    &lt;button type="submit"&gt;Envoyer ma demande&lt;/button&gt;
+  &lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>

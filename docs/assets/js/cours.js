@@ -52,10 +52,15 @@ window.COURS = {
         {
           id: "04-listes-et-tableaux",
           titre: "Listes et tableaux",
-          dispo: false,
+          dispo: true,
         },
-        { id: "05-formulaires", titre: "Formulaires", dispo: false },
-        { id: "06-html-semantique", titre: "HTML sémantique", dispo: false },
+        { id: "05-formulaires", titre: "Formulaires", dispo: true },
+        {
+          id: "06-formulaires-avances",
+          titre: "Formulaires — champs avancés",
+          dispo: true,
+        },
+        { id: "07-html-semantique", titre: "HTML sémantique", dispo: true },
       ],
     },
 

@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulaires — les bases · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* Aperçu formulaire dans une fausse page blanche */
+      .preview-form {
+        background: #fff;
+        color: #111;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+      }
+      .preview-form h3 {
+        font-size: 1rem;
+        margin: 0 0 1rem;
+        color: #111;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.6rem;
+      }
+      .preview-form label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.3rem;
+      }
+      .preview-form input[type="text"],
+      .preview-form input[type="email"],
+      .preview-form input[type="password"] {
+        width: 100%;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: #fff;
+        color: #111;
+        transition: border-color 0.15s;
+      }
+      .preview-form input:focus {
+        outline: none;
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+      }
+      .preview-form .field {
+        margin-bottom: 1rem;
+      }
+      .preview-form .btn {
+        background: linear-gradient(135deg, #38bdf8, #a78bfa);
+        color: #06121f;
+        border: none;
+        border-radius: 10px;
+        padding: 0.7rem 1.3rem;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .preview-form .btn:hover {
+        filter: brightness(1.08);
+      }
+
+      /* Anatomie */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* Tableau des types de input */
+      .types-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+        background: var(--panel2);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .types-table th,
+      .types-table td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .types-table th {
+        background: #141d47;
+        color: var(--cyan);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .types-table td:first-child code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.82em;
+      }
+      .types-table td:nth-child(2) {
+        color: #cdd6f8;
+      }
+      .types-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Dual */
+      .dual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      @media (max-width: 620px) {
+        .dual {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dual-lbl {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .dual-lbl.ok {
+        color: var(--green);
+      }
+      .dual-lbl.ko {
+        color: #f43f5e;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 1 · HTML</p>
+          <h1>Formulaires — les bases</h1>
+          <p class="lead">
+            Un formulaire, c'est ce qui transforme un site <b>passif</b> en site
+            <b>interactif</b> : inscription, contact, recherche, connexion…
+            C'est aussi <b>le pont</b> vers le backend (le PHP qu'on verra plus
+            tard). On commence ici par le squelette et les champs de base.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> À quoi sert un formulaire ?</h3>
+          <p>
+            Tout ce que tu fais sur le web qui « envoie » quelque chose passe
+            par un formulaire : te connecter, créer un compte, écrire un
+            commentaire, chercher une vidéo, valider une commande…
+          </p>
+          <p>
+            Un formulaire, c'est une <b>zone de saisie</b> dans laquelle
+            l'utilisateur écrit ou choisit des choses. Quand il clique sur le
+            bouton d'envoi, <b>les données partent vers un serveur</b> pour être
+            traitées.
+          </p>
+
+          <div class="box info">
+            <span class="t">Le trajet des données</span>
+            <b>Utilisateur</b> → remplit le formulaire →
+            <b>clique « Envoyer »</b> → les données voyagent →
+            <b>serveur</b> les reçoit → traite (stocke, vérifie, répond).
+            <br /><br />
+            Nous, on s'occupe aujourd'hui de la <b>partie visible</b> : le
+            formulaire. Le serveur, ce sera pour plus tard.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> Le squelette : <code>&lt;form&gt;</code>
+          </h3>
+          <p>
+            Tous les champs d'un formulaire sont enveloppés dans une balise
+            <code>&lt;form&gt;</code>. Elle indique au navigateur : « ceci est
+            un formulaire ».
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;form&gt;</code>
+              <p>
+                Le conteneur. Contient tous les champs et le bouton d'envoi.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>action="..."</code>
+              <p>
+                Vers où envoyer les données (l'adresse d'un script serveur).
+                <b>On peut l'omettre pour l'instant.</b>
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>method="..."</code>
+              <p>Comment envoyer (GET ou POST). On verra ça plus tard aussi.</p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;!-- Tous les champs vont ici --&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <h3>Un formulaire vide, c'est… vide</h3>
+                <p style="color: #888; font-size: 0.85rem; margin: 0">
+                  Rien à voir pour l'instant : on n'a mis aucun champ à
+                  l'intérieur.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">À retenir</span>
+            La balise <code>&lt;form&gt;</code> <b>ne s'affiche pas</b> à
+            l'écran. C'est juste une enveloppe invisible qui dit au navigateur «
+            tout ce qui est dedans fait partie d'un même formulaire ».
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">3</span> Le champ de texte :
+            <code>&lt;input&gt;</code>
+          </h3>
+          <p>
+            La balise <code>&lt;input&gt;</code> est <b>auto-fermante</b> et
+            surtout <b>très polyvalente</b> : son comportement change
+            complètement selon la valeur de son attribut <code>type</code>.
+          </p>
+          <p>
+            Le type le plus courant est <code>type="text"</code> — un champ
+            texte simple.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;input type="text" name="prenom"&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <input
+                  type="text"
+                  name="demo-prenom"
+                  placeholder="Écris quelque chose…"
+                />
+              </div>
+              <p class="cap">Clique dedans : tu peux taper du texte.</p>
+            </div>
+          </div>
+
+          <p>
+            Un <code>&lt;input&gt;</code> a besoin de
+            <b>deux attributs obligatoires</b> en pratique :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>type="..."</code>
+              <p>
+                Quel genre de champ c'est (texte, email, mot de passe, case à
+                cocher…).
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>name="..."</code>
+              <p>
+                <b>Le nom du champ.</b> C'est <b>crucial</b> : quand le
+                formulaire est envoyé au serveur, chaque donnée est étiquetée
+                par son <code>name</code>. Sans <code>name</code>, la donnée est
+                <b>perdue</b>.
+              </p>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">L'attribut <code>name</code>, c'est sacré</span>
+            Un <code>input</code> sans <code>name</code> n'envoie rien. C'est
+            <b>l'erreur n°1</b> quand un formulaire « ne marche pas ». Prends
+            l'habitude : <b>chaque champ a un name.</b>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">4</span> Les types d'input à connaître</h3>
+          <p>
+            Voici les types les plus utilisés. Le <code>type</code> change
+            <b>l'apparence</b> du champ (clavier adapté sur mobile, masquage
+            pour les mots de passe, validation automatique…).
+          </p>
+
+          <table class="types-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Ce qu'il fait</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>text</code></td>
+                <td>Champ texte simple (le plus courant).</td>
+              </tr>
+              <tr>
+                <td><code>email</code></td>
+                <td>
+                  Vérifie que ça ressemble à un email. Clavier adapté sur
+                  mobile.
+                </td>
+              </tr>
+              <tr>
+                <td><code>password</code></td>
+                <td>Masque la saisie avec des ••••.</td>
+              </tr>
+              <tr>
+                <td><code>number</code></td>
+                <td>
+                  N'accepte que des chiffres. Flèches +/- sur certains
+                  navigateurs.
+                </td>
+              </tr>
+              <tr>
+                <td><code>tel</code></td>
+                <td>Numéro de téléphone. Clavier numérique sur mobile.</td>
+              </tr>
+              <tr>
+                <td><code>url</code></td>
+                <td>Vérifie que c'est une URL valide.</td>
+              </tr>
+              <tr>
+                <td><code>search</code></td>
+                <td>Champ de recherche (peut avoir une croix pour effacer).</td>
+              </tr>
+              <tr>
+                <td><code>date</code></td>
+                <td>Sélecteur de date (calendrier).</td>
+              </tr>
+              <tr>
+                <td><code>color</code></td>
+                <td>Sélecteur de couleur.</td>
+              </tr>
+              <tr>
+                <td><code>file</code></td>
+                <td>Bouton pour choisir un fichier à envoyer.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;input type="text"     name="pseudo"&gt;
+  &lt;input type="email"    name="email"&gt;
+  &lt;input type="password" name="motdepasse"&gt;
+  &lt;input type="number"   name="age"&gt;
+  &lt;input type="date"     name="naissance"&gt;
+  &lt;input type="color"    name="couleur"&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <div class="field">
+                  <label>Pseudo</label>
+                  <input type="text" name="demo-pseudo" />
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" name="demo-email" />
+                </div>
+                <div class="field">
+                  <label>Mot de passe</label>
+                  <input type="password" name="demo-mdp" />
+                </div>
+                <div class="field">
+                  <label>Âge</label>
+                  <input type="number" name="demo-age" />
+                </div>
+                <div class="field">
+                  <label>Date de naissance</label>
+                  <input type="date" name="demo-naissance" />
+                </div>
+                <div class="field" style="margin-bottom: 0">
+                  <label>Couleur préférée</label>
+                  <input
+                    type="color"
+                    name="demo-couleur"
+                    style="width: 60px; height: 40px; padding: 2px"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Pourquoi c'est utile ?</span>
+            Utiliser <code>type="email"</code> plutôt que
+            <code>type="text"</code> pour un email :
+            <ul>
+              <li>
+                Le navigateur vérifie automatiquement le format
+                (<code>truc@domaine</code>).
+              </li>
+              <li>
+                Sur mobile, le clavier affiche la touche <code>@</code> en
+                direct.
+              </li>
+              <li>
+                C'est plus accessible (un lecteur d'écran comprend le rôle du
+                champ).
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> <code>&lt;label&gt;</code> : le meilleur
+            ami du champ
+          </h3>
+          <p>
+            Un champ sans étiquette, c'est un formulaire muet. L'utilisateur
+            doit <b>deviner</b> ce qu'on attend. La balise
+            <code>&lt;label&gt;</code> sert exactement à ça :
+            <b>associer un texte descriptif à un champ</b>.
+          </p>
+          <p>
+            Il y a <b>deux façons</b> de faire le lien entre un label et un
+            input :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>for="..." + id="..."</code>
+              <p>
+                <b>Méthode classique.</b> Le <code>for</code> du label doit
+                correspondre à l'<code>id</code> du champ. Un
+                <code>id</code> doit être <b>unique</b> sur la page.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;label&gt;…&lt;input&gt;…&lt;/label&gt;</code>
+              <p>
+                <b>Méthode par enveloppement.</b> L'input est <b>dans</b> le
+                label. Plus simple, mais moins flexible à styliser.
+              </p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;!-- Méthode 1 : for + id --&gt;
+&lt;label for="prenom"&gt;Prénom&lt;/label&gt;
+&lt;input type="text" id="prenom" name="prenom"&gt;
+
+&lt;!-- Méthode 2 : enveloppement --&gt;
+&lt;label&gt;
+  Email
+  &lt;input type="email" name="email"&gt;
+&lt;/label&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <div class="field">
+                  <label for="demo-prenom">Prénom</label>
+                  <input type="text" id="demo-prenom" name="demo-prenom" />
+                </div>
+                <div class="field" style="margin-bottom: 0">
+                  <label
+                    >Email
+                    <input
+                      type="email"
+                      name="demo-email"
+                      style="margin-top: 0.3rem"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Le test magique</span>
+            Clique sur le <b>mot « Prénom »</b> dans la démo ci-dessus. Le
+            curseur saute automatiquement dans le champ. C'est ça, un label bien
+            fait. C'est aussi ce qui permet à un lecteur d'écran d'annoncer
+            <em>« Prénom, champ texte »</em>.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">6</span> <code>placeholder</code> : un indice
+            temporaire
+          </h3>
+          <p>
+            Le <code>placeholder</code> affiche un texte grisé
+            <b>à l'intérieur</b> du champ tant que l'utilisateur n'a rien tapé.
+            Ça aide à donner un exemple.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;input type="email"
+       name="email"
+       placeholder="ton.email@exemple.com"&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <input
+                  type="email"
+                  name="demo-ph"
+                  placeholder="ton.email@exemple.com"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Piège classique</span>
+            Le <code>placeholder</code> <b>ne remplace PAS</b> un
+            <code>&lt;label&gt;</code>. Il disparaît dès que l'utilisateur tape,
+            et n'est pas lu par tous les lecteurs d'écran. Un bon formulaire a
+            <b>toujours un label</b>, et <b>parfois</b> un placeholder en bonus.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">7</span> Le bouton d'envoi</h3>
+          <p>
+            Un formulaire sans bouton, c'est une porte sans poignée. Deux
+            options pour créer un bouton d'envoi :
+          </p>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ok">✅ Recommandé</div>
+              <pre><code class="language-markup">&lt;button type="submit"&gt;Envoyer&lt;/button&gt;</code></pre>
+            </div>
+            <div>
+              <div class="dual-lbl">➕ Ancienne méthode</div>
+              <pre><code class="language-markup">&lt;input type="submit" value="Envoyer"&gt;</code></pre>
+            </div>
+          </div>
+
+          <p>
+            Les deux fonctionnent, mais la balise
+            <code>&lt;button&gt;</code> est préférée parce qu'elle :
+          </p>
+          <ul>
+            <li>
+              peut contenir <b>du HTML</b> (une icône, une image, un emoji…) ;
+            </li>
+            <li>a un rôle explicite dans le HTML sémantique.</li>
+          </ul>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;label for="pseudo"&gt;Pseudo&lt;/label&gt;
+  &lt;input type="text" id="pseudo" name="pseudo"&gt;
+
+  &lt;button type="submit"&gt;S'inscrire&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <div class="field">
+                  <label for="demo-pseudo2">Pseudo</label>
+                  <input type="text" id="demo-pseudo2" name="demo-pseudo2" />
+                </div>
+                <button
+                  type="submit"
+                  class="btn"
+                  onclick="event.preventDefault()"
+                >
+                  S'inscrire
+                </button>
+              </div>
+              <p class="cap">
+                Le clic déclenche <code>submit</code> — l'envoi au serveur
+                (qu'on fera plus tard).
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t"><code>type="submit"</code>, c'est important</span>
+            Le <code>type</code> du <code>&lt;button&gt;</code> peut être :
+            <ul>
+              <li><code>submit</code> → envoie le formulaire (par défaut)</li>
+              <li>
+                <code>button</code> → ne fait rien tout seul (utile avec
+                JavaScript)
+              </li>
+              <li><code>reset</code> → efface tous les champs du formulaire</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">8</span> Premier formulaire complet</h3>
+          <p>
+            Assemblons tout ce qu'on a vu dans un formulaire simple, mais bien
+            fait.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;form&gt;
+  &lt;h3&gt;Créer un compte&lt;/h3&gt;
+
+  &lt;label for="pseudo"&gt;Pseudo&lt;/label&gt;
+  &lt;input type="text"
+         id="pseudo"
+         name="pseudo"
+         placeholder="ton pseudo"&gt;
+
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;input type="email"
+         id="email"
+         name="email"
+         placeholder="ton.email@exemple.com"&gt;
+
+  &lt;label for="password"&gt;Mot de passe&lt;/label&gt;
+  &lt;input type="password"
+         id="password"
+         name="password"&gt;
+
+  &lt;button type="submit"&gt;Créer mon compte&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-form">
+                <h3>Créer un compte</h3>
+                <div class="field">
+                  <label for="demo-f-pseudo">Pseudo</label>
+                  <input
+                    type="text"
+                    id="demo-f-pseudo"
+                    name="demo-f-pseudo"
+                    placeholder="ton pseudo"
+                  />
+                </div>
+                <div class="field">
+                  <label for="demo-f-email">Email</label>
+                  <input
+                    type="email"
+                    id="demo-f-email"
+                    name="demo-f-email"
+                    placeholder="ton.email@exemple.com"
+                  />
+                </div>
+                <div class="field">
+                  <label for="demo-f-mdp">Mot de passe</label>
+                  <input type="password" id="demo-f-mdp" name="demo-f-mdp" />
+                </div>
+                <button
+                  type="submit"
+                  class="btn"
+                  onclick="event.preventDefault()"
+                >
+                  Créer mon compte
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Tu viens d'écrire un vrai formulaire</span>
+            C'est exactement la structure que tu retrouves sur n'importe quel
+            site (Twitter, Instagram, Amazon…). Les champs sont différents, la
+            logique est la même.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Quel attribut identifie un champ <b>pour le serveur</b> (sans lui,
+            la donnée est perdue) ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>id</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>name</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>placeholder</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Quelle balise associe un texte descriptif à un champ de formulaire ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;p&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;title&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;label&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Pour un champ où l'utilisateur tape son mot de passe, quel
+            <code>type</code> utilises-tu ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>password</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>text</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>secret</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Le <code>placeholder</code> peut-il <b>remplacer</b> un
+            <code>&lt;label&gt;</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Oui, c'est plus court.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Non, il disparaît à la saisie et n'est pas toujours lu par les
+              lecteurs d'écran.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Oui, sur mobile seulement.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Ta page d'inscription</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée un fichier <code>inscription.html</code> dans ton dossier
+            <code>01-html</code>, avec :
+          </p>
+          <ul>
+            <li>
+              Un <code>&lt;h1&gt;</code> : <code>Rejoins l'aventure</code>
+            </li>
+            <li>Un <code>&lt;p&gt;</code> de présentation.</li>
+            <li>
+              Un formulaire contenant :
+              <ul>
+                <li>
+                  Un champ <b>pseudo</b> (type <code>text</code>) avec un label
+                  et un placeholder.
+                </li>
+                <li>
+                  Un champ <b>email</b> (type <code>email</code>) avec un label
+                  et un placeholder.
+                </li>
+                <li>
+                  Un champ <b>mot de passe</b> (type <code>password</code>) avec
+                  un label.
+                </li>
+                <li>
+                  Un champ <b>date de naissance</b> (type <code>date</code>)
+                  avec un label.
+                </li>
+                <li>Un bouton <b>« Créer mon compte »</b>.</li>
+              </ul>
+            </li>
+          </ul>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 <b>Chaque champ</b> doit avoir : un <code>type</code>, un
+            <code>id</code>, un <code>name</code>, et un
+            <code>&lt;label for="..."&gt;</code> correspondant. Vérifie en
+            cliquant sur chaque label : le curseur doit sauter dans le champ.
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Inscription&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Rejoins l'aventure&lt;/h1&gt;
+  &lt;p&gt;Quelques infos et c'est parti.&lt;/p&gt;
+
+  &lt;form&gt;
+    &lt;label for="pseudo"&gt;Pseudo&lt;/label&gt;
+    &lt;input type="text" id="pseudo" name="pseudo"
+           placeholder="ton pseudo"&gt;
+
+    &lt;label for="email"&gt;Email&lt;/label&gt;
+    &lt;input type="email" id="email" name="email"
+           placeholder="ton.email@exemple.com"&gt;
+
+    &lt;label for="password"&gt;Mot de passe&lt;/label&gt;
+    &lt;input type="password" id="password" name="password"&gt;
+
+    &lt;label for="naissance"&gt;Date de naissance&lt;/label&gt;
+    &lt;input type="date" id="naissance" name="naissance"&gt;
+
+    &lt;button type="submit"&gt;Créer mon compte&lt;/button&gt;
+  &lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>
