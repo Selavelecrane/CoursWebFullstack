@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Palmyre</title>
+    <link rel="stylesheet" href="04-site_palmyre/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kripa:wght@100..900&family=Snowburst+One&family=Spicy+Rice&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="logo">
+          <span>PALMYRE</span>
+        </div>
+        <nav>
+          <ul>
+            <li><a>HOME</a></li>
+            <li><a>NOTRE CARTE</a></li>
+            <li><a>CONTACT</a></li>
+          </ul>
+        </nav>
+        <div class="lang">
+          <ul>
+            <li><a>FR</a></li>
+            <li><span>|</span></li>
+            <li><a>EN</a></li>
+          </ul>
+        </div>
+      </div>
+      <section class="banner">
+        <div>
+          <!--<h2>Nous sommes ouverts</h2>
+                <p> _</p>
+                <p>Lundi au Vendredi</p>
+                <p>Samedi</p>
+                <p>Dimanche fermé</p>-->
+          <img class="img-banner" src="kebbe-mezze.jpg" />
+        </div>
+        <div>
+          <h1>Découvrez notre cuisine Syrienne authentique !</h1>
+        </div>
+      </section>
+    </header>
+    <main>
+      <!--<section class="banner">
+            <div>
+                <img src="https://lesultan.fr/wp-content/uploads/2025/07/ASSIETTE_FALAFEL_1-2-1.jpg">
+            </div>
+            <div>
+                <h1>Le Palmyre</h1>
+                <p>Le meilleur restaurant Syrien de Genève</p>
+            </div>
+        </section>-->
+      <section class="main-menu">
+        <aside>
+          <nav>
+            <ul>
+              <li class="menu-list active-color" data-action="entree">
+                Entrées
+              </li>
+              <li class="menu-list" data-action="plat">Plats</li>
+              <li class="menu-list" data-action="dessert">Desserts</li>
+            </ul>
+          </nav>
+        </aside>
+        <div class="menu-view">
+          <div class="menu-cat-display active" data-event="entree">
+            <div class="menu-cat">
+              <h2 class="cat-title">Nos entrées</h2>
+              <div class="cat-details">
+                <article class="menu-item">
+                  <div class="item-header">
+                    <div class="article-image">
+                      <img src="https://placehold.co/200x200" />
+                    </div>
+                    <h3>Salade Palmyre</h3>
+                    <span class="price">12 €</span>
+                  </div>
+                  <p class="description">
+                    Feta, olives kalamata, tomates fraîches et huile d'olive
+                    vierge.
+                  </p>
+                </article>
+                <article class="menu-item">
+                  <div class="item-header">
+                    <div class="article-image">
+                      <img src="https://placehold.co/200x200" />
+                    </div>
+                    <h3>Soupe du Jour</h3>
+                    <span class="price">9 €</span>
+                  </div>
+                  <p class="description">
+                    Légumes de saison bio et croûtons maison.
+                  </p>
+                </article>
+
+                <article class="menu-item">
+                  <div class="item-header">
+                    <div class="article-image">
+                      <img src="https://placehold.co/200x200" />
+                    </div>
+                    <h3>Salade Palmyre</h3>
+                    <span class="price">12 €</span>
+                  </div>
+                  <p class="description">
+                    Feta, olives kalamata, tomates fraîches et huile d'olive
+                    vierge.
+                  </p>
+                </article>
+                <article class="menu-item">
+                  <div class="article-image">
+                    <img src="https://placehold.co/200x200" />
+                  </div>
+                  <div class="item-header">
+                    <h3>Soupe du Jour</h3>
+                    <span class="price">9 €</span>
+                  </div>
+                  <p class="description">
+                    Légumes de saison bio et croûtons maison.
+                  </p>
+                </article>
+
+                <article class="menu-item">
+                  <div class="item-header">
+                    <div class="article-image">
+                      <img src="https://placehold.co/200x200" />
+                    </div>
+                    <h3>Salade Palmyre</h3>
+                    <span class="price">12 €</span>
+                  </div>
+                  <p class="description">
+                    Feta, olives kalamata, tomates fraîches et huile d'olive
+                    vierge.
+                  </p>
+                </article>
+                <article class="menu-item">
+                  <div class="article-image">
+                    <img src="https://placehold.co/200x200" />
+                  </div>
+                  <div class="item-header">
+                    <h3>Soupe du Jour</h3>
+                    <span class="price">9 €</span>
+                  </div>
+                  <p class="description">
+                    Légumes de saison bio et croûtons maison.
+                  </p>
+                </article>
+                <article class="menu-item">
+                  <div class="article-image">
+                    <img src="https://placehold.co/200x200" />
+                  </div>
+                  <div class="item-header">
+                    <h3>Soupe du Jour</h3>
+                    <span class="price">9 €</span>
+                  </div>
+                  <p class="description">
+                    Légumes de saison bio et croûtons maison.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+          <div class="menu-cat-display" data-event="plat">
+            <div class="menu-cat">
+              <h2 class="cat-title">Nos plats</h2>
+              <div class="cat-details">
+                <article class="menu-item">
+                  <div class="article-image">
+                    <img src="https://placehold.co/200x200" />
+                  </div>
+                  <div class="item-header">
+                    <h3>Filet de Bar Rôti</h3>
+                    <span class="price">24 €</span>
+                  </div>
+                  <p class="description">
+                    Mousseline de céleri et sauce au citron vert.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+          <div class="menu-cat-display" data-event="dessert">
+            <div class="menu-cat">
+              <h2 class="cat-title">Nos desserts</h2>
+              <div class="cat-details">
+                <article class="menu-item">
+                  <div class="article-image">
+                    <img src="https://placehold.co/200x200" />
+                  </div>
+                  <div class="item-header">
+                    <h3>Tiramisu Maison</h3>
+                    <span class="price">8 €</span>
+                  </div>
+                  <p class="description">
+                    Café espresso, mascarpone et cacao amer.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <section class="location-section">
+        <h2>Nous trouver</h2>
+        <p>Rue de la Terrassière, Genève</p>
+
+        <!-- Carte Google Maps responsive sans clé API -->
+        <div class="map-container">
+          <iframe
+            src="https://maps.google.com/maps?q=Palmyre%20Geneve&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            width="100%"
+            height="350"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          >
+          </iframe>
+        </div>
+      </section>
+      <p>© 2026 - Tous droits réservés</p>
+    </footer>
+    <script>
+      const mainMenu = document.querySelector(".main-menu");
+      mainMenu.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-action]");
+        if (!button) return;
+        const action = button.dataset.action;
+        const target = document.querySelector(`[data-event="${action}"]`);
+        document.querySelectorAll(".menu-cat-display").forEach((e) => {
+          e.classList.remove("active");
+        });
+        document.querySelectorAll(".menu-list").forEach((e) => {
+          e.classList.remove("active-color");
+        });
+        target.classList.add("active");
+        button.classList.add("active-color");
+      });
+    </script>
+  </body>
+</html>

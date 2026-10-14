@@ -1,0 +1,282 @@
+/* ==========================================================================
+CSS Reset Moderne & Épuré
+========================================================================== */
+
+/* 1. Modèle de boîte universel (Box-sizing)
+Inclut le padding et les bordures dans la largeur/hauteur totale de l'élément */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* 2. Suppression des marges et paddings par défaut sur tous les éléments */
+
+ *   {
+    margin: 0;
+    padding: 0;
+}
+
+/* 3. Configuration de base du document HTML / BODY */
+html {
+/* Évite les sauts brutaux lors du défilement vers des ancres (#) */
+scroll-behavior: smooth;
+}
+
+body {
+    /* Définit une hauteur minimale équivalente à tout l'écran */
+min-height: 100vh;
+/* Ligne de texte plus aérée et agréable à lire */
+line-height: 1.5;
+/* Amélioration du rendu des polices */
+-webkit-font-smoothing: antialiased;
+/* Police système par défaut si aucune police n'est chargée */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* 4. Rendre les médias réactifs (Images, Vidéos, SVG) */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* 5. Réinitialisation des formulaires et boutons */
+input,
+button,
+textarea,
+select {
+font: inherit; /* Hérite de la police et de la taille du parent */
+}
+
+/* 6. Suppression du style par défaut des listes (optionnel mais pratique) */
+ul,
+ol {
+    list-style: none;
+}
+
+/* 7. Liens plus propres par défaut */
+a {
+    text-decoration-skip-ink: auto;
+    color: inherit;
+}
+
+* {
+    /*background-color: aquamarine;*/
+    /*border: 1px solid black;*/
+}
+:root {
+    /* Couleurs principales */
+    --primary-color: rgb(237, 5, 24);
+    --secondary-color: #ED0518;
+    --primary-hover: rgb(156, 14, 0);
+    /*--bg-color: #4D0016;*/
+    --bg-color-dark:rgb(255, 175, 20);
+    --bg-color-light: rgb(255, 210, 106);
+    --text-color-light: rgba(255, 175, 2, 0.9);
+    --text-color-dark: rgba(84, 57, 0, 0.9);
+}
+body {
+    min-height: 100vh;
+    /*background-color: var(--bg-color-dark);*/
+    background: linear-gradient(135deg, rgb(255, 240, 206) 40%, rgb(255, 249, 234) 60%);
+    /* 1. Transforme le body en conteneur Flex vertical */
+    display: flex;
+    flex-direction: column;
+    
+    
+    /* (garder vos autres propriétés : line-height, font-family, etc.) */
+}
+header {
+    /*display: flex;
+    justify-content: space-between;
+    align-items: end;*/
+    /*color: var(--text-color-light);*/
+    /*background-image: url("https://lesultan.fr/wp-content/uploads/2025/07/ASSIETTE_FALAFEL_1-2-1.jpg");*/
+    /*background: linear-gradient(135deg, rgb(156, 14, 0) 20%, rgb(20, 20, 20) 20%);*/
+    /*background:
+            linear-gradient(217deg, rgba(101, 4, 19, 0.8)),
+            linear-gradient(127deg, rgba(74, 1, 8, 1)),
+            linear-gradient(336deg, rgba(237, 1, 24, 1));*/
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    /*background: linear-gradient(135deg, rgb(156, 14, 0) 30%, var(--bg-color-dark) 30%);*/
+    color: var(--text-color-dark);
+}
+.logo {
+    min-height: 80px;
+    min-width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*color: var(--bg-color);*/
+    font-size: 3rem;
+    font-family: "Snowburst One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    /*font-weight:900;*/
+}
+.navbar nav ul{
+    display: flex;
+    gap: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.navbar .lang ul {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.0rem;
+    /*font-weight: 700;*/
+}
+
+.banner {
+    display: flex;
+    /*min-height: 400px;*/
+    padding: 1rem 0;
+    color: var(--text-color-dark);
+    /*color: rgb(255, 222, 160);*/
+    font-size: 1.5rem;
+    font-family:"Snowburst One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    max-height: 600px;
+}
+
+.img-banner {
+    /*max-width: 200px;*/
+    /*opacity: 0.5;*/
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    
+    filter: drop-shadow(16px 16px 20px var(--text-color-dark));
+}
+.banner div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+}
+/*.banner div {
+    flex: 1;
+    
+}*/
+main {
+    flex: 1;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 30px;
+    margin: 2rem;
+    color: var(--text-color-dark);
+}
+.main-menu {
+    display: flex;
+    /*background-color: rgb(246, 219, 111);*/
+    /*flex: 1 1 20%;*/
+}
+
+.main-menu aside {
+    flex: 0 0 20%;
+    /*top: 0;
+    position:sticky;
+    align-self: start;*/
+    background-color: white;
+
+}
+
+.main-menu aside ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.menu-cat-display {
+    display: none;
+}
+.menu-cat {
+    display: flex;
+    border-left: 1px solid grey;
+    padding-left: 3rem;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.active {
+    display: block;
+    
+}
+.menu-list {
+    /*background-color: white;*/
+    /*padding: 1rem 0;*/
+}
+.active-color {
+    border: 2px solid var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 3px;
+    padding: 0.5rem;
+}
+.menu-view {
+    flex: 1 1 80%;
+    /*background-color: var(--bg-color-light);*/
+}
+.cat-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    align-items: center;
+    gap: 1rem;
+}
+.menu-item {
+    /*flex: 0 1 200px;*/
+    max-width: 300px;
+    display: flex;
+    flex-direction:column;
+    justify-content: space-between;
+    gap: 2rem;
+    border: 1px solid var(--bg-color-dark);
+    border-radius: .5rem;
+}
+.cat-title {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+.article-image {
+    display: flex;
+    justify-content: center;
+}
+
+@media(max-width:760px) {
+    main {
+        padding: 0.8rem;
+        margin: 0;
+    }
+
+    .main-menu {
+        flex-direction: column;
+    }
+
+    .main-menu aside {
+        flex: 1;
+    }
+
+    .main-menu aside nav ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.5rem 0;
+    }
+    .menu-cat {
+        padding-left: 0;
+        border: none;
+    }
+}

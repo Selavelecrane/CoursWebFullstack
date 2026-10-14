@@ -120,7 +120,7 @@ window.COURS = {
         { id: "01-carte-de-visite", titre: "Carte de visite", dispo: false },
         { id: "02-todo-list", titre: "Todo list", dispo: false },
         { id: "03-mini-jeu", titre: "Mini-jeu", dispo: false },
-        { id: "04-palmyre", titre: "Site web Palmyre", dispo: true },
+        { id: "04-site_palmyre", titre: "Site web Palmyre", dispo: true },
       ],
     },
   ],
