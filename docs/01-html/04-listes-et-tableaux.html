@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listes et tableaux · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* ---- Zone d'aperçu (mini navigateur blanc) ---- */
+      .preview {
+        background: #fff;
+        color: #111;
+        padding: 1.3rem 1.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        font-family: Georgia, "Times New Roman", serif;
+        line-height: 1.6;
+      }
+      .preview ul,
+      .preview ol {
+        margin: 0.5rem 0 0.5rem 1.4rem;
+        color: #333;
+      }
+      .preview ul li,
+      .preview ol li {
+        margin: 0.25rem 0;
+        font-size: 0.98rem;
+      }
+      .preview ul ul,
+      .preview ol ol,
+      .preview ul ol,
+      .preview ol ul {
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+      }
+      .preview p {
+        font-size: 0.98rem;
+        color: #333;
+        margin: 0.5rem 0;
+      }
+      .preview h3 {
+        color: #111;
+        font-size: 1.05rem;
+        margin: 1rem 0 0.4rem;
+        font-family: inherit;
+      }
+
+      /* ---- Tableaux ---- */
+      .preview table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0.6rem 0;
+        font-family: inherit;
+        font-size: 0.94rem;
+      }
+      .preview table th,
+      .preview table td {
+        border: 1px solid #ccc;
+        padding: 0.5rem 0.8rem;
+        text-align: left;
+        color: #333;
+      }
+      .preview table th {
+        background: #f3f4f6;
+        font-weight: 700;
+        color: #111;
+      }
+      .preview table caption {
+        font-style: italic;
+        color: #666;
+        padding: 0.3rem 0;
+        caption-side: top;
+        text-align: left;
+        font-size: 0.88rem;
+      }
+      .preview table tbody tr:nth-child(even) {
+        background: #fafafa;
+      }
+
+      /* ---- Anatomie ligne par ligne ---- */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* ---- Dual comparaison ---- */
+      .dual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      @media (max-width: 620px) {
+        .dual {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dual-lbl {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .dual-lbl.ok {
+        color: var(--green);
+      }
+      .dual-lbl.ko {
+        color: #f43f5e;
+      }
+
+      /* ---- Structure arborescente de liste imbriquée ---- */
+      .tree {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        color: #cdd6f8;
+        line-height: 1.8;
+        margin: 1rem 0;
+      }
+      .tree .tag {
+        color: #7dd3fc;
+      }
+      .tree .comment {
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      /* ---- Encart piège tableau ---- */
+      .layout-trap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding: 1.2rem;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        margin: 1rem 0;
+      }
+      @media (max-width: 640px) {
+        .layout-trap {
+          grid-template-columns: 1fr;
+        }
+      }
+      .layout-trap .col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .layout-trap .col h4 {
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .layout-trap .col.bad h4 {
+        color: #fda4af;
+      }
+      .layout-trap .col.good h4 {
+        color: #6ee7b7;
+      }
+      .layout-trap .fake-table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.85rem;
+      }
+      .layout-trap .fake-table td {
+        border: 1px solid #3b4d92;
+        padding: 0.5rem;
+        color: #cdd6f8;
+        text-align: center;
+        background: rgba(56, 189, 248, 0.06);
+      }
+      .layout-trap .fake-table .hdr {
+        background: rgba(244, 63, 94, 0.15);
+        color: #fda4af;
+        font-weight: 700;
+      }
+      .layout-trap .real-flex {
+        display: grid;
+        gap: 0.4rem;
+      }
+      .layout-trap .real-flex .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.4rem;
+      }
+      .layout-trap .real-flex .cell {
+        background: rgba(52, 211, 153, 0.15);
+        border: 1px solid rgba(52, 211, 153, 0.35);
+        border-radius: 6px;
+        padding: 0.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #6ee7b7;
+      }
+      .layout-trap .real-flex .cell.hdr {
+        background: rgba(52, 211, 153, 0.28);
+        color: #fff;
+        font-weight: 700;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 1 · HTML</p>
+          <h1>Listes et tableaux</h1>
+          <p class="lead">
+            Deux familles de balises qui <b>structurent des données</b> : les
+            listes pour énumérer, les tableaux pour présenter en grille.
+            Attention, l'un des deux est <b>piégeux</b> — on verra pourquoi.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> Pourquoi des listes ?</h3>
+          <p>
+            Dès qu'on a <b>plusieurs choses</b> à présenter les unes sous les
+            autres — une recette, un menu, une playlist, une to-do — on utilise
+            une liste.
+          </p>
+          <p>HTML propose <b>deux types</b> de listes principales :</p>
+          <ul>
+            <li>
+              Les listes <b>non ordonnées</b> : l'ordre n'a pas d'importance
+              (une liste de courses, un menu de navigation).
+            </li>
+            <li>
+              Les listes <b>ordonnées</b> : l'ordre compte (une recette étape
+              par étape, un classement).
+            </li>
+          </ul>
+
+          <div class="box tip">
+            <span class="t">La question à te poser</span>
+            Si tu <b>mélangeais les éléments</b>, est-ce que ça changerait
+            quelque chose ?<br />
+            <b>Non</b> → liste non ordonnée (<code>&lt;ul&gt;</code>).<br />
+            <b>Oui</b> → liste ordonnée (<code>&lt;ol&gt;</code>).
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> La liste non ordonnée :
+            <code>&lt;ul&gt;</code>
+          </h3>
+          <p>
+            <code>&lt;ul&gt;</code> signifie <em>unordered list</em>. Elle
+            contient une suite de <b>balises <code>&lt;li&gt;</code></b> (<em
+              >list item</em
+            >, « élément de liste »).
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;ul&gt;
+  &lt;li&gt;Pommes&lt;/li&gt;
+  &lt;li&gt;Bananes&lt;/li&gt;
+  &lt;li&gt;Cerises&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview">
+                <ul>
+                  <li>Pommes</li>
+                  <li>Bananes</li>
+                  <li>Cerises</li>
+                </ul>
+              </div>
+              <p class="cap">
+                Le navigateur affiche une <b>puce</b> (un petit rond) devant
+                chaque élément.
+              </p>
+            </div>
+          </div>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;ul&gt;</code>
+              <p>
+                Ouvre la liste. Contient <b>uniquement</b> des
+                <code>&lt;li&gt;</code> (en HTML moderne).
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;li&gt;</code>
+              <p>Un élément de la liste. C'est ici qu'on met le texte.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;/ul&gt;</code>
+              <p>Ferme la liste.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">3</span> La liste ordonnée :
+            <code>&lt;ol&gt;</code>
+          </h3>
+          <p>
+            <code>&lt;ol&gt;</code> signifie <em>ordered list</em>. Fonctionne
+            comme <code>&lt;ul&gt;</code>, mais le navigateur affiche des
+            <b>numéros</b> au lieu de puces.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;ol&gt;
+  &lt;li&gt;Casser les œufs dans un bol&lt;/li&gt;
+  &lt;li&gt;Ajouter la farine&lt;/li&gt;
+  &lt;li&gt;Mélanger jusqu'à obtenir une pâte lisse&lt;/li&gt;
+  &lt;li&gt;Cuire 20 minutes à 180 °C&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview">
+                <ol>
+                  <li>Casser les œufs dans un bol</li>
+                  <li>Ajouter la farine</li>
+                  <li>Mélanger jusqu'à obtenir une pâte lisse</li>
+                  <li>Cuire 20 minutes à 180 °C</li>
+                </ol>
+              </div>
+              <p class="cap">
+                L'ordre compte : sans lui, la recette ne veut rien dire.
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Peut-on changer le type de numérotation ?</span>
+            Oui, avec l'attribut <code>type</code> :
+            <code>&lt;ol type="A"&gt;</code> (A, B, C…),
+            <code>type="i"</code> (i, ii, iii…), ou <code>start="5"</code> pour
+            commencer à 5. Mais on verra plus tard qu'en vrai, on change plutôt
+            ça en CSS.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">4</span> Les listes imbriquées</h3>
+          <p>
+            On peut mettre une liste <b>à l'intérieur</b> d'un
+            <code>&lt;li&gt;</code>. C'est très utile pour les menus et les
+            arborescences.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;ul&gt;
+  &lt;li&gt;Fruits
+    &lt;ul&gt;
+      &lt;li&gt;Pomme&lt;/li&gt;
+      &lt;li&gt;Banane&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Légumes
+    &lt;ul&gt;
+      &lt;li&gt;Carotte&lt;/li&gt;
+      &lt;li&gt;Brocoli&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview">
+                <ul>
+                  <li>
+                    Fruits
+                    <ul>
+                      <li>Pomme</li>
+                      <li>Banane</li>
+                    </ul>
+                  </li>
+                  <li>
+                    Légumes
+                    <ul>
+                      <li>Carotte</li>
+                      <li>Brocoli</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Où placer la sous-liste ?</span>
+            La sous-liste doit être <b>à l'intérieur</b> du
+            <code>&lt;li&gt;</code>, pas entre deux <code>&lt;li&gt;</code>.
+            Sinon, elle sort de la structure.
+          </div>
+
+          <pre><code class="language-markup">&lt;!-- ❌ Mauvais : la sous-liste est en dehors du li --&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fruits&lt;/li&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Pomme&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/ul&gt;
+
+&lt;!-- ✅ Bon : la sous-liste est dans le li parent --&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fruits
+    &lt;ul&gt;
+      &lt;li&gt;Pomme&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">5</span> Cas d'usage classiques des listes</h3>
+          <p>
+            Les listes servent <b>partout</b> dans une vraie page. Quelques
+            exemples :
+          </p>
+
+          <div class="tree">
+            <span class="comment">// Menu de navigation d'un site</span>
+            <span class="tag">&lt;ul&gt;</span>
+            <span class="tag">&lt;li&gt;</span>Accueil<span class="tag"
+              >&lt;/li&gt;</span
+            >
+            <span class="tag">&lt;li&gt;</span>Blog<span class="tag"
+              >&lt;/li&gt;</span
+            >
+            <span class="tag">&lt;li&gt;</span>Contact<span class="tag"
+              >&lt;/li&gt;</span
+            >
+            <span class="tag">&lt;/ul&gt;</span>
+
+            <span class="comment">// Étapes d'une recette</span>
+            <span class="tag">&lt;ol&gt;</span>
+            <span class="tag">&lt;li&gt;</span>Préchauffer le four<span
+              class="tag"
+              >&lt;/li&gt;</span
+            >
+            <span class="tag">&lt;li&gt;</span>Préparer la pâte<span class="tag"
+              >&lt;/li&gt;</span
+            >
+            <span class="tag">&lt;/ol&gt;</span>
+
+            <span class="comment">// Liste de courses</span>
+            <span class="tag">&lt;ul&gt;</span>
+            <span class="tag">&lt;li&gt;</span>Pain<span class="tag"
+              >&lt;/li&gt;</span
+            >
+            <span class="tag">&lt;li&gt;</span>Lait<span class="tag"
+              >&lt;/li&gt;</span
+            >
+            <span class="tag">&lt;/ul&gt;</span>
+          </div>
+
+          <p>
+            D'ailleurs, tu ne t'en rends peut-être pas compte, mais
+            <b>la sidebar de ce cours</b> est une liste
+            <code>&lt;ul&gt;</code> avec des sous-listes
+            <code>&lt;ul&gt;</code>. Va voir dans le code source
+            (<kbd>Ctrl</kbd>+<kbd>U</kbd> sur cette page) : les menus sont
+            toujours des listes.
+          </p>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">6</span> Les tableaux : <code>&lt;table&gt;</code>
+          </h3>
+          <p>
+            Un tableau sert à présenter des <b>données en grille</b> : un
+            planning, un classement, un catalogue de prix. C'est un outil
+            précis, avec sa propre structure.
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;table&gt;</code>
+              <p>Le conteneur du tableau.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;tr&gt;</code>
+              <p><em>Table row</em> — une <b>ligne</b> du tableau.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;th&gt;</code>
+              <p>
+                <em>Table header</em> — une cellule <b>d'en-tête</b> (gras et
+                centré par défaut).
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;td&gt;</code>
+              <p><em>Table data</em> — une cellule <b>normale</b>.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;caption&gt;</code>
+              <p>
+                Le <b>titre</b> du tableau. Se place juste après
+                <code>&lt;table&gt;</code>.
+              </p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;table&gt;
+  &lt;caption&gt;Emploi du temps du lundi&lt;/caption&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Heure&lt;/th&gt;
+    &lt;th&gt;Matière&lt;/th&gt;
+    &lt;th&gt;Salle&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;8h00&lt;/td&gt;
+    &lt;td&gt;Mathématiques&lt;/td&gt;
+    &lt;td&gt;B12&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;10h00&lt;/td&gt;
+    &lt;td&gt;Histoire&lt;/td&gt;
+    &lt;td&gt;A03&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;14h00&lt;/td&gt;
+    &lt;td&gt;Français&lt;/td&gt;
+    &lt;td&gt;C21&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview">
+                <table>
+                  <caption>
+                    Emploi du temps du lundi
+                  </caption>
+                  <tr>
+                    <th>Heure</th>
+                    <th>Matière</th>
+                    <th>Salle</th>
+                  </tr>
+                  <tr>
+                    <td>8h00</td>
+                    <td>Mathématiques</td>
+                    <td>B12</td>
+                  </tr>
+                  <tr>
+                    <td>10h00</td>
+                    <td>Histoire</td>
+                    <td>A03</td>
+                  </tr>
+                  <tr>
+                    <td>14h00</td>
+                    <td>Français</td>
+                    <td>C21</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">La première ligne</span>
+            La <b>première ligne</b> d'un tableau contient en général les
+            <code>&lt;th&gt;</code> : ce sont les « titres de colonnes ». Les
+            autres lignes contiennent les <code>&lt;td&gt;</code>, les vraies
+            données.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">7</span> Les tableaux plus complexes :
+            <code>&lt;thead&gt;</code> et <code>&lt;tbody&gt;</code>
+          </h3>
+          <p>
+            On peut (et on <b>devrait</b>) séparer la partie « en-têtes » de la
+            partie « données » avec deux balises de regroupement. C'est plus
+            clair et plus accessible.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;table&gt;
+  &lt;caption&gt;Mes livres préférés&lt;/caption&gt;
+
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Titre&lt;/th&gt;
+      &lt;th&gt;Auteur&lt;/th&gt;
+      &lt;th&gt;Année&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Le Petit Prince&lt;/td&gt;
+      &lt;td&gt;Saint-Exupéry&lt;/td&gt;
+      &lt;td&gt;1943&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Harry Potter&lt;/td&gt;
+      &lt;td&gt;J.K. Rowling&lt;/td&gt;
+      &lt;td&gt;1997&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview">
+                <table>
+                  <caption>
+                    Mes livres préférés
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th>Titre</th>
+                      <th>Auteur</th>
+                      <th>Année</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Le Petit Prince</td>
+                      <td>Saint-Exupéry</td>
+                      <td>1943</td>
+                    </tr>
+                    <tr>
+                      <td>Harry Potter</td>
+                      <td>J.K. Rowling</td>
+                      <td>1997</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="cap">
+                Le <code>&lt;thead&gt;</code> regroupe les en-têtes, le
+                <code>&lt;tbody&gt;</code> les données.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">8</span> Le grand piège : les tableaux ne servent
+            <b>pas</b> à la mise en page
+          </h3>
+          <p>
+            Avant 2010, on utilisait des <code>&lt;table&gt;</code> pour
+            dessiner <b>toute la mise en page</b> des sites : entêtes, colonnes,
+            footers… C'était une <b>très mauvaise idée</b>, mais on n'avait pas
+            le choix. Aujourd'hui, on ne le fait plus.
+          </p>
+
+          <div class="layout-trap">
+            <div class="col bad">
+              <h4>❌ Une table pour la mise en page</h4>
+              <table class="fake-table">
+                <tr>
+                  <td class="hdr" colspan="2">En-tête du site</td>
+                </tr>
+                <tr>
+                  <td>Menu</td>
+                  <td>Contenu</td>
+                </tr>
+                <tr>
+                  <td class="hdr" colspan="2">Pied de page</td>
+                </tr>
+              </table>
+            </div>
+            <div class="col good">
+              <h4>✅ La bonne approche (aujourd'hui)</h4>
+              <div class="real-flex">
+                <div class="row">
+                  <div class="cell hdr" style="grid-column: 1 / -1">
+                    En-tête du site
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="cell">Menu</div>
+                  <div class="cell" style="grid-column: 2 / -1">Contenu</div>
+                </div>
+                <div class="row">
+                  <div class="cell hdr" style="grid-column: 1 / -1">
+                    Pied de page
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Pourquoi c'est mauvais ?</span>
+            <ul>
+              <li>
+                <b>Accessibilité :</b> un lecteur d'écran annonce « tableau de 3
+                lignes, 2 colonnes » à une personne malvoyante, alors qu'il n'y
+                a <b>aucune donnée</b> à comprendre.
+              </li>
+              <li>
+                <b>Sémantique :</b> tu mens sur la nature de ton contenu. Un
+                tableau, c'est pour des données.
+              </li>
+              <li>
+                <b>Maintenance :</b> modifier une mise en page en table est un
+                cauchemar.
+              </li>
+            </ul>
+            <br />
+            <b>La règle :</b> on utilise <code>&lt;table&gt;</code>
+            <b>uniquement</b> pour de vraies données tabulaires (planning,
+            catalogue, comparaison, statistiques). Pour la mise en page, on
+            utilise CSS (Flexbox et Grid, qu'on verra plus tard).
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">9</span> Récapitulatif : quand utiliser quoi ?
+          </h3>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;ul&gt;</code>
+              <p>
+                <b>Liste sans ordre.</b> Menu, liste de courses, tags, liens… La
+                position de chaque élément n'a pas d'importance.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;ol&gt;</code>
+              <p>
+                <b>Liste ordonnée.</b> Recette, étapes, classement, top 10…
+                L'ordre porte du sens.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;table&gt;</code>
+              <p>
+                <b>Données en grille.</b> Planning, prix, statistiques,
+                comparaison de produits.
+                <b>Jamais pour la mise en page.</b>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Tu veux faire une <b>liste de courses</b>. Quel type de liste
+            utilises-tu ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;ol&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;ul&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;table&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Quelle balise représente une <b>cellule de données</b> dans un
+            tableau ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;tr&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;th&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;td&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Pourquoi ne faut-il <b>pas</b> utiliser
+            <code>&lt;table&gt;</code> pour la mise en page d'un site ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Parce que c'est un mauvais message sémantique pour
+              l'accessibilité, et c'est difficile à maintenir.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Parce que les tableaux ne s'affichent pas sur mobile.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Parce que les tableaux sont trop lents à charger.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Dans une liste imbriquée, où doit-on placer la sous-liste ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Après la balise <code>&lt;/li&gt;</code> du parent, mais avant
+              <code>&lt;/ul&gt;</code>.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              À l'intérieur du <code>&lt;li&gt;</code> parent, avant sa
+              fermeture.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              À côté du <code>&lt;ul&gt;</code> principal.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Ta recette structurée</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée un fichier <code>recette.html</code> dans ton dossier
+            <code>01-html</code>, avec :
+          </p>
+          <ul>
+            <li>
+              Un <code>&lt;h1&gt;</code> : <code>Ma recette de crêpes</code>
+            </li>
+            <li>
+              Un <code>&lt;h2&gt;</code> : <code>Ingrédients</code>, suivi d'une
+              liste <b>non ordonnée</b> (<code>&lt;ul&gt;</code>) avec au moins
+              5 ingrédients.
+            </li>
+            <li>
+              Un <code>&lt;h2&gt;</code> : <code>Préparation</code>, suivi d'une
+              liste <b>ordonnée</b> (<code>&lt;ol&gt;</code>) avec au moins 5
+              étapes.
+            </li>
+            <li>
+              Un <code>&lt;h2&gt;</code> : <code>Temps</code>, suivi d'un petit
+              <b>tableau</b> à 2 colonnes : <em>Étape</em> et <em>Durée</em>.
+              Quelques lignes : repos de la pâte 1h, cuisson 2 min par crêpe…
+            </li>
+            <li>
+              Pour aller plus loin : mets un ingrédient avec une sous-liste (par
+              exemple « Épices » avec ses variantes).
+            </li>
+          </ul>
+
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 Vérifie que le tableau contient bien des
+            <code>&lt;th&gt;</code> sur la première ligne et des
+            <code>&lt;td&gt;</code> ailleurs.
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Ma recette de crêpes&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Ma recette de crêpes&lt;/h1&gt;
+
+  &lt;h2&gt;Ingrédients&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;250 g de farine&lt;/li&gt;
+    &lt;li&gt;4 œufs&lt;/li&gt;
+    &lt;li&gt;50 cl de lait&lt;/li&gt;
+    &lt;li&gt;2 cuillères à soupe de sucre&lt;/li&gt;
+    &lt;li&gt;1 pincée de sel&lt;/li&gt;
+    &lt;li&gt;Parfums possibles :
+      &lt;ul&gt;
+        &lt;li&gt;Extrait de vanille&lt;/li&gt;
+        &lt;li&gt;Zeste de citron&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;h2&gt;Préparation&lt;/h2&gt;
+  &lt;ol&gt;
+    &lt;li&gt;Mettre la farine dans un saladier.&lt;/li&gt;
+    &lt;li&gt;Ajouter les œufs un par un.&lt;/li&gt;
+    &lt;li&gt;Verser le lait petit à petit en mélangeant.&lt;/li&gt;
+    &lt;li&gt;Ajouter le sucre et le sel.&lt;/li&gt;
+    &lt;li&gt;Laisser reposer la pâte 1 heure.&lt;/li&gt;
+  &lt;/ol&gt;
+
+  &lt;h2&gt;Temps&lt;/h2&gt;
+  &lt;table&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Étape&lt;/th&gt;
+      &lt;th&gt;Durée&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Préparation&lt;/td&gt;&lt;td&gt;10 min&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Repos de la pâte&lt;/td&gt;&lt;td&gt;1 h&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Cuisson&lt;/td&gt;&lt;td&gt;2 min par crêpe&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>
