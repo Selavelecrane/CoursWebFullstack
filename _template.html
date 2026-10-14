@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TITRE DU CHAPITRE · Cours Web Fullstack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+  <div id="progress"></div>
+  <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+  <div class="shell">
+    <aside class="side" id="side">
+      <a class="brand" href="../../">
+        <div class="logo"><i></i><i></i><i></i></div>
+        <div>
+          <b>Cours Web Fullstack</b>
+          <small>Du premier fichier HTML à l'app complète</small>
+        </div>
+      </a>
+      <nav id="nav"></nav>
+    </aside>
+
+    <main>
+
+      <header class="chap-hero">
+        <p class="eyebrow">Module · TITRE DU MODULE</p>
+        <h1>TITRE DU CHAPITRE</h1>
+        <p class="lead">Objectif du chapitre en une phrase. Ce que l'élève saura faire à la fin.</p>
+      </header>
+
+      <!-- ============================================= -->
+      <!-- CONTENU : à écrire                                          -->
+      <!-- ============================================= -->
+
+      <article class="lesson">
+        <h3><span class="num">1</span> Première idée</h3>
+        <p>Explication…</p>
+      </article>
+
+      <!-- Démo interactive (code + résultat) -->
+      <div class="try">
+        <div class="codes">
+          <pre><code class="language-css live">.exemple {
+  display: grid;
+}</code></pre>
+        </div>
+        <div class="stage">
+          <div class="sizer rs">
+            <div class="demo exemple"><div>A</div><div>B</div></div>
+          </div>
+          <p class="cap">Légende de la démo.</p>
+        </div>
+      </div>
+
+      <!-- Encadré -->
+      <div class="box tip">
+        <span class="t">À retenir</span>
+        L'idée essentielle à mémoriser.
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz" data-answer="b">
+        <div class="quiz-head">Quiz</div>
+        <p class="quiz-q">Question ?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">Réponse A</button>
+          <button class="quiz-opt" data-opt="b" data-l="B">Réponse B</button>
+          <button class="quiz-opt" data-opt="c" data-l="C">Réponse C</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <!-- Défi -->
+      <div class="challenge">
+        <b>🎯 Défi</b>
+        <ul><li>Énoncé du défi.</li></ul>
+        <details><summary>Voir une solution</summary>
+<pre><code class="language-css">/* Solution */</code></pre>
+        </details>
+      </div>
+
+      <!-- Bouton "marquer comme terminé" (généré par nav.js) -->
+      <div class="mark-done" id="mark-done"></div>
+
+      <!-- Navigation prev/next (générée par nav.js) -->
+      <div class="chap-nav" id="chap-nav"></div>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+  <script>window.BASE_URL = "../../";</script>
+  <script src="../../assets/js/cours.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <!--<script src="../../assets/js/resize.js"></script>
+  <script src="../../assets/js/quiz.js"></script>-->
+</body>
+</html>
