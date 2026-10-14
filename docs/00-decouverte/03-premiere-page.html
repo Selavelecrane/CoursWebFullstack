@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ta première page · Cours Web Fullstack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="../assets/css/main.css">
+
+  <style>
+    /* Structure d'une page HTML expliquée */
+    .anatomy{
+      display:grid;gap:1rem;margin:1.5rem 0;
+    }
+    .anatomy-line{
+      display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:12px;padding:.9rem 1rem;
+    }
+    .anatomy-line code{
+      background:#0a1120;border:1px solid var(--line);
+      padding:.3em .6em;border-radius:6px;
+      font-size:.82rem;color:#7dd3fc;white-space:nowrap;
+    }
+    .anatomy-line p{font-size:.88rem;color:#cdd6f8;margin:0}
+
+    /* "Balise" visuelle */
+    .tag-demo{
+      display:inline-block;background:rgba(56,189,248,.14);
+      border:1px solid rgba(56,189,248,.35);border-radius:8px;
+      padding:.15em .5em;font-family:'JetBrains Mono',monospace;
+      font-size:.85em;color:#7dd3fc;
+    }
+    .tag-demo.closing{
+      background:rgba(244,63,94,.14);border-color:rgba(244,63,94,.35);color:#fda4af;
+    }
+
+    /* Résultat attendu */
+    .resultat{
+      background:#0a1120;border:1px solid var(--line);
+      border-radius:12px;padding:1.2rem;margin:1rem 0;
+      font-family:'Space Grotesk',sans-serif;
+    }
+    .resultat h1{margin-bottom:.4rem;font-size:1.6rem;color:#e8ecff}
+    .resultat p{color:#cdd6f8;font-size:.95rem;margin:0}
+
+    /* Étapes numérotées */
+    .steps{display:grid;gap:1rem;margin:1.5rem 0;counter-reset:step}
+    .step{
+      counter-increment:step;
+      display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:14px;padding:1.1rem;
+    }
+    .step::before{
+      content:counter(step);
+      width:38px;height:38px;flex:0 0 auto;
+      display:grid;place-items:center;border-radius:11px;
+      background:linear-gradient(135deg,var(--cyan),var(--violet));
+      color:#06121f;font-weight:800;font-size:1.1rem;
+    }
+    .step h4{color:#fff;font-size:1rem;margin-bottom:.3rem}
+    .step p{font-size:.9rem;color:#cdd6f8}
+
+    kbd{
+      background:#0a1120;border:1px solid var(--line);
+      border-bottom-width:2px;border-radius:6px;
+      padding:.12em .5em;font-size:.82em;
+      font-family:'JetBrains Mono',monospace;color:#e8ecff;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="progress"></div>
+  <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+  <div class="shell">
+    <aside class="side" id="side">
+      <a class="brand" href="../">
+        <div class="logo"><i></i><i></i><i></i></div>
+        <div>
+          <b>Cours Web Fullstack</b>
+          <small>Du premier fichier HTML à l'app complète</small>
+        </div>
+      </a>
+      <nav id="nav"></nav>
+    </aside>
+
+    <main>
+
+      <header class="chap-hero">
+        <p class="eyebrow">Module 0 · Découverte</p>
+        <h1>Ta première page web</h1>
+        <p class="lead">
+          Le moment est arrivé. Tu vas écrire ta toute première page HTML,
+          la voir s'afficher dans ton navigateur, et comprendre ce que chaque ligne fait.
+          Rien de magique : juste de la logique.
+        </p>
+      </header>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">1</span> Créer le fichier</h3>
+        <p>
+          On va créer un fichier qui s'appellera <code>index.html</code>. Le nom <code>index</code> est spécial :
+          c'est <b>le fichier que le navigateur ouvre par défaut</b> quand on visite un dossier. Prends l'habitude,
+          on l'utilisera tout le temps.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div>
+              <h4>Dans VS Code, ouvre ton dossier <code>00-decouverte</code></h4>
+              <p>Tu dois le voir dans la barre latérale à gauche. Clique dessus pour l'ouvrir.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h4>Crée un nouveau fichier</h4>
+              <p>Fais un clic droit sur le dossier <code>00-decouverte</code> → <b>New File</b>. Nomme-le exactement <code>index.html</code>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h4>Un fichier vide s'ouvre</h4>
+              <p>La zone de droite est vide, avec un curseur qui clignote. C'est ici que tu vas écrire. <b>Ne tape rien pour l'instant</b>, lis d'abord la suite.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">2</span> Comprendre une page HTML</h3>
+        <p>
+          Une page HTML, c'est une <b>boîte</b> avec des <b>boîtes dedans</b>. Chaque boîte est délimitée par une
+          <b>balise</b> (un mot entre chevrons <code>&lt; &gt;</code>).
+        </p>
+        <p>
+          Une balise fonctionne toujours par paire :
+        </p>
+
+        <div class="anatomy">
+          <div class="anatomy-line">
+            <code>&lt;h1&gt;</code>
+            <p>La balise d'<b>ouverture</b>. Elle dit : « je commence un titre principal ».</p>
+          </div>
+          <div class="anatomy-line">
+            <code>Bonjour</code>
+            <p>Le <b>contenu</b>. C'est le texte qui apparaîtra à l'écran.</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;/h1&gt;</code>
+            <p>La balise de <b>fermeture</b>. Le slash <code>/</code> indique qu'on ferme la balise. Elle dit : « le titre est fini ».</p>
+          </div>
+        </div>
+
+        <div class="box tip">
+          <span class="t">À retenir</span>
+          <span class="tag-demo">&lt;h1&gt;</span> ouvre, <span class="tag-demo closing">&lt;/h1&gt;</span> ferme.
+          Tout ce qui est <b>entre les deux</b> est le contenu de la balise.
+        </div>
+
+        <p>
+          Une page HTML complète, c'est un assemblage de plusieurs balises qui s'emboîtent comme des poupées russes.
+        </p>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">3</span> Le squelette d'une page</h3>
+        <p>
+          Tape <b>exactement</b> ceci dans ton fichier <code>index.html</code>. Ne saute aucune ligne.
+          Ce squelette est <b>toujours le même</b> pour toutes les pages web du monde.
+        </p>
+
+        <div class="try">
+          <div class="codes">
+<pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Ma première page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Bonjour le monde !&lt;/h1&gt;
+  &lt;p&gt;Ceci est ma toute première page web.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </div>
+          <div class="stage">
+            <div class="resultat">
+              <h1>Bonjour le monde !</h1>
+              <p>Ceci est ma toute première page web.</p>
+            </div>
+            <p class="cap">Voici ce que le navigateur affichera.</p>
+          </div>
+        </div>
+
+        <p>
+          <b>Sauvegarde</b> avec <kbd>Ctrl</kbd> + <kbd>S</kbd>. Sans sauvegarde, rien ne se passe.
+        </p>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">4</span> Ce que chaque ligne veut dire</h3>
+        <p>Reprenons le squelette ligne par ligne. Aucune ligne n'est là par hasard.</p>
+
+        <div class="anatomy">
+          <div class="anatomy-line">
+            <code>&lt;!DOCTYPE html&gt;</code>
+            <p>Dit au navigateur : « Ceci est une page HTML moderne ». Cette ligne est <b>obligatoire</b> et toujours la première.</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;html lang="fr"&gt;</code>
+            <p>La balise racine. Tout est dedans. Le <code>lang="fr"</code> indique que la page est en français (utile pour les moteurs de recherche et la synthèse vocale).</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;head&gt;</code>
+            <p>La <b>tête</b> de la page. Ce qu'on met ici n'apparaît pas à l'écran. Ce sont des informations <em>sur</em> la page.</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;meta charset="UTF-8"&gt;</code>
+            <p>Dit au navigateur comment décoder les caractères. Sans ça, les accents (é, à, ç) s'affichent comme des symboles bizarres.</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;title&gt;…&lt;/title&gt;</code>
+            <p>Le titre de l'onglet du navigateur. Regarde en haut de ton navigateur : c'est ce que tu vois écrit sur l'onglet.</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;body&gt;</code>
+            <p>Le <b>corps</b> de la page. <b>Tout ce qui s'affiche à l'écran</b> est ici.</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;h1&gt;…&lt;/h1&gt;</code>
+            <p>Un <b>titre de niveau 1</b>. Il en existe 6 : de <code>h1</code> (le plus grand) à <code>h6</code> (le plus petit).</p>
+          </div>
+          <div class="anatomy-line">
+            <code>&lt;p&gt;…&lt;/p&gt;</code>
+            <p>Un <b>paragraphe</b>. Le texte normal. C'est la balise la plus utilisée du HTML.</p>
+          </div>
+        </div>
+
+        <div class="box info">
+          <span class="t">Le cerveau retient mieux avec une image</span>
+          Imagine une page comme un être humain :
+          <ul>
+            <li><b>&lt;head&gt;</b> = la tête — invisible, mais elle contient les informations (le titre, la langue, les réglages).</li>
+            <li><b>&lt;body&gt;</b> = le corps — tout ce qu'on voit.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">5</span> Voir le résultat dans ton navigateur</h3>
+        <p>Deux méthodes. La première est plus simple, la seconde plus confortable.</p>
+
+        <div class="steps">
+          <div class="step">
+            <div>
+              <h4>Méthode simple : ouvrir directement</h4>
+              <p>Dans VS Code, fais un <b>clic droit</b> sur <code>index.html</code> → <b>Reveal in File Manager</b> (ou l'équivalent). Double-clique sur le fichier. Il s'ouvre dans ton navigateur par défaut.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h4>Méthode pro : Live Server</h4>
+              <p>Dans VS Code, fais un <b>clic droit</b> sur <code>index.html</code> → <b>Open with Live Server</b>. Le navigateur s'ouvre automatiquement.</p>
+              <p>À partir de maintenant, chaque fois que tu sauvegardes (<kbd>Ctrl</kbd> + <kbd>S</kbd>), la page se recharge toute seule. Essaie : modifie le texte de ton <code>&lt;h1&gt;</code>, sauvegarde, regarde le navigateur se mettre à jour.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="box fun">
+          <span class="t">Le moment magique</span>
+          Ce que tu as écrit dans un fichier apparaît sur ton écran. C'est <b>exactement</b> ce que fait un développeur toute la journée. Bravo, tu viens d'écrire ta première page web.
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">6</span> Expérimente</h3>
+        <p>
+          La meilleure façon d'apprendre, c'est de <b>casser des choses</b>. Essaie ces trois modifications,
+          une par une, en sauvegardant à chaque fois :
+        </p>
+
+        <div class="try">
+          <div class="codes">
+<pre><code class="language-markup">&lt;body&gt;
+  &lt;h1&gt;Bonjour le monde !&lt;/h1&gt;
+  &lt;p&gt;Ceci est ma toute première page web.&lt;/p&gt;
+
+  &lt;h2&gt;Ce que je vais apprendre&lt;/h2&gt;
+  &lt;p&gt;Du HTML, du CSS et du JavaScript.&lt;/p&gt;
+
+  &lt;h2&gt;Pourquoi ?&lt;/h2&gt;
+  &lt;p&gt;Parce que je veux créer mes propres sites.&lt;/p&gt;
+&lt;/body&gt;</code></pre>
+          </div>
+          <div class="stage">
+            <div class="resultat">
+              <h1>Bonjour le monde !</h1>
+              <p>Ceci est ma toute première page web.</p>
+              <h2 style="color:#e8ecff;font-size:1.25rem;margin:.9rem 0 .3rem">Ce que je vais apprendre</h2>
+              <p>Du HTML, du CSS et du JavaScript.</p>
+              <h2 style="color:#e8ecff;font-size:1.25rem;margin:.9rem 0 .3rem">Pourquoi ?</h2>
+              <p>Parce que je veux créer mes propres sites.</p>
+            </div>
+          </div>
+        </div>
+
+        <p>Tu vois la différence entre <code>&lt;h1&gt;</code> et <code>&lt;h2&gt;</code> ? Le titre <code>h1</code> est plus gros. Il existe 6 niveaux de titres : <code>h1</code>, <code>h2</code>, <code>h3</code>, <code>h4</code>, <code>h5</code>, <code>h6</code>.</p>
+
+        <div class="box warn">
+          <span class="t">Règle d'or</span>
+          Sur une page, on met <b>un seul <code>h1</code></b>. Ensuite autant de <code>h2</code>, <code>h3</code>… que nécessaire. Le <code>h1</code>, c'est le titre principal de la page.
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <div class="quiz" data-answer="c">
+        <div class="quiz-head">Quiz · Question 1/3</div>
+        <p class="quiz-q">Où doit-on placer <b>le contenu visible</b> de la page ?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">Dans <code>&lt;head&gt;</code></button>
+          <button class="quiz-opt" data-opt="b" data-l="B">Dans <code>&lt;title&gt;</code></button>
+          <button class="quiz-opt" data-opt="c" data-l="C">Dans <code>&lt;body&gt;</code></button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz" data-answer="a">
+        <div class="quiz-head">Quiz · Question 2/3</div>
+        <p class="quiz-q">Quelle balise ouvre un <b>paragraphe</b> ?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A"><code>&lt;p&gt;</code></button>
+          <button class="quiz-opt" data-opt="b" data-l="B"><code>&lt;par&gt;</code></button>
+          <button class="quiz-opt" data-opt="c" data-l="C"><code>&lt;text&gt;</code></button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz" data-answer="b">
+        <div class="quiz-head">Quiz · Question 3/3</div>
+        <p class="quiz-q">À quoi sert <code>&lt;meta charset="UTF-8"&gt;</code> ?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">À choisir la police d'écriture.</button>
+          <button class="quiz-opt" data-opt="b" data-l="B">À bien afficher les caractères accentués (é, à, ç…).</button>
+          <button class="quiz-opt" data-opt="c" data-l="C">À définir la taille du texte.</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <div class="challenge">
+        <b>🎯 Défi — Ta carte de présentation</b>
+        <p style="font-size:.9rem;color:#cdd6f8;margin-bottom:.6rem">Crée une nouvelle page <code>moi.html</code> dans ton dossier <code>00-decouverte</code> avec :</p>
+        <ul>
+          <li>Un <code>&lt;h1&gt;</code> avec ton prénom.</li>
+          <li>Un <code>&lt;h2&gt;</code> qui dit « Qui je suis ».</li>
+          <li>Un <code>&lt;p&gt;</code> qui te décrit en 2 phrases.</li>
+          <li>Un <code>&lt;h2&gt;</code> qui dit « Ce que j'aime ».</li>
+          <li>Un <code>&lt;p&gt;</code> avec 3 choses que tu aimes.</li>
+          <li>Un <code>&lt;h2&gt;</code> qui dit « Mon objectif ».</li>
+          <li>Un <code>&lt;p&gt;</code> qui explique pourquoi tu apprends le web.</li>
+        </ul>
+        <p style="font-size:.9rem;color:#cdd6f8;margin-top:.6rem">Ouvre-la dans ton navigateur avec Live Server. Voilà, tu as un site. 🎉</p>
+
+        <details><summary>Voir une solution possible</summary>
+<pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Moi&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Alex&lt;/h1&gt;
+
+  &lt;h2&gt;Qui je suis&lt;/h2&gt;
+  &lt;p&gt;J'ai 12 ans et j'adore les jeux vidéo.&lt;/p&gt;
+
+  &lt;h2&gt;Ce que j'aime&lt;/h2&gt;
+  &lt;p&gt;Les mangas, le foot et la pizza.&lt;/p&gt;
+
+  &lt;h2&gt;Mon objectif&lt;/h2&gt;
+  &lt;p&gt;Je veux créer mon propre site de jeux en ligne.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></details>
+      </div>
+
+      <div class="mark-done" id="mark-done"></div>
+      <div class="chap-nav" id="chap-nav"></div>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+  <script>
+    window.BASE_URL = window.location.hostname.includes('github.io')
+      ? '/CoursWebFullstack/'
+      : '../';
+  </script>
+  <script src="../assets/js/cours.js"></script>
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/resize.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+  <script src="../assets/js/demo.js"></script>
+</body>
+</html>

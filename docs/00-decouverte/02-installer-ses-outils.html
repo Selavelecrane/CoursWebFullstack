@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Installer ses outils · Cours Web Fullstack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="../assets/css/main.css">
+
+  <style>
+    /* Étapes numérotées visuellement */
+    .steps{
+      display:grid;gap:1rem;margin:1.5rem 0;
+      counter-reset:step;
+    }
+    .step{
+      counter-increment:step;
+      display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:14px;padding:1.1rem;
+    }
+    .step::before{
+      content:counter(step);
+      width:38px;height:38px;flex:0 0 auto;
+      display:grid;place-items:center;border-radius:11px;
+      background:linear-gradient(135deg,var(--cyan),var(--violet));
+      color:#06121f;font-weight:800;font-size:1.1rem;
+    }
+    .step h4{color:#fff;font-size:1rem;margin-bottom:.3rem}
+    .step p{font-size:.9rem;color:#cdd6f8;margin-bottom:.4rem}
+    .step pre{margin-top:.4rem!important;font-size:.78rem!important}
+    .step code.inline{
+      background:rgba(56,189,248,.12);color:#7dd3fc;
+      padding:.1em .4em;border-radius:5px;
+    }
+
+    /* Encart "Tu dois voir" */
+    .check{
+      display:flex;gap:.8rem;align-items:flex-start;
+      background:color-mix(in srgb,var(--green) 10%,transparent);
+      border-left:4px solid var(--green);
+      border-radius:0 12px 12px 0;
+      padding:.8rem 1rem;margin:1rem 0;font-size:.9rem;color:#d9e0fb;
+    }
+    .check::before{content:"✅";font-size:1.1rem;flex:0 0 auto}
+
+    /* Raccourcis clavier */
+    kbd{
+      background:#0a1120;border:1px solid var(--line);
+      border-bottom-width:2px;border-radius:6px;
+      padding:.12em .5em;font-size:.82em;
+      font-family:'JetBrains Mono',monospace;color:#e8ecff;
+    }
+
+    /* Plan de l'arborescence */
+    .tree{
+      font-family:'JetBrains Mono',monospace;font-size:.85rem;
+      background:#0a1120;border:1px solid var(--line);
+      border-radius:12px;padding:1rem 1.2rem;color:#cdd6f8;
+      line-height:1.7;
+    }
+    .tree .folder{color:var(--yellow)}
+    .tree .file{color:var(--cyan)}
+    .tree .comment{color:var(--muted);font-style:italic}
+  </style>
+</head>
+<body>
+
+  <div id="progress"></div>
+  <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+  <div class="shell">
+    <aside class="side" id="side">
+      <a class="brand" href="../">
+        <div class="logo"><i></i><i></i><i></i></div>
+        <div>
+          <b>Cours Web Fullstack</b>
+          <small>Du premier fichier HTML à l'app complète</small>
+        </div>
+      </a>
+      <nav id="nav"></nav>
+    </aside>
+
+    <main>
+
+      <header class="chap-hero">
+        <p class="eyebrow">Module 0 · Découverte</p>
+        <h1>Installer ses outils</h1>
+        <p class="lead">
+          Un bon artisan a de bons outils. On installe ici les <b>deux seuls</b> dont tu as besoin
+          pour commencer : un éditeur de code et une extension qui recharge ton navigateur tout seul.
+          15 minutes, pas plus.
+        </p>
+      </header>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">1</span> Les outils du développeur</h3>
+        <p>
+          Un développeur web a besoin d'exactement <b>deux</b> outils pour commencer :
+        </p>
+        <ul>
+          <li><b>Un éditeur de code</b> — comme un traitement de texte, mais spécialement conçu pour écrire du code. Il colore les mots, repère les erreurs, t'aide à taper.</li>
+          <li><b>Un navigateur web</b> — Chrome, Firefox, Safari… Tu en as déjà un. C'est lui qui va afficher ton travail.</li>
+        </ul>
+        <p>
+          Et c'est tout. Pas besoin de serveur, pas besoin d'installer quoi que ce soit d'autre pour l'instant.
+        </p>
+
+        <div class="box info">
+          <span class="t">Une note pour plus tard</span>
+          On ajoutera <b>Git</b> plus tard, quand on mettra ton code sur GitHub. Pour l'instant, on se concentre sur l'essentiel.
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">2</span> Installer VS Code</h3>
+        <p>
+          L'éditeur qu'on va utiliser s'appelle <b>Visual Studio Code</b> (ou « VS Code »). C'est gratuit,
+          utilisé par des millions de développeurs, et il existe pour Linux, macOS et Windows.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div>
+              <h4>Ouvre un terminal</h4>
+              <p>Sur Fedora, tu peux le trouver dans le menu des applications (cherche « Terminal ») ou l'ouvrir avec le raccourci <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h4>Installe VS Code</h4>
+              <p>Copie-colle cette commande dans le terminal :</p>
+              <pre><code class="language-bash">sudo dnf install code</code></pre>
+              <p>Si Fedora te dit que le paquet n'existe pas, essaie via Flatpak :</p>
+              <pre><code class="language-bash">flatpak install flathub com.visualstudio.code</code></pre>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h4>Lance VS Code</h4>
+              <p>Tape <code class="inline">code</code> dans le terminal, ou cherche « Code » dans le menu des applications. Une fenêtre s'ouvre : bienvenue !</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="check">Si une fenêtre sombre s'affiche avec un menu à gauche, c'est gagné.</div>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">3</span> Installer l'extension Live Server</h3>
+        <p>
+          <b>Live Server</b> est une extension de VS Code. Son travail : recharger automatiquement ton navigateur
+          dès que tu sauvegardes un fichier. Tu vas voir, ça change la vie.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div>
+              <h4>Ouvre le panneau des extensions</h4>
+              <p>Dans VS Code, clique sur l'icône <b>carrés empilés</b> dans la barre de gauche (ou <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h4>Cherche « Live Server »</h4>
+              <p>Tape <code class="inline">Live Server</code> dans la barre de recherche. Le premier résultat est celui de <b>Ritwick Dey</b> — clique sur <b>Install</b>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h4>Vérifie l'installation</h4>
+              <p>Une fois installée, l'extension apparaît dans la liste. Tu n'as plus rien à faire, elle est prête.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="box tip">
+          <span class="t">Comment on s'en sert</span>
+          Plus tard, dans un fichier HTML, tu verras en bas à droite de VS Code un petit bouton <b>« Go Live »</b>.
+          Un clic → ton navigateur s'ouvre sur ta page. À chaque sauvegarde (<kbd>Ctrl</kbd> + <kbd>S</kbd>),
+          la page se met à jour automatiquement.
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">4</span> Créer ton dossier de travail</h3>
+        <p>
+          On va tout ranger dans un seul dossier. C'est important : ne mets pas tes fichiers n'importe où.
+          Ton « atelier » doit être propre.
+        </p>
+        <p>Dans le terminal, crée ton dossier de travail :</p>
+        <pre><code class="language-bash">mkdir ~/cours-web
+cd ~/cours-web</code></pre>
+        <p>Puis ouvre ce dossier dans VS Code :</p>
+        <pre><code class="language-bash">code .</code></pre>
+        <p>Le <code class="inline">.</code> signifie « le dossier courant ». VS Code s'ouvre et affiche ton dossier vide à gauche.</p>
+
+        <div class="box info">
+          <span class="t">À quoi ressemblera ton dossier à la fin du cours</span>
+          Ne t'inquiète pas si tu ne comprends pas tout, c'est juste pour te donner une vision :
+        </div>
+
+        <div class="tree">
+<span class="folder">cours-web/</span>
+├── <span class="folder">00-decouverte/</span>       <span class="comment">← tu es ici</span>
+├── <span class="folder">01-html/</span>              <span class="comment">← bientôt</span>
+├── <span class="folder">02-css/</span>
+├── <span class="folder">03-javascript/</span>
+└── <span class="folder">04-projets/</span>
+        </div>
+
+        <p>
+          Pour l'instant, on va juste créer un dossier <code class="inline">00-decouverte</code>. Dans VS Code :
+        </p>
+        <ul>
+          <li>Fais un <b>clic droit</b> dans la zone de gauche (là où il n'y a rien)</li>
+          <li>Choisis <b>New Folder</b></li>
+          <li>Nomme-le <code class="inline">00-decouverte</code></li>
+        </ul>
+      </article>
+
+      <!-- ============================================================ -->
+      <article class="lesson">
+        <h3><span class="num">5</span> Les raccourcis à connaître</h3>
+        <p>Il y a 5 raccourcis qui vont te servir <b>tous les jours</b>. Prends 30 secondes pour les mémoriser :</p>
+        <ul>
+          <li><kbd>Ctrl</kbd> + <kbd>S</kbd> → <b>Sauvegarder</b>. À faire après chaque modification. Si tu ne sauvegardes pas, rien ne change dans le navigateur.</li>
+          <li><kbd>Ctrl</kbd> + <kbd>Z</kbd> → <b>Annuler</b>. Ton meilleur ami.</li>
+          <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> → <b>Refaire</b> (l'inverse d'annuler).</li>
+          <li><kbd>Ctrl</kbd> + <kbd>F</kbd> → <b>Chercher</b> dans le fichier ouvert.</li>
+          <li><kbd>Ctrl</kbd> + <kbd>B</kbd> → <b>Afficher / cacher</b> la barre latérale.</li>
+        </ul>
+
+        <div class="box warn">
+          <span class="t">La règle d'or</span>
+          <b>Sauvegarde toujours</b> avant de regarder le navigateur. 90 % des « ça ne marche pas » chez les débutants viennent d'un fichier non sauvegardé. Tu verras, on l'a tous fait.
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <div class="quiz" data-answer="b">
+        <div class="quiz-head">Quiz · Question 1/2</div>
+        <p class="quiz-q">À quoi sert l'extension <b>Live Server</b> ?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">À écrire du code automatiquement.</button>
+          <button class="quiz-opt" data-opt="b" data-l="B">À recharger le navigateur automatiquement à chaque sauvegarde.</button>
+          <button class="quiz-opt" data-opt="c" data-l="C">À installer des polices d'écriture.</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz" data-answer="c">
+        <div class="quiz-head">Quiz · Question 2/2</div>
+        <p class="quiz-q">Tu modifies ton fichier HTML, tu recharges le navigateur… rien n'a changé. Quelle est l'explication la plus probable ?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-opt="a" data-l="A">Ton navigateur est cassé.</button>
+          <button class="quiz-opt" data-opt="b" data-l="B">Il faut réinstaller VS Code.</button>
+          <button class="quiz-opt" data-opt="c" data-l="C">Tu as oublié de sauvegarder le fichier.</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <div class="challenge">
+        <b>🎯 Défi — Prépare ton atelier</b>
+        <ul>
+          <li>Dans ton dossier <code>cours-web</code>, crée un fichier <code>journal.txt</code>.</li>
+          <li>Écris la date d'aujourd'hui et une phrase : <em>« Aujourd'hui, je commence à apprendre le web. »</em></li>
+          <li>Sauvegarde.</li>
+          <li>Ferme VS Code complètement. Rouvre-le. Vérifie que ton fichier est bien là et que ton texte est intact.</li>
+        </ul>
+        <p style="font-size:.9rem;color:var(--muted);margin-top:.6rem">Ce petit fichier, c'est ton journal de bord. Reviens-y de temps en temps pour noter ce que tu as appris.</p>
+      </div>
+
+      <div class="mark-done" id="mark-done"></div>
+      <div class="chap-nav" id="chap-nav"></div>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+  <script>
+    window.BASE_URL = window.location.hostname.includes('github.io')
+      ? '/CoursWebFullstack/'
+      : '../';
+  </script>
+  <script src="../assets/js/cours.js"></script>
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/resize.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+  <script src="../assets/js/demo.js"></script>
+</body>
+</html>
