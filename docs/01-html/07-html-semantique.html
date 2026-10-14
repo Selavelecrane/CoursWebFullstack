@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML sémantique · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* ---- Dual : div partout vs sémantique ---- */
+      .dual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1.2rem 0;
+      }
+      @media (max-width: 700px) {
+        .dual {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dual > div {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.1rem;
+      }
+      .dual-lbl {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.6rem;
+        font-family: "JetBrains Mono", monospace;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .dual-lbl.ok {
+        color: var(--green);
+      }
+      .dual-lbl.ko {
+        color: #f43f5e;
+      }
+      .dual pre {
+        margin: 0 !important;
+      }
+
+      /* ---- Schéma de page (wireframe) ---- */
+      .wireframe {
+        display: grid;
+        gap: 6px;
+        margin: 1.5rem 0;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+        grid-template-columns: 1fr 3fr 1fr;
+        grid-template-areas:
+          "header header header"
+          "nav    main   aside"
+          "footer footer footer";
+        min-height: 340px;
+      }
+      .wireframe .zone {
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        transition: transform 0.2s;
+      }
+      .wireframe .zone:hover {
+        transform: scale(1.02);
+      }
+      .wireframe .zone .tag {
+        font-weight: 800;
+        color: #fff;
+        font-size: 0.82rem;
+        letter-spacing: 0.02em;
+      }
+      .wireframe .zone .desc {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.75);
+        font-family: "Space Grotesk", sans-serif;
+        line-height: 1.4;
+      }
+      .wireframe .z-header {
+        grid-area: header;
+        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      }
+      .wireframe .z-nav {
+        grid-area: nav;
+        background: linear-gradient(135deg, #a78bfa, #7c3aed);
+      }
+      .wireframe .z-main {
+        grid-area: main;
+        background: linear-gradient(135deg, #34d399, #059669);
+      }
+      .wireframe .z-aside {
+        grid-area: aside;
+        background: linear-gradient(135deg, #fb923c, #ea580c);
+      }
+      .wireframe .z-footer {
+        grid-area: footer;
+        background: linear-gradient(135deg, #f472b6, #db2777);
+      }
+
+      @media (max-width: 640px) {
+        .wireframe {
+          grid-template-columns: 1fr;
+          grid-template-areas: "header" "nav" "main" "aside" "footer";
+          min-height: auto;
+        }
+      }
+
+      /* ---- Anatomie ligne par ligne ---- */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+      .anatomy-line p b {
+        color: #fff;
+      }
+
+      /* ---- Avant/après : structure HTML ---- */
+      .structure-demo {
+        display: grid;
+        gap: 6px;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        margin: 0.8rem 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+      }
+      .structure-demo .block {
+        border-radius: 6px;
+        padding: 0.5rem 0.8rem;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .structure-demo .b-header {
+        background: rgba(14, 165, 233, 0.22);
+        color: #7dd3fc;
+      }
+      .structure-demo .b-nav {
+        background: rgba(168, 85, 247, 0.22);
+        color: #d8b4fe;
+      }
+      .structure-demo .b-main {
+        background: rgba(52, 211, 153, 0.22);
+        color: #6ee7b7;
+      }
+      .structure-demo .b-article {
+        background: rgba(52, 211, 153, 0.14);
+        color: #a7f3d0;
+        margin-left: 1rem;
+      }
+      .structure-demo .b-aside {
+        background: rgba(251, 146, 60, 0.22);
+        color: #fdba74;
+      }
+      .structure-demo .b-footer {
+        background: rgba(244, 114, 182, 0.22);
+        color: #f9a8d4;
+      }
+
+      /* ---- Préview d'une vraie page ---- */
+      .preview-article {
+        background: #fff;
+        color: #111;
+        border-radius: 12px;
+        padding: 1.5rem;
+        font-family: Georgia, serif;
+        line-height: 1.6;
+        margin: 1rem 0;
+      }
+      .preview-article header {
+        border-bottom: 2px solid #111;
+        padding-bottom: 0.7rem;
+        margin-bottom: 1rem;
+      }
+      .preview-article header h1 {
+        font-size: 1.6rem;
+        color: #111;
+        font-family: inherit;
+        margin: 0 0 0.3rem;
+      }
+      .preview-article header p {
+        color: #666;
+        font-size: 0.85rem;
+        margin: 0;
+        font-style: italic;
+      }
+      .preview-article section h2 {
+        font-size: 1.15rem;
+        color: #111;
+        font-family: inherit;
+        margin: 1rem 0 0.4rem;
+      }
+      .preview-article p {
+        font-size: 0.95rem;
+        color: #333;
+        margin: 0 0 0.7rem;
+      }
+      .preview-article aside {
+        background: #f3f4f6;
+        border-left: 3px solid #0ea5e9;
+        padding: 0.7rem 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.88rem;
+        color: #333;
+      }
+      .preview-article footer {
+        border-top: 1px solid #ddd;
+        padding-top: 0.7rem;
+        margin-top: 1.2rem;
+        font-size: 0.82rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 1 · HTML</p>
+          <h1>HTML sémantique</h1>
+          <p class="lead">
+            Jusqu'ici, on a écrit du HTML « qui marche ». Aujourd'hui, on écrit
+            du HTML
+            <b>qui veut dire quelque chose</b> — un code qui se comprend tout
+            seul, qui parle aux navigateurs, aux moteurs de recherche et aux
+            lecteurs d'écran.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">1</span> Le problème :
+            <code>&lt;div&gt;</code> partout
+          </h3>
+          <p>
+            Avant d'aller plus loin, il faut connaître une balise spéciale :
+            <code>&lt;div&gt;</code>. C'est un <b>conteneur neutre</b> — il n'a
+            <b>aucun sens</b> propre. Il sert juste à <b>grouper</b> des
+            éléments.
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;div&gt;</code>
+              <p>
+                Un bloc neutre. Ne dit rien sur ce qu'il contient. Utile quand
+                aucun autre élément n'est adapté, mais
+                <b>à ne pas utiliser par défaut</b>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;span&gt;</code>
+              <p>
+                Le cousin <em>en ligne</em> du <code>&lt;div&gt;</code>. Groupe
+                du texte à l'intérieur d'un paragraphe, sans signification
+                particulière.
+              </p>
+            </div>
+          </div>
+
+          <p>
+            Le piège, c'est que <code>&lt;div&gt;</code> marche <b>toujours</b>.
+            On peut tout faire avec. Beaucoup de développeurs débutants en
+            mettent partout, et leur code finit par ressembler à ça :
+          </p>
+
+          <pre><code class="language-markup">&lt;!-- ❌ Le « div-soup » : aucun sens --&gt;
+&lt;div class="header"&gt;
+  &lt;div class="titre"&gt;Mon site&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="nav"&gt;
+  &lt;div&gt;Accueil&lt;/div&gt;
+  &lt;div&gt;Blog&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="content"&gt;
+  &lt;div class="article"&gt;
+    &lt;div class="titre"&gt;Mon article&lt;/div&gt;
+    &lt;div&gt;Le contenu…&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="footer"&gt;© 2026&lt;/div&gt;</code></pre>
+
+          <p>
+            <b>Ça marche</b> — le navigateur affichera quelque chose de correct.
+            Mais aucune machine ne peut deviner que
+            <code>class="header"</code> est un en-tête, que
+            <code>class="nav"</code> est une navigation… Ce sont juste des mots
+            anglais dans une classe CSS.
+          </p>
+
+          <div class="box warn">
+            <span class="t">Le problème du « div-soup »</span>
+            <ul>
+              <li>
+                <b>Les lecteurs d'écran</b> (pour malvoyants) annoncent «
+                groupe, groupe, groupe » sans distinction. Inutilisable.
+              </li>
+              <li>
+                <b>Google</b> ne comprend pas la structure de ta page → moins
+                bon référencement.
+              </li>
+              <li>
+                <b>Toi, dans 6 mois</b>, tu ne retrouves plus tes petits. Où est
+                le menu ? Où est le contenu ?
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> La solution : les balises sémantiques
+          </h3>
+          <p>
+            HTML5 a introduit des balises dont le <b>nom décrit le contenu</b>.
+            Ce sont les balises <b>sémantiques</b> : elles disent aux machines
+            <b>ce qu'elles contiennent</b>.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;!-- ✅ Version sémantique : chaque bloc a un sens --&gt;
+&lt;header&gt;
+  &lt;h1&gt;Mon site&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;nav&gt;
+  &lt;a href="#"&gt;Accueil&lt;/a&gt;
+  &lt;a href="#"&gt;Blog&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Mon article&lt;/h2&gt;
+    &lt;p&gt;Le contenu…&lt;/p&gt;
+  &lt;/article&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;© 2026&lt;/footer&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="structure-demo">
+                <div class="block b-header">&lt;header&gt;</div>
+                <div class="block b-nav">&lt;nav&gt;</div>
+                <div class="block b-main">&lt;main&gt;</div>
+                <div class="block b-article">&lt;article&gt;</div>
+                <div class="block b-footer">&lt;footer&gt;</div>
+              </div>
+              <p class="cap">
+                Même rendu visuel, mais le code <b>parle tout seul</b>.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">3</span> Les 7 balises sémantiques à connaître
+          </h3>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;header&gt;</code>
+              <p>
+                <b>L'en-tête</b> d'une page ou d'une section. Contient
+                généralement le titre, le logo, parfois un slogan. Peut
+                apparaître plusieurs fois (une fois par
+                <code>&lt;article&gt;</code>, par exemple).
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;nav&gt;</code>
+              <p>
+                <b>La navigation.</b> Regroupe des liens de navigation (menu
+                principal, menu secondaire, fil d'Ariane). Contient presque
+                toujours une liste <code>&lt;ul&gt;</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;main&gt;</code>
+              <p>
+                <b>Le contenu principal.</b> Le cœur de la page.
+                <b>Un seul <code>&lt;main&gt;</code> par page</b>, et pas dans
+                un <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code> ou
+                <code>&lt;footer&gt;</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;section&gt;</code>
+              <p>
+                <b>Une section thématique.</b> Un regroupement de contenu autour
+                d'un même sujet. Souvent introduite par un titre
+                <code>&lt;h2&gt;</code> ou <code>&lt;h3&gt;</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;article&gt;</code>
+              <p>
+                <b>Un contenu autonome.</b> Un article de blog, un post, une
+                fiche produit — quelque chose qui aurait du sens
+                <b>extrait de la page</b>. Test : « si je copie ce bloc
+                ailleurs, est-ce que ça tient debout tout seul ? »
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;aside&gt;</code>
+              <p>
+                <b>Un contenu annexe.</b> Barre latérale, encart « à lire aussi
+                », publicité, notes secondaires. Quelque chose qui
+                <b>complète</b> mais n'est pas essentiel.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;footer&gt;</code>
+              <p>
+                <b>Le pied de page.</b> En bas d'une page ou d'une section.
+                Contient souvent des mentions légales, des liens secondaires, un
+                copyright.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Astuce pour retenir</span>
+            <b>header = début</b> · <b>footer = fin</b> · <b>nav = liens</b> ·
+            <b>main = le principal</b> · <b>article = autonome</b> ·
+            <b>section = thématique</b> · <b>aside = annexe</b>.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">4</span> Visualise : la structure d'une page type
+          </h3>
+          <p>
+            Voici comment se découpe une page web classique (un blog, un
+            journal, un site d'actualités). Chaque zone a
+            <b>sa balise sémantique</b>.
+          </p>
+
+          <div class="wireframe">
+            <div class="zone z-header">
+              <span class="tag">&lt;header&gt;</span>
+              <span class="desc"
+                >Logo, titre du site, slogan. En haut de chaque page.</span
+              >
+            </div>
+            <div class="zone z-nav">
+              <span class="tag">&lt;nav&gt;</span>
+              <span class="desc">Menu de navigation. Liste de liens.</span>
+            </div>
+            <div class="zone z-main">
+              <span class="tag">&lt;main&gt;</span>
+              <span class="desc"
+                >Le contenu principal. Unique sur la page.</span
+              >
+            </div>
+            <div class="zone z-aside">
+              <span class="tag">&lt;aside&gt;</span>
+              <span class="desc">Annexe : tags, articles liés, pub…</span>
+            </div>
+            <div class="zone z-footer">
+              <span class="tag">&lt;footer&gt;</span>
+              <span class="desc"
+                >Mentions légales, contact, réseaux sociaux.</span
+              >
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Voyons ça dans le vrai monde</span>
+            Ouvre un site d'actualité (Le Monde, 20 Minutes, un blog…). Sur
+            <b>n'importe quelle page</b>, fais <kbd>F12</kbd> puis cherche les
+            balises <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>,
+            <code>&lt;main&gt;</code>… Tu verras cette structure partout. C'est
+            LA convention du web moderne.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> <code>&lt;section&gt;</code> ou
+            <code>&lt;article&gt;</code> ?
+          </h3>
+          <p>
+            C'est la question qui revient le plus souvent. La règle est simple :
+          </p>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ok">
+                ✅ Utilise <code>&lt;article&gt;</code> si…
+              </div>
+              <p
+                style="
+                  font-size: 0.88rem;
+                  color: #cdd6f8;
+                  margin: 0.5rem 0 0.6rem;
+                "
+              >
+                le contenu <b>tient debout tout seul</b>, détaché du reste.
+              </p>
+              <ul style="font-size: 0.88rem; color: #cdd6f8">
+                <li>Un article de blog</li>
+                <li>Un post sur un réseau social</li>
+                <li>Une fiche produit</li>
+                <li>Un commentaire</li>
+                <li>Un résultat de recherche</li>
+              </ul>
+            </div>
+            <div>
+              <div class="dual-lbl">
+                📦 Utilise <code>&lt;section&gt;</code> si…
+              </div>
+              <p
+                style="
+                  font-size: 0.88rem;
+                  color: #cdd6f8;
+                  margin: 0.5rem 0 0.6rem;
+                "
+              >
+                tu regroupes du contenu <b>par thème</b>, mais chaque bloc n'a
+                pas de sens isolé.
+              </p>
+              <ul style="font-size: 0.88rem; color: #cdd6f8">
+                <li>« Nos services »</li>
+                <li>« À propos »</li>
+                <li>« Nos projets »</li>
+                <li>« Contact »</li>
+                <li>« FAQ »</li>
+              </ul>
+            </div>
+          </div>
+
+          <p>
+            <b>Le test ultime :</b> imagine que tu copies ce bloc et que tu le
+            colles <b>seul</b>
+            dans une nouvelle page. Est-ce qu'il a du sens tout seul ?
+            <br />• <b>Oui</b> → <code>&lt;article&gt;</code> <br />•
+            <b>Non</b> → <code>&lt;section&gt;</code> (ou
+            <code>&lt;div&gt;</code>)
+          </p>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">6</span> Exemple complet : un mini-blog</h3>
+          <p>
+            Assemblons tout. Voici la structure d'une page de blog, entièrement
+            sémantique. Regarde le <b>code</b>, puis le <b>rendu</b>. La même
+            page, deux fois.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mon blog&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;
+    &lt;h1&gt;Mon blog de dev&lt;/h1&gt;
+    &lt;p&gt;Ce que j'apprends, jour après jour.&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Accueil&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Articles&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;header&gt;
+        &lt;h2&gt;Pourquoi HTML n'est pas un langage de programmation&lt;/h2&gt;
+        &lt;p&gt;Publié le 14 octobre 2026&lt;/p&gt;
+      &lt;/header&gt;
+
+      &lt;section&gt;
+        &lt;h3&gt;La question&lt;/h3&gt;
+        &lt;p&gt;Beaucoup de débutants pensent que…&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;section&gt;
+        &lt;h3&gt;La réponse&lt;/h3&gt;
+        &lt;p&gt;En réalité, HTML ne fait aucun calcul…&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;footer&gt;
+        &lt;p&gt;Par Alex&lt;/p&gt;
+      &lt;/footer&gt;
+    &lt;/article&gt;
+
+    &lt;aside&gt;
+      &lt;h3&gt;À lire aussi&lt;/h3&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#"&gt;CSS en 10 minutes&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Mon premier site&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/aside&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;© 2026 — Tous droits réservés.&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview-article">
+                <header>
+                  <h1>Mon blog de dev</h1>
+                  <p>Ce que j'apprends, jour après jour.</p>
+                </header>
+
+                <h2
+                  style="
+                    font-size: 1.15rem;
+                    color: #111;
+                    font-family: Georgia, serif;
+                    margin: 1rem 0 0.4rem;
+                  "
+                >
+                  Pourquoi HTML n'est pas un langage de programmation
+                </h2>
+                <p
+                  style="
+                    font-size: 0.82rem;
+                    color: #666;
+                    margin: 0 0 0.6rem;
+                    font-style: italic;
+                  "
+                >
+                  Publié le 14 octobre 2026
+                </p>
+
+                <h3
+                  style="
+                    font-size: 1rem;
+                    color: #111;
+                    font-family: Georgia, serif;
+                    margin: 0.8rem 0 0.3rem;
+                  "
+                >
+                  La question
+                </h3>
+                <p>Beaucoup de débutants pensent que…</p>
+
+                <h3
+                  style="
+                    font-size: 1rem;
+                    color: #111;
+                    font-family: Georgia, serif;
+                    margin: 0.8rem 0 0.3rem;
+                  "
+                >
+                  La réponse
+                </h3>
+                <p>En réalité, HTML ne fait aucun calcul…</p>
+
+                <aside>
+                  <strong>À lire aussi :</strong> CSS en 10 minutes, Mon premier
+                  site.
+                </aside>
+
+                <p
+                  style="
+                    font-size: 0.82rem;
+                    color: #666;
+                    font-style: italic;
+                    margin: 0.8rem 0 0;
+                  "
+                >
+                  Par Alex
+                </p>
+
+                <footer>© 2026 — Tous droits réservés.</footer>
+              </div>
+              <p class="cap">
+                Rendu volontairement brut : aucune CSS. C'est ton navigateur qui
+                affiche les balises sémantiques avec leurs styles par défaut.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Observe la magie</span>
+            Ce code source, <b>sans une seule classe CSS</b>, se comprend déjà
+            tout seul : il y a un header, une nav, un article avec deux
+            sections, un aside, un footer. Si tu revenais dessus dans un an, tu
+            saurais tout de suite où est quoi.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">7</span> Quand utiliser
+            <code>&lt;div&gt;</code> et <code>&lt;span&gt;</code> ?
+          </h3>
+          <p>
+            On ne les abandonne <b>pas</b>. Ils restent utiles dans
+            <b>deux cas</b> :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;div class="carte"&gt;</code>
+              <p>
+                <b>Grouper pour le style.</b> Quand tu as besoin d'un conteneur
+                neutre <b>juste pour y appliquer du CSS</b>, sans signification
+                sémantique.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>&lt;span class="badge"&gt;Nouveau&lt;/span&gt;</code>
+              <p>
+                <b>Marquer un mot dans un texte.</b> Pour changer la couleur
+                d'un mot dans un paragraphe, par exemple, sans lui donner de
+                rôle particulier.
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">La règle à retenir</span>
+            <b>Sémantique d'abord.</b> Si un élément a un sens (une navigation,
+            un article, un bouton…), utilise la balise adaptée. Si vraiment
+            <b>aucun</b> élément ne correspond, alors
+            <code>&lt;div&gt;</code> (bloc) ou <code>&lt;span&gt;</code> (en
+            ligne).
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">8</span> Bilan du module HTML</h3>
+          <p>
+            Tu viens de terminer <b>tout le module HTML</b>. Bravo !
+            Récapitulons ce que tu sais faire :
+          </p>
+
+          <ul>
+            <li>
+              Écrire le <b>squelette</b> de n'importe quelle page
+              (<code>doctype</code>, <code>html</code>, <code>head</code>,
+              <code>body</code>).
+            </li>
+            <li>
+              Structurer du <b>texte</b> avec des titres et des paragraphes.
+            </li>
+            <li>Créer des <b>liens</b> et afficher des <b>images</b>.</li>
+            <li>Faire des <b>listes</b> et des <b>tableaux</b>.</li>
+            <li>
+              Construire des <b>formulaires</b> complets, avec validation.
+            </li>
+            <li>
+              Donner du <b>sens</b> à ta structure avec les balises sémantiques.
+            </li>
+          </ul>
+
+          <p>
+            Tu sais maintenant écrire <b>une page HTML complète et propre</b>.
+            Le problème, c'est qu'elle est <b>moche</b> : par défaut, le
+            navigateur l'affiche en Times New Roman, en noir sur blanc, sans
+            espacement, sans couleur. C'est exactement ce qu'on va régler dans
+            le <b>module suivant</b>.
+          </p>
+
+          <div class="box fun">
+            <span class="t">Prochaine étape : CSS</span>
+            Le <b>module 2 · CSS</b> va transformer tes pages. Couleurs,
+            typographie, mises en page, animations… Le HTML sans CSS, c'est une
+            maison sans peinture : tout est là, mais ça donne pas envie
+            d'entrer.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Combien de <code>&lt;main&gt;</code> peut-on mettre par page ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Autant qu'on veut.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">Un seul.</button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Un par section.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Tu écris un <b>article de blog</b> dans ta page. Quelle balise
+            utilises-tu ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;article&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;div class="article"&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;section&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Quelle balise utiliser pour un <b>menu de navigation</b> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;menu&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>&lt;div class="menu"&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;nav&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Pourquoi préférer <code>&lt;header&gt;</code> à
+            <code>&lt;div class="header"&gt;</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Parce que <code>&lt;header&gt;</code> donne un sens au contenu
+              (accessibilité, SEO, lisibilité).
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Parce que c'est plus court à écrire.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Parce que <code>&lt;div&gt;</code> ne s'affiche pas.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi final du module HTML</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée un fichier <code>blog.html</code> dans ton dossier
+            <code>01-html</code>. C'est ton <b>projet de fin de module</b>. Il
+            doit contenir :
+          </p>
+          <ul>
+            <li>
+              Un <code>&lt;header&gt;</code> avec un
+              <code>&lt;h1&gt;</code> (nom de ton blog) et un
+              <code>&lt;p&gt;</code> (slogan).
+            </li>
+            <li>
+              Un <code>&lt;nav&gt;</code> avec une <code>&lt;ul&gt;</code> de 3
+              liens (Accueil, Articles, Contact).
+            </li>
+            <li>
+              Un <code>&lt;main&gt;</code> contenant
+              <b>deux <code>&lt;article&gt;</code></b
+              >. Chaque article doit avoir :
+              <ul>
+                <li>
+                  Un <code>&lt;header&gt;</code> avec
+                  <code>&lt;h2&gt;</code> (titre) et
+                  <code>&lt;p&gt;</code> (date).
+                </li>
+                <li>
+                  Au moins une <code>&lt;section&gt;</code> avec
+                  <code>&lt;h3&gt;</code> et du texte.
+                </li>
+                <li>Un <code>&lt;footer&gt;</code> avec « Par … ».</li>
+              </ul>
+            </li>
+            <li>
+              Un <code>&lt;aside&gt;</code> dans le
+              <code>&lt;main&gt;</code> avec 3 liens « À lire aussi ».
+            </li>
+            <li>Un <code>&lt;footer&gt;</code> final avec copyright.</li>
+          </ul>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 <b>Contrainte forte :</b> essaie d'écrire ce fichier
+            <b>sans un seul <code>&lt;div&gt;</code></b
+            >. Si tu y arrives, tu as vraiment compris le HTML sémantique.
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mon blog&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;
+    &lt;h1&gt;Les aventures du code&lt;/h1&gt;
+    &lt;p&gt;Un blog sur ce que j'apprends chaque jour.&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Accueil&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Articles&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;main&gt;
+
+    &lt;article&gt;
+      &lt;header&gt;
+        &lt;h2&gt;Mon premier jour de code&lt;/h2&gt;
+        &lt;p&gt;Publié le 10 octobre 2026&lt;/p&gt;
+      &lt;/header&gt;
+
+      &lt;section&gt;
+        &lt;h3&gt;Ce que j'ai appris&lt;/h3&gt;
+        &lt;p&gt;Que HTML n'est pas si compliqué qu'on le dit…&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;footer&gt;
+        &lt;p&gt;Par Alex&lt;/p&gt;
+      &lt;/footer&gt;
+    &lt;/article&gt;
+
+    &lt;article&gt;
+      &lt;header&gt;
+        &lt;h2&gt;Les balises sémantiques&lt;/h2&gt;
+        &lt;p&gt;Publié le 14 octobre 2026&lt;/p&gt;
+      &lt;/header&gt;
+
+      &lt;section&gt;
+        &lt;h3&gt;Pourquoi c'est important&lt;/h3&gt;
+        &lt;p&gt;Parce que le code doit pouvoir se comprendre tout seul…&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;footer&gt;
+        &lt;p&gt;Par Alex&lt;/p&gt;
+      &lt;/footer&gt;
+    &lt;/article&gt;
+
+    &lt;aside&gt;
+      &lt;h3&gt;À lire aussi&lt;/h3&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Découvrir CSS&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Mon outil préféré&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Comment je m'organise&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/aside&gt;
+
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;© 2026 Alex — Tous droits réservés.&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>
