@@ -49,7 +49,11 @@
     </main>
   </div>
 
-  <script>window.BASE_URL = "../";</script>
+  <script>
+  window.BASE_URL = window.location.hostname.includes('github.io')
+    ? '/CoursWebFullstack/'
+    : './';
+</script>
   <script src="./assets/js/cours.js"></script>
   <script src="./assets/js/nav.js"></script>
 </body>

@@ -99,7 +99,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 
-  <script>window.BASE_URL = "../";</script>
+  <script>
+  window.BASE_URL = window.location.hostname.includes('github.io')
+    ? '/CoursWebFullstack/'
+    : '../';
+</script>
   <script src="../assets/js/cours.js"></script>
   <script src="../assets/js/nav.js"></script>
   <!--<script src="../../assets/js/resize.js"></script>
