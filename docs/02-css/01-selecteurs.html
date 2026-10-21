@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sélecteurs CSS · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* --- Zone preview --- */
+      .preview {
+        background: #fff;
+        color: #111;
+        padding: 1.3rem 1.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        font-family: Georgia, "Times New Roman", serif;
+        line-height: 1.6;
+      }
+      .preview h1 {
+        color: #111;
+        font-size: 1.5rem;
+        margin: 0 0 0.4rem;
+        font-family: inherit;
+      }
+      .preview h2 {
+        color: #111;
+        font-size: 1.15rem;
+        margin: 0.8rem 0 0.3rem;
+        font-family: inherit;
+      }
+      .preview p {
+        margin: 0.4rem 0;
+        font-size: 0.98rem;
+        color: #333;
+      }
+      .preview ul {
+        margin: 0.4rem 0 0.4rem 1.4rem;
+        color: #333;
+      }
+      .preview li {
+        margin: 0.2rem 0;
+        font-size: 0.95rem;
+      }
+
+      /* --- Règles CSS visuelles --- */
+      .rule-anatomy {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.4rem;
+        margin: 1.5rem 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1rem;
+        overflow-x: auto;
+      }
+      .rule-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .rule-piece {
+        padding: 0.25rem 0.55rem;
+        border-radius: 6px;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.15rem;
+      }
+      .rule-piece .lbl {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        opacity: 0.9;
+      }
+      .rp1 {
+        background: rgba(56, 189, 248, 0.14);
+        color: #7dd3fc;
+        border: 1px solid rgba(56, 189, 248, 0.35);
+      }
+      .rp1 .lbl {
+        color: #7dd3fc;
+      }
+      .rp2 {
+        background: rgba(168, 85, 247, 0.14);
+        color: #c4b5fd;
+        border: 1px solid rgba(168, 85, 247, 0.35);
+      }
+      .rp2 .lbl {
+        color: #c4b5fd;
+      }
+      .rp3 {
+        background: rgba(52, 211, 153, 0.14);
+        color: #6ee7b7;
+        border: 1px solid rgba(52, 211, 153, 0.35);
+      }
+      .rp3 .lbl {
+        color: #6ee7b7;
+      }
+      .rp4 {
+        background: rgba(251, 191, 36, 0.14);
+        color: #fde68a;
+        border: 1px solid rgba(251, 191, 36, 0.35);
+      }
+      .rp4 .lbl {
+        color: #fde68a;
+      }
+      .rp5 {
+        background: rgba(244, 63, 94, 0.14);
+        color: #fda4af;
+        border: 1px solid rgba(244, 63, 94, 0.35);
+      }
+      .rp5 .lbl {
+        color: #fda4af;
+      }
+
+      /* --- Tableau sélecteurs --- */
+      .sel-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+        background: var(--panel2);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .sel-table th,
+      .sel-table td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .sel-table th {
+        background: #141d47;
+        color: var(--cyan);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .sel-table td:first-child code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.82em;
+        white-space: nowrap;
+      }
+      .sel-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* --- Démo "qui est ciblé" --- */
+      .target-demo {
+        background: #fff;
+        color: #111;
+        padding: 1.3rem;
+        border-radius: 12px;
+        margin: 0.6rem 0;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .target-demo p {
+        margin: 0.4rem 0;
+        padding: 0.5rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        background: #f5f5f5;
+        color: #333;
+        transition: 0.3s;
+      }
+      .target-demo p.hit {
+        background: #fef3c7;
+        color: #92400e;
+        box-shadow: 0 0 0 2px #fbbf24;
+      }
+      .target-demo p.hit-blue {
+        background: #dbeafe;
+        color: #1e40af;
+        box-shadow: 0 0 0 2px #3b82f6;
+      }
+
+      /* --- Dual --- */
+      .dual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      @media (max-width: 640px) {
+        .dual {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dual > div {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      .dual-lbl {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .dual-lbl.ok {
+        color: var(--green);
+      }
+      .dual-lbl.ko {
+        color: #f43f5e;
+      }
+
+      /* --- Bloc méthode lier CSS --- */
+      .link-method {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 0.8rem 0;
+      }
+      .link-method h4 {
+        color: var(--cyan);
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .link-method h4 .badge-m {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        background: var(--cyan);
+        color: #06121f;
+        padding: 0.15em 0.55em;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+      .link-method p {
+        font-size: 0.87rem;
+        color: #cdd6f8;
+        margin-bottom: 0.5rem;
+      }
+
+      /* --- Anatomie ligne par ligne --- */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 2 · CSS</p>
+          <h1>Les sélecteurs CSS</h1>
+          <p class="lead">
+            Le CSS sert à <b>styliser</b> le HTML. Mais avant de styliser, il
+            faut savoir <b>cibler</b> — dire à quoi une règle s'applique. C'est
+            le rôle des <b>sélecteurs</b> : la fondation de tout CSS.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> Pourquoi CSS existe ?</h3>
+          <p>
+            Tu l'as vu : le HTML seul donne des pages <b>très moches</b>. Le
+            texte en Times New Roman, en noir, collé aux bords. C'est normal —
+            HTML ne décrit que le <b>sens</b>, pas l'<b>apparence</b>.
+          </p>
+          <p>
+            Le <b>CSS</b> (Cascading Style Sheets — « feuilles de style en
+            cascade ») est un langage séparé, qui dit au navigateur : « ce
+            <code>&lt;h1&gt;</code>, fais-le en rouge, taille 32px, centré ».
+          </p>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ko">HTML seul</div>
+              <div
+                class="preview"
+                style="
+                  font-family: Georgia, serif;
+                  font-size: 1rem;
+                  padding: 0.8rem 1rem;
+                "
+              >
+                <h1
+                  style="
+                    font-size: 1.4rem;
+                    margin: 0 0 0.3rem;
+                    color: #111;
+                    font-family: inherit;
+                  "
+                >
+                  Mon titre
+                </h1>
+                <p style="color: #111; font-family: inherit; margin: 0">
+                  Un paragraphe brut.
+                </p>
+              </div>
+              <p
+                style="
+                  font-size: 0.82rem;
+                  color: var(--muted);
+                  margin-top: 0.4rem;
+                "
+              >
+                Times New Roman, noir, sans mise en page.
+              </p>
+            </div>
+            <div>
+              <div class="dual-lbl ok">HTML + CSS</div>
+              <div
+                style="
+                  background: #fff;
+                  padding: 0.8rem 1rem;
+                  border-radius: 12px;
+                  font-family: &quot;Space Grotesk&quot;, system-ui, sans-serif;
+                "
+              >
+                <h1
+                  style="
+                    font-size: 1.4rem;
+                    margin: 0 0 0.3rem;
+                    color: #0ea5e9;
+                    font-family: inherit;
+                  "
+                >
+                  Mon titre
+                </h1>
+                <p
+                  style="
+                    color: #444;
+                    font-family: inherit;
+                    margin: 0;
+                    font-size: 0.95rem;
+                  "
+                >
+                  Un paragraphe stylisé.
+                </p>
+              </div>
+              <p
+                style="
+                  font-size: 0.82rem;
+                  color: var(--muted);
+                  margin-top: 0.4rem;
+                "
+              >
+                Couleur, police, taille : tout est décidé.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">La règle fondatrice</span>
+            <b>HTML</b> = <em>quoi</em> · <b>CSS</b> =
+            <em>à quoi ça ressemble</em>. Deux langages, deux rôles bien
+            séparés. On ne met <b>jamais</b> de style directement dans le HTML
+            (sauf cas très précis qu'on verra).
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> Les 3 façons de lier du CSS à du HTML
+          </h3>
+          <p>
+            Il existe trois méthodes pour appliquer du CSS à une page. On
+            utilise surtout la 3ᵉ.
+          </p>
+
+          <div class="link-method">
+            <h4><span class="badge-m">1</span> Inline (dans la balise)</h4>
+            <p>
+              Directement dans l'attribut <code>style</code> d'un élément. À
+              éviter : mélange HTML et CSS, impossible à réutiliser.
+            </p>
+            <pre><code class="language-markup">&lt;h1 style="color: red; font-size: 32px;"&gt;Mon titre&lt;/h1&gt;</code></pre>
+          </div>
+
+          <div class="link-method">
+            <h4>
+              <span class="badge-m">2</span> Interne (dans le
+              <code>&lt;head&gt;</code>)
+            </h4>
+            <p>
+              Dans une balise <code>&lt;style&gt;</code>, au début de la page.
+              Pratique pour les pages isolées, mais pas réutilisable sur
+              plusieurs pages.
+            </p>
+            <pre><code class="language-markup">&lt;head&gt;
+  &lt;style&gt;
+    h1 {
+      color: red;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;</code></pre>
+          </div>
+
+          <div class="link-method">
+            <h4><span class="badge-m">3</span> Externe (fichier séparé) ✅</h4>
+            <p>
+              Dans un fichier <code>.css</code> séparé, lié par une balise
+              <code>&lt;link&gt;</code>.
+              <b>C'est la méthode professionnelle</b> : un seul fichier de style
+              pour tout un site.
+            </p>
+            <pre><code class="language-markup">&lt;head&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;</code></pre>
+          </div>
+
+          <div class="box warn">
+            <span class="t">À retenir</span>
+            À partir de maintenant, tu utiliseras <b>la méthode externe</b>. Un
+            fichier <code>style.css</code> à côté de ton
+            <code>index.html</code>, lié par
+            <code>&lt;link rel="stylesheet" href="style.css"&gt;</code>. C'est
+            ça que font tous les sites pro.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">3</span> Anatomie d'une règle CSS</h3>
+          <p>
+            Une règle CSS a toujours la même forme : un <b>sélecteur</b> suivi
+            d'un bloc entre accolades, contenant des <b>déclarations</b>.
+          </p>
+
+          <div class="rule-anatomy">
+            <div class="rule-line">
+              <span class="rule-piece rp1"
+                >h1<span class="lbl">sélecteur</span></span
+              >
+              <span style="color: #888"> { </span>
+            </div>
+            <div class="rule-line" style="padding-left: 1.4rem">
+              <span class="rule-piece rp2"
+                >color<span class="lbl">propriété</span></span
+              >
+              <span style="color: #888">: </span>
+              <span class="rule-piece rp3"
+                >red<span class="lbl">valeur</span></span
+              >
+              <span style="color: #888"> ;</span>
+            </div>
+            <div class="rule-line" style="padding-left: 1.4rem">
+              <span class="rule-piece rp2"
+                >font-size<span class="lbl">propriété</span></span
+              >
+              <span style="color: #888">: </span>
+              <span class="rule-piece rp3"
+                >32px<span class="lbl">valeur</span></span
+              >
+              <span style="color: #888"> ;</span>
+            </div>
+            <div class="rule-line">
+              <span style="color: #888"> } </span>
+            </div>
+          </div>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>sélecteur</code>
+              <p>
+                <b>À quoi la règle s'applique.</b> C'est la partie la plus
+                importante — si ton sélecteur est mauvais, aucun style ne
+                s'applique.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>{ }</code>
+              <p><b>Le bloc.</b> Contient toutes les propriétés à appliquer.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>propriété: valeur;</code>
+              <p>
+                <b>Une déclaration.</b> Chaque ligne modifie une propriété. Le
+                <code>;</code> à la fin est <b>obligatoire</b> (sauf sur la
+                dernière, mais prends l'habitude de le mettre).
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Syntaxe à retenir</span>
+            <code>sélecteur { propriété: valeur; }</code>
+            <br />Avec un espace après le <code>:</code>, et un
+            <code>;</code> après chaque déclaration.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">4</span> Sélecteur d'élément</h3>
+          <p>
+            Le plus simple : cibler <b>toutes les balises d'un type</b>. Écrire
+            <code>p</code> applique le style à <b>tous les paragraphes</b> de la
+            page.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.el-demo p {
+  color: #db2777;
+  font-weight: 700;
+}
+.el-demo h2 {
+  color: #0ea5e9;
+  border-bottom: 2px solid #0ea5e9;
+  padding-bottom: 4px;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview el-demo">
+                <h2>Un titre</h2>
+                <p>Un paragraphe devient rose et gras.</p>
+                <p>Un autre paragraphe aussi.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Limite du sélecteur d'élément</span>
+            Il est <b>trop large</b> : il touche <b>tous</b> les <code>p</code>,
+            partout. Si tu veux styler uniquement certains paragraphes, il faut
+            autre chose.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> Sélecteur de classe (le plus utilisé)
+          </h3>
+          <p>
+            Une <b>classe</b> est une étiquette qu'on met dans le HTML avec
+            l'attribut <code>class="..."</code>. Plusieurs éléments peuvent
+            partager la même classe. En CSS, on la cible avec un
+            <b>point</b> devant : <code>.ma-classe</code>.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.classe-demo .important {
+  color: #dc2626;
+  font-weight: 700;
+}
+.classe-demo .note {
+  color: #6b7280;
+  font-style: italic;
+  font-size: .9em;
+}</code></pre>
+              <pre><code class="language-markup">&lt;p class="important"&gt;Ce paragraphe est important.&lt;/p&gt;
+&lt;p&gt;Ce paragraphe est normal.&lt;/p&gt;
+&lt;p class="note"&gt;Ce paragraphe est une note.&lt;/p&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview classe-demo">
+                <p class="important">Ce paragraphe est important.</p>
+                <p>Ce paragraphe est normal.</p>
+                <p class="note">Ce paragraphe est une note.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Pourquoi les classes sont géniales</span>
+            <ul>
+              <li>
+                <b>Réutilisables</b> : une classe définie une fois s'applique
+                partout où elle est posée.
+              </li>
+              <li><b>Précises</b> : tu cibles exactement ce que tu veux.</li>
+              <li>
+                <b>Combinables</b> : un élément peut avoir plusieurs classes
+                (<code>class="important note"</code>).
+              </li>
+            </ul>
+          </div>
+
+          <p style="font-size: 0.88rem; color: #cdd6f8">
+            <b>Convention de nommage :</b> les classes sont en minuscules, sans
+            accents, avec des tirets pour séparer les mots
+            (<code>mon-super-paragraphe</code>).
+          </p>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">6</span> Sélecteur d'id (unique)</h3>
+          <p>
+            Un <b>id</b> est comme une classe, mais <b>unique</b> dans la page —
+            un seul élément peut avoir un id donné. On le cible avec un
+            <b>dièse</b> : <code>#mon-id</code>.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.id-demo #titre-principal {
+  color: #7c3aed;
+  text-align: center;
+  font-size: 1.6em;
+}</code></pre>
+              <pre><code class="language-markup">&lt;h2 id="titre-principal"&gt;Mon titre unique&lt;/h2&gt;
+&lt;h2&gt;Un autre titre&lt;/h2&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview id-demo">
+                <h2 id="titre-principal">Mon titre unique</h2>
+                <h2>Un autre titre</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Classe ou id ? La règle de pro</span>
+            <b>Utilise toujours des classes.</b> Les ids ont deux problèmes :
+            <ul>
+              <li>
+                Ils sont <b>trop puissants</b> en spécificité (on verra ça juste
+                après), ce qui rend le CSS difficile à surcharger.
+              </li>
+              <li>
+                Ils ne peuvent pas être réutilisés — tu te retrouves avec du
+                code dupliqué.
+              </li>
+            </ul>
+            Les ids servent surtout à <b>une chose</b> : créer des
+            <b>ancres</b> (<code>&lt;a href="#mon-id"&gt;</code>) ou lier un
+            <code>&lt;label&gt;</code> à un <code>&lt;input&gt;</code>.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">7</span> Les sélecteurs combinés</h3>
+          <p>On peut combiner des sélecteurs pour être plus précis.</p>
+
+          <table class="sel-table">
+            <thead>
+              <tr>
+                <th>Sélecteur</th>
+                <th>Signifie</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>p</code></td>
+                <td>Tous les paragraphes.</td>
+              </tr>
+              <tr>
+                <td><code>.rouge</code></td>
+                <td>Tous les éléments avec <code>class="rouge"</code>.</td>
+              </tr>
+              <tr>
+                <td><code>p.rouge</code></td>
+                <td>
+                  Les <code>&lt;p&gt;</code> qui ont la classe
+                  <code>rouge</code> (pas les
+                  <code>&lt;h2 class="rouge"&gt;</code>).
+                </td>
+              </tr>
+              <tr>
+                <td><code>*</code></td>
+                <td>Tous les éléments (le sélecteur universel).</td>
+              </tr>
+              <tr>
+                <td><code>div p</code></td>
+                <td>
+                  Les <code>p</code> qui sont
+                  <b>quelque part à l'intérieur</b> d'un <code>div</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><code>div &gt; p</code></td>
+                <td>
+                  Les <code>p</code> qui sont <b>enfants directs</b> d'un
+                  <code>div</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><code>p + p</code></td>
+                <td>
+                  Un <code>p</code> qui suit immédiatement un autre
+                  <code>p</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><code>a:hover</code></td>
+                <td>Un lien <b>quand la souris est dessus</b>.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.comb-demo p {
+  background: #f3f4f6;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin: 4px 0;
+  font-size: .92rem;
+}
+.comb-demo p.hit {
+  background: #fef3c7;
+  box-shadow: 0 0 0 2px #fbbf24;
+}
+.comb-demo a {
+  color: #0ea5e9;
+  text-decoration: underline;
+  transition: color .15s;
+}
+.comb-demo a:hover {
+  color: #7c3aed;
+  text-decoration: none;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview comb-demo">
+                <p>Un paragraphe normal.</p>
+                <p class="hit">Ce paragraphe a la classe <code>hit</code>.</p>
+                <p>Un autre paragraphe.</p>
+                <p>
+                  Passe la souris sur
+                  <a href="javascript:void(0)">ce lien</a>
+                  pour voir l'effet <code>:hover</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Combiner pour être précis</span>
+            Le sélecteur <code>p.hit</code> ne cible que les
+            <code>&lt;p&gt;</code> ayant la classe <code>hit</code>. C'est
+            différent de <code>.hit</code> tout seul, qui toucherait
+            <b>n'importe quel</b> élément avec cette classe.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">8</span> La spécificité (pourquoi mon style ne
+            s'applique pas)
+          </h3>
+          <p>
+            Parfois, un style est écrit… mais ne s'applique pas. C'est presque
+            toujours un problème de <b>spécificité</b> : quand deux règles
+            touchent le même élément, la <b>plus « forte »</b> gagne.
+          </p>
+
+          <p>La hiérarchie, du plus faible au plus fort :</p>
+
+          <ol style="margin: 0.5rem 0 1rem 1.4rem; color: #cdd6f8">
+            <li>
+              <b>Sélecteur d'élément</b> — <code>p</code>, <code>h1</code>…
+              (poids 1)
+            </li>
+            <li>
+              <b>Sélecteur de classe</b> — <code>.important</code> (poids 10)
+            </li>
+            <li><b>Sélecteur d'id</b> — <code>#titre</code> (poids 100)</li>
+            <li>
+              <b>Style en ligne</b> — <code>style="..."</code> (poids 1000)
+            </li>
+          </ol>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">/* Plusieurs règles touchent le même h2 */
+.spe-demo h2 {
+  color: #22c55e;      /* poids 1+1 = faible */
+}
+.spe-demo .titre {
+  color: #0ea5e9;      /* poids 10 = plus fort */
+}
+.spe-demo #mon-titre {
+  color: #dc2626;      /* poids 100 = le plus fort ! */
+}</code></pre>
+              <pre><code class="language-markup">&lt;h2 id="mon-titre" class="titre"&gt;Quelle couleur je vais prendre ?&lt;/h2&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview spe-demo">
+                <h2 id="mon-titre" class="titre">
+                  Quelle couleur je vais prendre ?
+                </h2>
+              </div>
+              <p class="cap">
+                L'id gagne : le titre est <b style="color: #dc2626">rouge</b>,
+                pas bleu, pas vert.
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Ce qu'il faut retenir</span>
+            <ul>
+              <li>
+                À poids égal, la <b>dernière règle écrite</b> gagne (effet «
+                cascade »).
+              </li>
+              <li>
+                Un <code>id</code> écrase une <code>classe</code>, qui écrase un
+                <code>élément</code>.
+              </li>
+              <li>Le style en ligne écrase <b>presque tout</b>.</li>
+              <li>
+                Pour cette raison, <b>évite les id en CSS</b> : ça rend ton code
+                difficile à modifier.
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">9</span> Récap' du chapitre</h3>
+          <p>
+            Les sélecteurs, c'est la grammaire du CSS. Une fois que tu les as,
+            tout devient clair.
+          </p>
+
+          <div class="box tip">
+            <span class="t">Les 4 sélecteurs à connaître par cœur</span>
+            <ul>
+              <li><code>p</code> — sélecteur d'élément (large)</li>
+              <li>
+                <code>.ma-classe</code> — sélecteur de classe (le plus utilisé)
+                ✅
+              </li>
+              <li>
+                <code>#mon-id</code> — sélecteur d'id (à éviter sauf cas précis)
+              </li>
+              <li><code>p.ma-classe</code> — combinaison (précise)</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Quel sélecteur cible un élément qui a <code>class="rouge"</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>#rouge</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>.rouge</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>rouge</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Quelle méthode de liaison CSS est <b>recommandée</b> aujourd'hui ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Inline (dans la balise)
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Interne (dans <code>&lt;style&gt;</code>)
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Externe (fichier <code>.css</code> séparé)
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Comment cible-t-on <b>uniquement</b> les
+            <code>&lt;p&gt;</code> ayant la classe <code>note</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>p.note</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>.note p</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>p .note</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Si <code>h2</code>, <code>.titre</code> et
+            <code>#titre</code> définissent chacun une couleur différente sur le
+            même élément, laquelle gagne ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>h2</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>.titre</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>#titre</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Stylise ta première page</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée un fichier <code>selecteurs.html</code> dans ton dossier
+            <code>02-css</code> (à créer), et un fichier
+            <code>style.css</code> à côté.
+          </p>
+          <ul>
+            <li>
+              Le HTML contient un <code>&lt;h1&gt;</code>, trois
+              <code>&lt;p&gt;</code>, dont un avec la classe
+              <code>important</code> et un avec la classe <code>astuce</code>.
+            </li>
+            <li>
+              Le <code>&lt;link&gt;</code> vers <code>style.css</code> doit être
+              dans le <code>&lt;head&gt;</code>.
+            </li>
+            <li>
+              Dans le CSS, tu dois avoir :
+              <ul>
+                <li>
+                  Une règle qui s'applique à
+                  <b>tous les paragraphes</b> (couleur, taille, interlignage).
+                </li>
+                <li>
+                  Une règle qui s'applique <b>uniquement</b> à
+                  <code>.important</code> (en rouge + gras).
+                </li>
+                <li>
+                  Une règle qui s'applique <b>uniquement</b> à
+                  <code>.astuce</code> (en italique + fond gris).
+                </li>
+                <li>
+                  Une règle sur <code>h1</code> (couleur, alignement, bordure en
+                  bas).
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Sélecteurs&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Ma première page stylisée&lt;/h1&gt;
+  &lt;p&gt;Un paragraphe normal.&lt;/p&gt;
+  &lt;p class="important"&gt;Un paragraphe important.&lt;/p&gt;
+  &lt;p class="astuce"&gt;Une petite astuce en note.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <pre><code class="language-css">/* style.css */
+p {
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.important {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.astuce {
+  font-style: italic;
+  background: #f3f4f6;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+h1 {
+  color: #0ea5e9;
+  text-align: center;
+  border-bottom: 2px solid #0ea5e9;
+  padding-bottom: 10px;
+}</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>

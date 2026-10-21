@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Box model · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* ---- Schéma des 4 couches ---- */
+      .box-schema {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.6rem;
+        margin: 1.5rem 0;
+        display: grid;
+        place-items: center;
+      }
+      .layer-margin {
+        background: rgba(244, 114, 182, 0.15);
+        border: 2px dashed rgba(244, 114, 182, 0.55);
+        border-radius: 10px;
+        padding: 26px;
+        position: relative;
+      }
+      .layer-margin::before {
+        content: "margin";
+        position: absolute;
+        top: 4px;
+        left: 10px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.68rem;
+        color: #f9a8d4;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .layer-border {
+        background: rgba(251, 191, 36, 0.14);
+        border: 6px solid rgba(251, 191, 36, 0.7);
+        border-radius: 6px;
+        padding: 20px;
+        position: relative;
+      }
+      .layer-border::before {
+        content: "border";
+        position: absolute;
+        top: -1.4rem;
+        left: 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.68rem;
+        color: #fde68a;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .layer-padding {
+        background: rgba(56, 189, 248, 0.16);
+        border-radius: 4px;
+        padding: 20px;
+        position: relative;
+      }
+      .layer-padding::before {
+        content: "padding";
+        position: absolute;
+        top: 2px;
+        left: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.68rem;
+        color: #7dd3fc;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .layer-content {
+        background: rgba(52, 211, 153, 0.2);
+        border: 1px dashed rgba(52, 211, 153, 0.7);
+        border-radius: 4px;
+        padding: 1rem 2rem;
+        text-align: center;
+        color: #6ee7b7;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      /* ---- Playground interactif ---- */
+      .playground {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        margin: 1.5rem 0;
+      }
+      .pg-controls {
+        background: var(--surface-2);
+        border-bottom: 1px solid var(--line);
+        padding: 1rem 1.2rem;
+        display: grid;
+        gap: 0.9rem;
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (max-width: 640px) {
+        .pg-controls {
+          grid-template-columns: 1fr;
+        }
+      }
+      .pg-slider {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+      }
+      .pg-slider label {
+        color: var(--muted);
+        min-width: 68px;
+      }
+      .pg-slider input[type="range"] {
+        flex: 1;
+        accent-color: var(--cyan);
+        min-width: 0;
+      }
+      .pg-slider .val {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        min-width: 52px;
+        text-align: center;
+        font-weight: 700;
+      }
+      .pg-slider.color-slider input[type="range"] {
+        accent-color: var(--yellow);
+      }
+      .pg-slider.color-slider .val {
+        background: rgba(251, 191, 36, 0.12);
+        color: #fde68a;
+      }
+
+      .pg-toggle {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.6rem 0.8rem;
+        background: rgba(168, 85, 247, 0.08);
+        border: 1px solid rgba(168, 85, 247, 0.3);
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #ddd6fe;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .pg-toggle input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--violet);
+      }
+      .pg-toggle strong {
+        color: #c4b5fd;
+      }
+
+      .pg-stage {
+        padding: 1.6rem 1.4rem;
+        background-image:
+          linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+        background-size: 20px 20px;
+        overflow: auto;
+      }
+      .pg-box {
+        background: rgba(52, 211, 153, 0.15);
+        border: 2px solid #34d399;
+        color: #e8ecff;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        text-align: center;
+        transition: all 0.15s ease;
+        display: inline-block;
+      }
+      .pg-box .inner {
+        display: block;
+      }
+
+      /* ---- Code live du playground ---- */
+      .pg-code {
+        background: #080d20;
+        border-top: 1px solid var(--line);
+        padding: 1rem 1.2rem;
+        margin: 0 !important;
+        font-size: 0.82rem !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      /* ---- Anatomie ---- */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* ---- Dual comparaison box-sizing ---- */
+      .dual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      @media (max-width: 640px) {
+        .dual {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dual > div {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1.2rem;
+      }
+      .dual-lbl {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.6rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .dual-lbl.ok {
+        color: var(--green);
+      }
+      .dual-lbl.ko {
+        color: #f43f5e;
+      }
+
+      .bs-demo {
+        background: rgba(56, 189, 248, 0.08);
+        border: 3px solid var(--cyan);
+        padding: 10px;
+        color: #7dd3fc;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        text-align: center;
+        position: relative;
+        transition: 0.15s;
+      }
+      .bs-demo .dim {
+        position: absolute;
+        bottom: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.65rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .bs-demo.normal {
+        box-sizing: content-box;
+        width: 150px;
+        height: 50px;
+      }
+      .bs-demo.borderbox {
+        box-sizing: border-box;
+        width: 150px;
+        height: 50px;
+      }
+
+      /* ---- Margin collapse démo ---- */
+      .collapse-demo {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin: 1rem 0;
+        display: grid;
+        gap: 0;
+      }
+      .collapse-demo .block {
+        background: rgba(56, 189, 248, 0.2);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        padding: 0.8rem 1rem;
+        color: #7dd3fc;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+      }
+      .collapse-demo .block.m1 {
+        margin-bottom: 30px;
+      }
+      .collapse-demo .block.m2 {
+        margin-top: 50px;
+      }
+      .collapse-demo .gap-label {
+        text-align: center;
+        font-size: 0.75rem;
+        color: #fda4af;
+        font-family: "JetBrains Mono", monospace;
+        background: rgba(244, 63, 94, 0.08);
+        border-radius: 4px;
+        padding: 0.3rem;
+        margin: 0.2rem 0;
+      }
+
+      /* ---- Tableau récap ---- */
+      .prop-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.86rem;
+        background: var(--panel2);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .prop-table th,
+      .prop-table td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .prop-table th {
+        background: #141d47;
+        color: var(--cyan);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .prop-table td:first-child code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.82em;
+        white-space: nowrap;
+      }
+      .prop-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 2 · CSS</p>
+          <h1>Le box model</h1>
+          <p class="lead">
+            Chaque élément HTML est une <b>boîte</b>. Cette boîte a quatre
+            zones, qui s'emboîtent comme des poupées russes. Tant que tu n'as
+            pas visualisé ça, tu ne comprends pas la moitié des problèmes de
+            mise en page. Aujourd'hui, on le visualise et on le manipule.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> Tout est une boîte</h3>
+          <p>
+            Un titre, un paragraphe, une image, un bouton, un lien…
+            <b>tout</b> est une boîte rectangulaire dans le rendu du navigateur.
+            Quand tu ouvres les DevTools (<kbd>F12</kbd>) et que tu survoles un
+            élément, tu vois d'ailleurs un rectangle coloré s'afficher.
+          </p>
+          <p>
+            Cette boîte est composée de <b>quatre zones</b>, du plus interne au
+            plus externe :
+          </p>
+
+          <div class="box-schema">
+            <div class="layer-margin">
+              <div class="layer-border">
+                <div class="layer-padding">
+                  <div class="layer-content">CONTENU</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>content</code>
+              <p>
+                <b>Le contenu.</b> Le texte ou l'image. Sa taille se règle avec
+                <code>width</code> et <code>height</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>padding</code>
+              <p>
+                <b>La marge intérieure.</b> L'espace
+                <b>entre le contenu et la bordure</b>. Située
+                <b>à l'intérieur</b> de la boîte.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>border</code>
+              <p>
+                <b>La bordure.</b> Le trait qui entoure le padding. Peut être
+                invisible (0).
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>margin</code>
+              <p>
+                <b>La marge extérieure.</b> L'espace
+                <b>entre la bordure et les voisins</b>. Située
+                <b>à l'extérieur</b>.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">La phrase magique</span>
+            <b>Padding = intérieur. Margin = extérieur.</b>
+            <br />
+            Retiens ça, et tu ne confondras plus jamais les deux.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">2</span> Le padding</h3>
+          <p>
+            Le <code>padding</code> crée de l'espace <b>à l'intérieur</b> de la
+            boîte, entre le contenu et la bordure. Utile pour « donner de l'air
+            » au contenu sans changer sa taille apparente.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.pad-demo .box {
+  background: #fef3c7;
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
+  margin: .5rem 0;
+}
+.pad-demo .box.small { padding: 4px; }
+.pad-demo .box.medium { padding: 16px; }
+.pad-demo .box.big { padding: 32px; }</code></pre>
+            </div>
+            <div class="stage">
+              <div
+                style="
+                  background: #fff;
+                  padding: 1.3rem;
+                  border-radius: 12px;
+                  font-family: &quot;Space Grotesk&quot;, system-ui, sans-serif;
+                "
+              >
+                <p class="pad-demo" style="margin: 0">
+                  <span
+                    class="box small"
+                    style="
+                      display: block;
+                      background: #fef3c7;
+                      border: 2px solid #f59e0b;
+                      border-radius: 8px;
+                      margin: 0.5rem 0;
+                      padding: 4px;
+                      font-size: 0.9rem;
+                      color: #333;
+                    "
+                    >padding: 4px — collé aux bords</span
+                  >
+                  <span
+                    class="box medium"
+                    style="
+                      display: block;
+                      background: #fef3c7;
+                      border: 2px solid #f59e0b;
+                      border-radius: 8px;
+                      margin: 0.5rem 0;
+                      padding: 16px;
+                      font-size: 0.9rem;
+                      color: #333;
+                    "
+                    >padding: 16px — respire</span
+                  >
+                  <span
+                    class="box big"
+                    style="
+                      display: block;
+                      background: #fef3c7;
+                      border: 2px solid #f59e0b;
+                      border-radius: 8px;
+                      margin: 0.5rem 0;
+                      padding: 32px;
+                      font-size: 0.9rem;
+                      color: #333;
+                    "
+                    >padding: 32px — très aéré</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p>Le <code>padding</code> s'écrit de plusieurs façons :</p>
+
+          <pre><code class="language-css">/* 4 valeurs → haut, droite, bas, gauche (dans le sens des aiguilles d'une montre) */
+padding: 10px 20px 30px 40px;
+
+/* 3 valeurs → haut, gauche/droite, bas */
+padding: 10px 20px 30px;
+
+/* 2 valeurs → haut/bas, gauche/droite */
+padding: 10px 20px;
+
+/* 1 valeur → les 4 côtés en même temps */
+padding: 16px;
+
+/* Individuellement : */
+padding-top: 10px;
+padding-right: 20px;
+padding-bottom: 10px;
+padding-left: 20px;</code></pre>
+
+          <div class="box warn">
+            <span class="t">Le sens des valeurs</span>
+            <b>haut → droite → bas → gauche</b>, comme les aiguilles d'une
+            montre.
+            <br />
+            <code>padding: 10px 20px 30px 40px;</code> = 10 en haut, 20 à
+            droite, 30 en bas, 40 à gauche.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">3</span> La margin</h3>
+          <p>
+            La <code>margin</code> crée de l'espace <b>à l'extérieur</b>, entre
+            la boîte et ses voisines. C'est ce qui « éloigne » les éléments les
+            uns des autres.
+          </p>
+          <p>Elle s'écrit exactement comme le padding :</p>
+
+          <pre><code class="language-css">/* Mêmes règles que le padding */
+margin: 10px;
+margin: 10px 20px;
+margin-top: 20px;
+margin-bottom: 40px;</code></pre>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.margin-demo .box {
+  background: #dbeafe;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.margin-demo .box.top { margin-bottom: 6px; }
+.margin-demo .box.middle { margin-bottom: 24px; }
+.margin-demo .box.bottom { margin-bottom: 0; }</code></pre>
+            </div>
+            <div class="stage">
+              <div
+                style="
+                  background: #fff;
+                  padding: 1.3rem;
+                  border-radius: 12px;
+                  font-family: &quot;Space Grotesk&quot;, system-ui, sans-serif;
+                "
+              >
+                <div
+                  class="box top"
+                  style="
+                    background: #dbeafe;
+                    border: 2px solid #2563eb;
+                    border-radius: 8px;
+                    padding: 10px 14px;
+                    margin-bottom: 6px;
+                    font-size: 0.9rem;
+                    color: #333;
+                  "
+                >
+                  margin-bottom: 6px
+                </div>
+                <div
+                  class="box middle"
+                  style="
+                    background: #dbeafe;
+                    border: 2px solid #2563eb;
+                    border-radius: 8px;
+                    padding: 10px 14px;
+                    margin-bottom: 24px;
+                    font-size: 0.9rem;
+                    color: #333;
+                  "
+                >
+                  margin-bottom: 24px — plus d'espace en dessous
+                </div>
+                <div
+                  class="box bottom"
+                  style="
+                    background: #dbeafe;
+                    border: 2px solid #2563eb;
+                    border-radius: 8px;
+                    padding: 10px 14px;
+                    margin-bottom: 0;
+                    font-size: 0.9rem;
+                    color: #333;
+                  "
+                >
+                  margin-bottom: 0 — collé
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Astuce centre : <code>margin: 0 auto</code></span>
+            Pour <b>centrer horizontalement</b> un bloc à largeur fixe, on écrit
+            <code>margin: 0 auto;</code>. Le <code>auto</code> répartit
+            équitablement l'espace restant à gauche et à droite.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">4</span> La bordure</h3>
+          <p>
+            La <code>border</code> entoure la boîte, entre le padding et la
+            margin. Elle a <b>trois propriétés</b> qu'on combine dans un
+            raccourci :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>border-width</code>
+              <p>
+                L'épaisseur : <code>1px</code>, <code>2px</code>,
+                <code>thin</code>, <code>medium</code>, <code>thick</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>border-style</code>
+              <p>
+                Le style : <code>solid</code>, <code>dashed</code>,
+                <code>dotted</code>, <code>double</code>, <code>none</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>border-color</code>
+              <p>La couleur (n'importe quel format CSS).</p>
+            </div>
+          </div>
+
+          <pre><code class="language-css">/* Raccourci : width style color */
+border: 2px solid #38bdf8;
+
+/* Équivalent complet : */
+border-width: 2px;
+border-style: solid;
+border-color: #38bdf8;</code></pre>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.border-demo .box {
+  padding: 10px 14px;
+  margin: .4rem 0;
+  font-size: .92rem;
+  border-radius: 6px;
+}
+.border-demo .b1 { border: 2px solid #0ea5e9; }
+.border-demo .b2 { border: 2px dashed #a78bfa; }
+.border-demo .b3 { border: 2px dotted #22c55e; }
+.border-demo .b4 { border: 4px double #f43f5e; }</code></pre>
+            </div>
+            <div class="stage">
+              <div
+                style="
+                  background: #fff;
+                  padding: 1.3rem;
+                  border-radius: 12px;
+                  font-family: &quot;Space Grotesk&quot;, system-ui, sans-serif;
+                "
+              >
+                <div
+                  class="b1"
+                  style="
+                    padding: 10px 14px;
+                    margin: 0.4rem 0;
+                    font-size: 0.92rem;
+                    border-radius: 6px;
+                    border: 2px solid #0ea5e9;
+                    color: #333;
+                  "
+                >
+                  border: 2px solid
+                </div>
+                <div
+                  class="b2"
+                  style="
+                    padding: 10px 14px;
+                    margin: 0.4rem 0;
+                    font-size: 0.92rem;
+                    border-radius: 6px;
+                    border: 2px dashed #a78bfa;
+                    color: #333;
+                  "
+                >
+                  border: 2px dashed
+                </div>
+                <div
+                  class="b3"
+                  style="
+                    padding: 10px 14px;
+                    margin: 0.4rem 0;
+                    font-size: 0.92rem;
+                    border-radius: 6px;
+                    border: 2px dotted #22c55e;
+                    color: #333;
+                  "
+                >
+                  border: 2px dotted
+                </div>
+                <div
+                  class="b4"
+                  style="
+                    padding: 10px 14px;
+                    margin: 0.4rem 0;
+                    font-size: 0.92rem;
+                    border-radius: 6px;
+                    border: 4px double #f43f5e;
+                    color: #333;
+                  "
+                >
+                  border: 4px double
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t"><code>border-radius</code></span>
+            La propriété <code>border-radius: 12px;</code> arrondit les coins
+            d'un élément. <code>border-radius: 50%;</code> transforme un carré
+            en <b>cercle</b>. Indispensable pour les avatars et les boutons
+            modernes.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> Le playground : manipule tout en direct
+          </h3>
+          <p>
+            Voici la démo interactive la plus importante du chapitre. Bouge les
+            sliders et regarde la boîte se transformer <b>en temps réel</b>. Le
+            code se met à jour tout seul.
+          </p>
+
+          <div class="playground">
+            <div class="pg-controls">
+              <div class="pg-slider">
+                <label for="pg-pad">padding</label>
+                <input type="range" id="pg-pad" min="0" max="40" value="12" />
+                <span class="val" id="pg-pad-val">12px</span>
+              </div>
+              <div class="pg-slider">
+                <label for="pg-mar">margin</label>
+                <input type="range" id="pg-mar" min="0" max="40" value="16" />
+                <span class="val" id="pg-mar-val">16px</span>
+              </div>
+              <div class="pg-slider color-slider">
+                <label for="pg-bor">border</label>
+                <input type="range" id="pg-bor" min="0" max="12" value="2" />
+                <span class="val" id="pg-bor-val">2px</span>
+              </div>
+              <div class="pg-slider">
+                <label for="pg-wid">width</label>
+                <input
+                  type="range"
+                  id="pg-wid"
+                  min="100"
+                  max="400"
+                  value="200"
+                />
+                <span class="val" id="pg-wid-val">200px</span>
+              </div>
+              <div class="pg-toggle">
+                <input type="checkbox" id="pg-bs" checked />
+                <label for="pg-bs" style="cursor: pointer">
+                  <strong>box-sizing: border-box</strong> — la width inclut
+                  padding + border
+                </label>
+              </div>
+            </div>
+
+            <div class="pg-stage">
+              <div
+                class="pg-box"
+                id="pg-box"
+                style="
+                  padding: 12px;
+                  margin: 16px;
+                  border: 2px solid #34d399;
+                  width: 200px;
+                  box-sizing: border-box;
+                  border-radius: 8px;
+                "
+              >
+                <span class="inner">Une boîte de démo</span>
+              </div>
+            </div>
+
+            <pre
+              class="pg-code"
+            ><code class="language-css" id="pg-code">.boite {
+  padding: 12px;
+  margin: 16px;
+  border: 2px solid #34d399;
+  width: 200px;
+  box-sizing: border-box;
+}</code></pre>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Essaie ça</span>
+            Décoche <b>box-sizing</b> et bouge le slider <b>padding</b>. Regarde
+            la width : elle grossit ! C'est exactement le piège du point 7.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">6</span> <code>width</code> et <code>height</code>
+          </h3>
+          <p>
+            Ces deux propriétés fixent la taille du <b>contenu</b> (par défaut).
+            Attention, elles acceptent plusieurs unités et pas mal de valeurs
+            particulières :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>width: 300px;</code>
+              <p>Taille fixe. Ne change jamais.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>width: 50%;</code>
+              <p>Pourcentage du parent. S'adapte au redimensionnement.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>width: 100%;</code>
+              <p>Prend toute la largeur disponible du parent.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>max-width: 800px;</code>
+              <p>
+                <b>Largeur maximale.</b> L'élément peut rétrécir, mais ne
+                dépassera jamais 800px.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>min-width: 200px;</code>
+              <p>
+                <b>Largeur minimale.</b> En dessous de 200px, il refuse de
+                rétrécir.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Le combo gagnant</span>
+            <code>max-width: 800px; margin: 0 auto;</code> — c'est
+            <b>le</b> pattern des contenus centrés lisibles. Un article qui ne
+            prend jamais plus de 800px de large, centré sur la page. Simple et
+            efficace.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">7</span> Le piège du siècle :
+            <code>box-sizing</code>
+          </h3>
+          <p>Voici <b>LE piège</b> qui rend fou les débutants. Écoute bien.</p>
+          <p>
+            Par défaut, quand tu écris <code>width: 200px;</code>, cette largeur
+            concerne <b>uniquement le contenu</b>. Le padding et la border
+            s'ajoutent <b>par-dessus</b>.
+          </p>
+          <p>Donc si tu écris :</p>
+
+          <pre><code class="language-css">.boite {
+  width: 200px;
+  padding: 20px;
+  border: 5px solid black;
+}</code></pre>
+
+          <p>La largeur totale à l'écran n'est pas 200px, mais :</p>
+
+          <pre><code class="language-css">200 (width) + 20 (pad gauche) + 20 (pad droite) + 5 (border gauche) + 5 (border droite) = 250px</code></pre>
+
+          <p>
+            Ça paraît anodin, mais ça casse tout quand tu veux aligner deux
+            colonnes de 50 %.
+          </p>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ko">❌ Sans border-box (défaut)</div>
+              <div class="bs-demo normal" style="margin-top: 0.6rem">
+                width: 150px<br />
+                padding: 10px<br />
+                border: 3px
+                <div class="dim">total réel : 176px</div>
+              </div>
+            </div>
+            <div>
+              <div class="dual-lbl ok">✅ Avec border-box</div>
+              <div class="bs-demo borderbox" style="margin-top: 0.6rem">
+                width: 150px<br />
+                padding: 10px<br />
+                border: 3px
+                <div class="dim">total réel : 150px</div>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            <b>La solution ?</b> Une seule ligne de CSS, à mettre
+            <b>au début de chaque projet</b> :
+          </p>
+
+          <pre><code class="language-css">* {
+  box-sizing: border-box;
+}</code></pre>
+
+          <div class="box warn">
+            <span class="t">À retenir absolument</span>
+            Avec <code>box-sizing: border-box</code>, quand tu écris
+            <code>width: 200px</code>, c'est <b>200px au total</b>. Le padding
+            et la border sont <b>déduits à l'intérieur</b>. C'est
+            <b>ce que tout le monde veut</b>, et c'est pour ça que tous les
+            projets mettent cette ligne au début.
+          </div>
+
+          <div class="box info">
+            <span class="t">Pourquoi c'est le défaut historique ?</span>
+            Parce que le CSS a été créé en 1996, avant qu'on se rende compte que
+            ce comportement était pénible. Aujourd'hui on ne peut plus changer
+            le défaut (ça casserait des millions de sites). Mais dans les
+            nouveaux projets, on met <b>toujours</b> la règle
+            <code>* { box-sizing: border-box; }</code>.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">8</span> Le <em>margin collapse</em> (bonus)
+          </h3>
+          <p>
+            Il existe un phénomène bizarre en CSS : quand deux marges verticales
+            se touchent, elles <b>fusionnent</b>. Elles ne s'additionnent pas —
+            elles prennent la plus grande.
+          </p>
+
+          <div class="collapse-demo">
+            <div class="block m1">Bloc 1 — margin-bottom: 30px</div>
+            <div class="gap-label">espace réel : 50px (pas 80px !)</div>
+            <div class="block m2">Bloc 2 — margin-top: 50px</div>
+          </div>
+
+          <p>
+            30 + 50 ne font pas 80, mais <b>50</b>. Le navigateur prend la plus
+            grande des deux marges. Ce phénomène s'appelle le
+            <b>margin collapse</b>.
+          </p>
+
+          <div class="box info">
+            <span class="t">Ça ne marche que verticalement</span>
+            Le margin collapse s'applique uniquement aux marges
+            <b>verticales</b> (top/bottom) entre éléments adjacents. Les marges
+            horizontales ne fusionnent <b>jamais</b>. <br /><br />
+            Pas besoin de comprendre tous les cas tordus aujourd'hui. Retiens
+            juste :
+            <b
+              >les marges verticales fusionnent parfois, ne t'étonne pas si
+              l'espace calculé n'est pas exact</b
+            >.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">9</span> Le reset CSS minimal</h3>
+          <p>
+            Chaque navigateur a ses styles par défaut (marges, tailles,
+            polices…). Pour repartir sur des bases propres et identiques
+            partout, on commence souvent ses feuilles de style par un petit «
+            reset » :
+          </p>
+
+          <pre><code class="language-css">/* Reset minimal recommandé */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}</code></pre>
+
+          <div class="box tip">
+            <span class="t">À mettre au début de TOUS tes projets</span>
+            Ces quelques lignes suppriment les différences entre navigateurs et
+            te donnent une base saine. Le
+            <code>* { box-sizing: border-box; }</code> est
+            <b>non négociable</b>. Le reste, tu peux l'ajuster selon ton projet.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Quelle est la différence entre <code>padding</code> et
+            <code>margin</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Aucune, ce sont des synonymes.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Le padding est <b>à l'intérieur</b> de la bordure ; la margin est
+              <b>à l'extérieur</b>.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Le padding est vertical ; la margin est horizontale.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Que fait <code>padding: 10px 20px 30px 40px;</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              10 en haut, 20 en bas, 30 à droite, 40 à gauche.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              10 à gauche, 20 à droite, 30 en haut, 40 en bas.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              10 en haut, 20 à droite, 30 en bas, 40 à gauche (sens des
+              aiguilles d'une montre).
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Tu écris <code>width: 200px; padding: 20px;</code> sans
+            <code>box-sizing</code>. Quelle est la largeur réelle à l'écran ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">200px.</button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              240px (200 + 20 + 20).
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              220px (200 + 20).
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Quelle règle met-on au début de <b>chaque</b> projet CSS pour éviter
+            les surprises de largeur ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>* { box-sizing: border-box; }</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>body { width: 100%; }</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>html { margin: 0 auto; }</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Ta carte de profil, version boîte</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Reprends ta carte de visite du chapitre précédent, ou crée
+            <code>box.html</code> + <code>box.css</code> dans ton dossier
+            <code>02-css</code>. L'objectif :
+            <b>manipuler consciemment</b> chaque propriété du box model.
+          </p>
+          <ul>
+            <li>
+              Un conteneur <code>.carte</code> avec :
+              <ul>
+                <li><code>width: 400px;</code></li>
+                <li><code>padding: 24px;</code></li>
+                <li><code>border: 2px solid …;</code></li>
+                <li><code>border-radius: 16px;</code></li>
+                <li>
+                  <code>margin: 40px auto;</code> → pour la <b>centrer</b>.
+                </li>
+                <li>
+                  <code>box-sizing: border-box;</code> → pour que la carte fasse
+                  <b>exactement</b> 400px.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Un titre <code>&lt;h1&gt;</code> avec
+              <code>margin-bottom: 8px;</code>.
+            </li>
+            <li>Des paragraphes avec <code>margin-bottom: 16px;</code>.</li>
+            <li>
+              Un bouton <code>.cta</code> avec
+              <code>padding: 12px 24px;</code> et
+              <code>border-radius: 8px;</code>.
+            </li>
+          </ul>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 <b>Test de validation :</b> ajoute
+            <code>padding: 60px;</code> sur la carte. Si elle grossit
+            visuellement, c'est qu'il manque
+            <code>box-sizing: border-box;</code>
+            quelque part. Si elle reste à 400px de large, c'est bon.
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Box model&lt;/title&gt;
+  &lt;link rel="stylesheet" href="box.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;div class="carte"&gt;
+    &lt;h1&gt;Alex&lt;/h1&gt;
+    &lt;p class="role"&gt;Apprenti développeur&lt;/p&gt;
+    &lt;p&gt;Passionné par le web, j'apprends à créer mes propres sites.&lt;/p&gt;
+    &lt;button class="cta"&gt;Me contacter&lt;/button&gt;
+  &lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <pre><code class="language-css">/* box.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.carte {
+  width: 400px;
+  padding: 24px;
+  border: 2px solid #38bdf8;
+  border-radius: 16px;
+  margin: 40px auto;
+  background: #1e293b;
+  box-sizing: border-box;
+}
+
+.carte h1 {
+  color: #38bdf8;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.carte .role {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.carte p {
+  margin-bottom: 16px;
+}
+
+.cta {
+  background: #38bdf8;
+  color: #0f172a;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.cta:hover {
+  background: #0ea5e9;
+}</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+
+    <script>
+      /* Playground box model — piloté par 4 sliders + 1 checkbox */
+      (function () {
+        const pad = document.getElementById("pg-pad");
+        const mar = document.getElementById("pg-mar");
+        const bor = document.getElementById("pg-bor");
+        const wid = document.getElementById("pg-wid");
+        const bs = document.getElementById("pg-bs");
+        if (!pad) return;
+
+        const padVal = document.getElementById("pg-pad-val");
+        const marVal = document.getElementById("pg-mar-val");
+        const borVal = document.getElementById("pg-bor-val");
+        const widVal = document.getElementById("pg-wid-val");
+        const box = document.getElementById("pg-box");
+        const code = document.getElementById("pg-code");
+
+        function render() {
+          const p = pad.value + "px";
+          const m = mar.value + "px";
+          const b = bor.value + "px";
+          const w = wid.value + "px";
+          const useBs = bs.checked;
+
+          padVal.textContent = p;
+          marVal.textContent = m;
+          borVal.textContent = b;
+          widVal.textContent = w;
+
+          box.style.padding = p;
+          box.style.margin = m;
+          box.style.borderWidth = b;
+          box.style.width = w;
+          box.style.boxSizing = useBs ? "border-box" : "content-box";
+
+          code.textContent =
+            ".boite {\n" +
+            "  padding: " +
+            p +
+            ";\n" +
+            "  margin: " +
+            m +
+            ";\n" +
+            "  border: " +
+            b +
+            " solid #34d399;\n" +
+            "  width: " +
+            w +
+            ";\n" +
+            "  box-sizing: " +
+            (useBs ? "border-box" : "content-box") +
+            ";\n" +
+            "}";
+
+          if (window.Prism) Prism.highlightElement(code);
+        }
+
+        [pad, mar, bor, wid, bs].forEach((el) => {
+          el.addEventListener("input", render);
+          el.addEventListener("change", render);
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

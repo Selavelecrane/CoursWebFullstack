@@ -73,16 +73,16 @@ window.COURS = {
       description:
         "Couleurs, mise en page, animation. Le CSS donne vie à la structure.",
       chapitres: [
-        { id: "01-selecteurs", titre: "Sélecteurs", dispo: false },
+        { id: "01-selecteurs", titre: "Sélecteurs", dispo: true },
         {
           id: "02-couleurs-et-typo",
           titre: "Couleurs et typographie",
-          dispo: false,
+          dispo: true,
         },
-        { id: "03-box-model", titre: "Box model", dispo: false },
-        { id: "04-flexbox", titre: "Flexbox", dispo: false },
+        { id: "03-box-model", titre: "Box model", dispo: true },
+        { id: "04-flexbox", titre: "Flexbox", dispo: true },
         { id: "05-grid", titre: "CSS Grid", dispo: true },
-        { id: "06-responsive", titre: "Responsive", dispo: false },
+        { id: "06-responsive", titre: "Responsive", dispo: true },
       ],
     },
 

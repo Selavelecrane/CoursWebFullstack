@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flexbox · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* --- Schéma des 2 axes --- */
+      .axis-schema {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.4rem;
+        margin: 1.5rem 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+      }
+      .axis-schema .row {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+        margin-bottom: 0.7rem;
+        flex-wrap: wrap;
+      }
+      .axis-schema .tag {
+        background: rgba(56, 189, 248, 0.14);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        font-weight: 700;
+      }
+      .axis-schema .tag.cross {
+        background: rgba(244, 114, 182, 0.14);
+        color: #f9a8d4;
+        border-color: rgba(244, 114, 182, 0.35);
+      }
+      .axis-schema p {
+        margin: 0;
+        color: #cdd6f8;
+        font-size: 0.85rem;
+      }
+
+      /* --- Démo générique pour Flexbox --- */
+      .flex-stage {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        gap: 8px;
+        min-height: 140px;
+        margin: 0.5rem 0;
+        transition: 0.2s;
+      }
+      .flex-stage > div {
+        background: linear-gradient(160deg, #38bdf8, #0ea5e9);
+        color: #04121f;
+        font-weight: 700;
+        font-size: 0.82rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        min-width: 60px;
+        min-height: 44px;
+        transition: 0.2s;
+      }
+      .flex-stage > div:nth-child(2) {
+        background: linear-gradient(160deg, #c084fc, #9333ea);
+        color: #fff;
+      }
+      .flex-stage > div:nth-child(3) {
+        background: linear-gradient(160deg, #fb7185, #e11d48);
+        color: #fff;
+      }
+      .flex-stage > div:nth-child(4) {
+        background: linear-gradient(160deg, #4ade80, #16a34a);
+        color: #04210f;
+      }
+      .flex-stage > div:nth-child(5) {
+        background: linear-gradient(160deg, #fbbf24, #d97706);
+        color: #2a1a00;
+      }
+
+      /* Conteneur stylé comme un vrai projet */
+      .navbar-demo {
+        background: linear-gradient(
+          135deg,
+          rgba(56, 189, 248, 0.12),
+          rgba(168, 85, 247, 0.12)
+        );
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        margin: 0.6rem 0;
+      }
+      .navbar-demo .logo {
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: var(--cyan);
+      }
+      .navbar-demo .spacer {
+        flex: 1;
+      }
+      .navbar-demo a {
+        color: #c4b5fd;
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding: 0.35rem 0.7rem;
+        border-radius: 6px;
+        transition: 0.15s;
+      }
+      .navbar-demo a:hover {
+        background: rgba(168, 85, 247, 0.18);
+        color: #fff;
+      }
+
+      /* --- Cartes alignées --- */
+      .cards-demo {
+        display: flex;
+        gap: 12px;
+        margin: 0.6rem 0;
+      }
+      .cards-demo .c {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: #cdd6f8;
+      }
+      .cards-demo .c h4 {
+        color: var(--cyan);
+        font-size: 0.95rem;
+        margin: 0;
+      }
+      .cards-demo .c p {
+        margin: 0;
+        flex: 1;
+      }
+      .cards-demo .c button {
+        background: var(--cyan);
+        color: #06121f;
+        border: none;
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.82rem;
+        align-self: flex-start;
+      }
+
+      /* --- Dual --- */
+      .dual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      @media (max-width: 640px) {
+        .dual {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dual > div {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      .dual-lbl {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .dual-lbl.ok {
+        color: var(--green);
+      }
+      .dual-lbl.ko {
+        color: #f43f5e;
+      }
+
+      /* --- Faux code visuel (pour schéma 3 valeurs) --- */
+      .value-lines {
+        display: grid;
+        gap: 0.4rem;
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        color: #cdd6f8;
+        margin: 1rem 0;
+      }
+      .value-lines .line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: center;
+      }
+      .value-lines .num {
+        background: rgba(56, 189, 248, 0.14);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-weight: 700;
+      }
+
+      /* --- Anatomie --- */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* --- Tableau --- */
+      .prop-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.86rem;
+        background: var(--panel2);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .prop-table th,
+      .prop-table td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .prop-table th {
+        background: #141d47;
+        color: var(--cyan);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .prop-table td:first-child code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.82em;
+        white-space: nowrap;
+      }
+      .prop-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 2 · CSS</p>
+          <h1>Flexbox</h1>
+          <p class="lead">
+            Le box model gère <b>une boîte</b>. Flexbox gère
+            <b>plusieurs boîtes</b> : comment les aligner, les répartir, les
+            centrer. C'est le premier vrai système de mise en page du CSS
+            moderne, et tu vas l'utiliser <b>tous les jours</b>.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> Pourquoi Flexbox ?</h3>
+          <p>
+            Imagine une barre de navigation : un logo à gauche, trois liens à
+            droite, alignés verticalement au centre. Avec les vieilles
+            techniques (floats, position absolute), c'était un <b>cauchemar</b>.
+          </p>
+          <p>
+            Flexbox est arrivé pour résoudre ça. Une ligne de CSS sur le
+            <b>parent</b> : <code>display: flex;</code>. Et tous les enfants
+            directs deviennent des <b>flex items</b> alignés en ligne. C'est
+            tout.
+          </p>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ko">Sans Flexbox</div>
+              <div
+                style="
+                  background: #fff;
+                  padding: 0.8rem 1rem;
+                  border-radius: 8px;
+                "
+              >
+                <span
+                  style="
+                    display: inline-block;
+                    background: #0ea5e9;
+                    color: #fff;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                  "
+                  >Logo</span
+                >
+                <span
+                  style="
+                    display: inline-block;
+                    background: #7c3aed;
+                    color: #fff;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                    margin-left: 4px;
+                  "
+                  >Accueil</span
+                >
+                <span
+                  style="
+                    display: inline-block;
+                    background: #7c3aed;
+                    color: #fff;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                  "
+                  >Blog</span
+                >
+              </div>
+              <p
+                style="
+                  font-size: 0.82rem;
+                  color: var(--muted);
+                  margin-top: 0.5rem;
+                "
+              >
+                Alignement vertical bricolé, espacement géré à la main.
+              </p>
+            </div>
+            <div>
+              <div class="dual-lbl ok">Avec Flexbox</div>
+              <div
+                style="
+                  background: #fff;
+                  padding: 0.8rem 1rem;
+                  border-radius: 8px;
+                  display: flex;
+                  gap: 8px;
+                  align-items: center;
+                "
+              >
+                <span
+                  style="
+                    background: #0ea5e9;
+                    color: #fff;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                  "
+                  >Logo</span
+                >
+                <span style="flex: 1"></span>
+                <span
+                  style="
+                    background: #7c3aed;
+                    color: #fff;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                  "
+                  >Accueil</span
+                >
+                <span
+                  style="
+                    background: #7c3aed;
+                    color: #fff;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                  "
+                  >Blog</span
+                >
+              </div>
+              <p
+                style="
+                  font-size: 0.82rem;
+                  color: var(--muted);
+                  margin-top: 0.5rem;
+                "
+              >
+                3 lignes de CSS. Aligné, espacé, propre.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">La règle simple</span>
+            Flexbox = <b>mise en page sur 1 axe</b> (une ligne <em>ou</em> une
+            colonne). Pour du 2D (lignes ET colonnes en même temps), ce sera
+            Grid, au chapitre suivant.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> Activer Flexbox :
+            <code>display: flex</code>
+          </h3>
+          <p>
+            On met <code>display: flex;</code> sur le <b>parent</b>.
+            Automatiquement :
+          </p>
+          <ul>
+            <li>Les enfants s'alignent en <b>ligne</b> (horizontalement).</li>
+            <li>
+              Ils prennent la taille de leur contenu (ne s'étirent plus en
+              pleine largeur).
+            </li>
+            <li>Ils s'alignent en haut par défaut.</li>
+          </ul>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.flex-demo {
+  display: flex;
+}</code></pre>
+              <pre><code class="language-markup">&lt;div class="flex-demo"&gt;
+  &lt;div&gt;Un&lt;/div&gt;
+  &lt;div&gt;Deux&lt;/div&gt;
+  &lt;div&gt;Trois&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="flex-stage flex-demo">
+                <div>Un</div>
+                <div>Deux</div>
+                <div>Trois</div>
+              </div>
+              <p class="cap">
+                Les 3 boîtes s'alignent en ligne, chacune à la taille de son
+                contenu.
+              </p>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Piège classique</span>
+            <code>display: flex;</code> transforme les <b>enfants directs</b> en
+            flex items. Pas les petits-enfants. Comme pour Grid.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">3</span> Les deux axes</h3>
+          <p>
+            Flexbox raisonne en <b>deux axes</b>. Comprendre ces deux axes,
+            c'est comprendre 90 % de Flexbox.
+          </p>
+
+          <div class="axis-schema">
+            <div class="row">
+              <span class="tag">Axe principal (main axis)</span>
+              <p>
+                → la direction dans laquelle les items sont alignés. Par défaut
+                : <b>horizontal</b>.
+              </p>
+            </div>
+            <div class="row" style="margin-bottom: 0">
+              <span class="tag cross">Axe secondaire (cross axis)</span>
+              <p>
+                → perpendiculaire au principal. Par défaut : <b>vertical</b>.
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Retiens les 2 propriétés clés</span>
+            <ul>
+              <li>
+                <code>justify-content</code> → aligne sur
+                <b>l'axe principal</b>.
+              </li>
+              <li>
+                <code>align-items</code> → aligne sur <b>l'axe secondaire</b>.
+              </li>
+            </ul>
+            <br />
+            Si tu changes <code>flex-direction</code> en <code>column</code>,
+            les axes <b>s'inversent</b> : principal devient vertical, secondaire
+            devient horizontal.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">4</span> La direction :
+            <code>flex-direction</code>
+          </h3>
+          <p>
+            4 valeurs possibles. Par défaut, c'est <code>row</code> (ligne, de
+            gauche à droite).
+          </p>
+
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Valeur</th>
+                <th>Effet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>row</code></td>
+                <td>Ligne, de gauche à droite (défaut).</td>
+              </tr>
+              <tr>
+                <td><code>row-reverse</code></td>
+                <td>Ligne, de droite à gauche.</td>
+              </tr>
+              <tr>
+                <td><code>column</code></td>
+                <td>Colonne, de haut en bas.</td>
+              </tr>
+              <tr>
+                <td><code>column-reverse</code></td>
+                <td>Colonne, de bas en haut.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.dir-demo {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div
+                class="tog"
+                data-target=".dir-demo"
+                data-prop="flex-direction"
+                data-values="row row-reverse column column-reverse"
+              ></div>
+              <div
+                class="flex-stage dir-demo"
+                style="display: flex; flex-direction: row; gap: 10px"
+              >
+                <div>Un</div>
+                <div>Deux</div>
+                <div>Trois</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> Répartir sur l'axe principal :
+            <code>justify-content</code>
+          </h3>
+          <p>
+            <code>justify-content</code> décide comment les items se
+            répartissent sur <b>l'axe principal</b>. 6 valeurs à connaître :
+          </p>
+
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Valeur</th>
+                <th>Effet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>flex-start</code></td>
+                <td>Alignés au début (défaut).</td>
+              </tr>
+              <tr>
+                <td><code>flex-end</code></td>
+                <td>Alignés à la fin.</td>
+              </tr>
+              <tr>
+                <td><code>center</code></td>
+                <td>Centrés.</td>
+              </tr>
+              <tr>
+                <td><code>space-between</code></td>
+                <td>Espace <b>entre</b> les items. Rien aux bords.</td>
+              </tr>
+              <tr>
+                <td><code>space-around</code></td>
+                <td>Espace autour de chaque item (demi-espace aux bords).</td>
+              </tr>
+              <tr>
+                <td><code>space-evenly</code></td>
+                <td>Espaces strictement égaux partout.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.jc-demo {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div
+                class="tog"
+                data-target=".jc-demo"
+                data-prop="justify-content"
+                data-values="flex-start flex-end center space-between space-around space-evenly"
+              ></div>
+              <div
+                class="flex-stage jc-demo"
+                style="display: flex; gap: 10px; justify-content: flex-start"
+              >
+                <div>Un</div>
+                <div>Deux</div>
+                <div>Trois</div>
+              </div>
+              <p class="cap">
+                Le conteneur est toujours de la même largeur : observe la
+                répartition.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Le plus utilisé : <code>space-between</code></span>
+            Pour une barre de navigation avec un logo à gauche et un menu à
+            droite,
+            <code>justify-content: space-between;</code> fait exactement ça :
+            les éléments se collent aux extrémités, l'espace libre se met au
+            milieu.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">6</span> Aligner sur l'axe secondaire :
+            <code>align-items</code>
+          </h3>
+          <p>
+            <code>align-items</code> s'occupe de <b>l'axe secondaire</b>.
+            Valeurs principales :
+          </p>
+
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Valeur</th>
+                <th>Effet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>stretch</code></td>
+                <td>Les items s'étirent pour remplir (défaut).</td>
+              </tr>
+              <tr>
+                <td><code>flex-start</code></td>
+                <td>Alignés au début.</td>
+              </tr>
+              <tr>
+                <td><code>flex-end</code></td>
+                <td>Alignés à la fin.</td>
+              </tr>
+              <tr>
+                <td><code>center</code></td>
+                <td>Centrés.</td>
+              </tr>
+              <tr>
+                <td><code>baseline</code></td>
+                <td>Alignés sur la ligne de base du texte.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.ai-demo {
+  display: flex;
+  gap: 10px;
+  height: 140px;
+  align-items: stretch;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div
+                class="tog"
+                data-target=".ai-demo"
+                data-prop="align-items"
+                data-values="stretch flex-start flex-end center baseline"
+              ></div>
+              <div
+                class="flex-stage ai-demo"
+                style="
+                  display: flex;
+                  gap: 10px;
+                  height: 140px;
+                  align-items: stretch;
+                "
+              >
+                <div>Un</div>
+                <div style="min-height: 90px">Deux<br />plus<br />haut</div>
+                <div>Trois</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Le combo magique du centrage parfait</span>
+            <code>justify-content: center;</code> +
+            <code>align-items: center;</code> → tu centres
+            <b>n'importe quoi</b> dans son parent, sur les deux axes. C'était
+            l'astuce CSS la plus recherchée sur Google avant Flexbox.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">7</span> Espacements : <code>gap</code></h3>
+          <p>
+            Sur un conteneur flex, <code>gap</code> crée un espace régulier
+            <b>entre</b> les items — exactement comme en Grid. C'est la méthode
+            moderne : plus besoin de marges bricolées.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.gap-demo {
+  display: flex;
+  gap: 20px;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="flex-stage gap-demo" style="display: flex; gap: 20px">
+                <div>Un</div>
+                <div>Deux</div>
+                <div>Trois</div>
+              </div>
+              <p class="cap">
+                Essaie de changer <code>gap: 20px;</code> à
+                <code>gap: 6px;</code> dans ton code — tu verras.
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t"><code>gap</code> marche aussi en Grid</span>
+            C'est le même <code>gap</code> qu'on a vu dans le cours Grid.
+            Uniforme entre Flexbox et Grid, c'est l'une des grandes forces du
+            CSS moderne.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">8</span> Faire grandir un item :
+            <code>flex</code> et ses comparses
+          </h3>
+          <p>
+            Sur un <b>item</b> (pas sur le parent), on peut décider comment il
+            réagit à l'espace disponible. Trois propriétés :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>flex-grow</code>
+              <p>
+                <b>Capacité à grandir.</b> <code>0</code> par défaut (ne grandit
+                pas). <code>1</code> = prend sa part de l'espace libre.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>flex-shrink</code>
+              <p>
+                <b>Capacité à rétrécir.</b> <code>1</code> par défaut (peut
+                rétrécir). <code>0</code> = refuse de rétrécir.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>flex-basis</code>
+              <p>
+                <b>Taille de base.</b> La taille « de départ » de l'item, avant
+                répartition. Par défaut : <code>auto</code> (la taille du
+                contenu).
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>flex: 1</code>
+              <p>
+                <b>Raccourci.</b> <code>flex: 1</code> =
+                <code>flex: 1 1 0</code> =
+                <em>« prends une part égale de l'espace »</em>. C'est
+                <b>le plus utilisé</b>.
+              </p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.fx-demo {
+  display: flex;
+  gap: 10px;
+}
+.fx-demo .a { flex: 1; }
+.fx-demo .b { flex: 2; }
+.fx-demo .c { flex: 1; }</code></pre>
+              <pre><code class="language-markup">&lt;div class="fx-demo"&gt;
+  &lt;div class="a"&gt;flex: 1&lt;/div&gt;
+  &lt;div class="b"&gt;flex: 2&lt;/div&gt;
+  &lt;div class="c"&gt;flex: 1&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="flex-stage fx-demo" style="display: flex; gap: 10px">
+                <div class="a" style="flex: 1">flex: 1</div>
+                <div class="b" style="flex: 2">flex: 2</div>
+                <div class="c" style="flex: 1">flex: 1</div>
+              </div>
+              <p class="cap">
+                Les valeurs de <code>flex</code> se répartissent comme des parts
+                : 1+2+1 = 4 parts.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t"
+              >Le pattern à retenir : <code>flex: 1</code> sur les cartes</span
+            >
+            Tu as 3 cartes à mettre côte à côte, toutes de la même largeur ?
+            Mets
+            <code>flex: 1;</code> sur chacune. Elles se partagent l'espace
+            équitablement, et <b>s'adaptent automatiquement</b> à la largeur du
+            conteneur.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">9</span> Cas pratique 1 : la barre de navigation
+          </h3>
+          <p>
+            Le cas d'usage n°1 de Flexbox. Logo à gauche, liens à droite, tout
+            aligné verticalement.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.navbar-demo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+.navbar-demo .spacer { flex: 1; }</code></pre>
+            </div>
+            <div class="stage">
+              <div class="navbar-demo">
+                <span class="logo">MonSite</span>
+                <span class="spacer"></span>
+                <a href="javascript:void(0)">Accueil</a>
+                <a href="javascript:void(0)">Blog</a>
+                <a href="javascript:void(0)">Contact</a>
+              </div>
+              <p class="cap">
+                Le <code>spacer</code> (un <code>&lt;span&gt;</code> vide avec
+                <code>flex: 1</code>) pousse les liens à droite. C'est une
+                technique classique.
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Alternative : <code>margin-left: auto</code></span>
+            Sur le premier lien, tu peux mettre <code>margin-left: auto;</code>.
+            Il sera poussé à droite avec tous les suivants. Plus simple que
+            d'ajouter un spacer.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">10</span> Cas pratique 2 : cartes alignées avec
+            bouton en bas
+          </h3>
+          <p>
+            Le pattern des sites e-commerce : 3 cartes côte à côte, avec un
+            bouton collé en bas de chaque carte. Voici la recette.
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.cards-demo {
+  display: flex;
+  gap: 12px;
+}
+.cards-demo .c {
+  display: flex;              /* la carte est elle-même un flex */
+  flex-direction: column;     /* mais en colonne */
+  flex: 1;
+}
+.cards-demo .c p {
+  flex: 1;                    /* le texte prend tout l'espace dispo */
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="cards-demo">
+                <div class="c">
+                  <h4>Titre court</h4>
+                  <p>Un texte bref.</p>
+                  <button>Acheter</button>
+                </div>
+                <div class="c">
+                  <h4>Titre plus long ici</h4>
+                  <p>
+                    Un texte beaucoup plus long qui va pousser le bouton vers le
+                    bas si on n'y prend pas garde.
+                  </p>
+                  <button>Acheter</button>
+                </div>
+                <div class="c">
+                  <h4>Moyen</h4>
+                  <p>Longueur moyenne.</p>
+                  <button>Acheter</button>
+                </div>
+              </div>
+              <p class="cap">
+                Les trois boutons sont alignés malgré des textes de tailles
+                différentes.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">La recette complète</span>
+            <ol style="margin: 0.4rem 0 0 1.2rem">
+              <li>Le parent : <code>display: flex; gap: 12px;</code></li>
+              <li>
+                Chaque carte :
+                <code>display: flex; flex-direction: column; flex: 1;</code>
+              </li>
+              <li>
+                Dans chaque carte, l'élément à pousser (le texte) :
+                <code>flex: 1;</code>
+              </li>
+            </ol>
+            Ça marche aussi avec <code>&lt;footer&gt;</code>,
+            <code>&lt;ul&gt;</code>, n'importe quoi.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">11</span> Cas pratique 3 : centrage parfait
+            (recette en 2 lignes)
+          </h3>
+          <p>
+            La recette la plus utile de toutes. Tu centres n'importe quoi dans
+            son parent :
+          </p>
+
+          <pre><code class="language-css">.parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}</code></pre>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.center-demo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div
+                class="flex-stage center-demo"
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  min-height: 180px;
+                "
+              >
+                <div>Je suis parfaitement centré</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box fun">
+            <span class="t">Le secret du centrage</span>
+            Pendant 15 ans, les développeurs pleuraient pour centrer
+            verticalement en CSS. Flexbox a résolu ça avec <b>2 lignes</b>.
+            Aujourd'hui, c'est devenu trivial.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Sur quel élément applique-t-on <code>display: flex;</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Sur chaque enfant.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Sur le parent (le conteneur).
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Sur le <code>&lt;body&gt;</code>.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Quelle propriété aligne les items sur <b>l'axe principal</b> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>align-items</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>justify-items</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>justify-content</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Tu veux que 3 cartes se partagent l'espace également. Quel code sur
+            chaque carte ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>flex: 1;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>width: 33%;</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>margin: auto;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Pour centrer parfaitement un élément dans son parent (les 2 axes),
+            que faut-il ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>margin: auto;</code> seulement.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code
+                >display: flex; justify-content: center; align-items:
+                center;</code
+              >
+              sur le parent.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>position: absolute; top: 50%; left: 50%;</code> sans plus.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Ta page portfolio Flexbox</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée <code>flex.html</code> + <code>flex.css</code> dans ton dossier
+            <code>02-css</code>. Ce projet combine tout ce que tu as appris :
+            box model + Flexbox.
+          </p>
+          <ul>
+            <li>
+              Un <b>header</b> en <code>display: flex;</code> avec :
+              <ul>
+                <li>Ton nom à gauche (en gras).</li>
+                <li>
+                  Tes liens « Projets / À propos / Contact » à droite (utilise
+                  <code>space-between</code> ou un spacer).
+                </li>
+                <li>Tout aligné verticalement au centre.</li>
+              </ul>
+            </li>
+            <li>
+              Un <b>main</b> contenant une section « Mes projets » avec
+              <b>3 cartes</b> :
+              <ul>
+                <li>
+                  Le parent des cartes est en <code>display: flex;</code> avec
+                  <code>gap: 16px;</code>.
+                </li>
+                <li>Chaque carte est en <code>flex: 1;</code>.</li>
+                <li>
+                  Chaque carte est elle-même un flex en colonne, avec un titre,
+                  un texte court, et un bouton en bas.
+                </li>
+                <li>
+                  Le texte de chaque carte a <code>flex: 1;</code> pour pousser
+                  le bouton en bas.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Un <b>footer</b> avec un seul paragraphe centré via Flexbox (<code
+                >justify-content: center;</code
+              >
+              sur le footer, ou <code>text-align: center;</code>).
+            </li>
+          </ul>
+
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            💡 N'oublie pas le reset CSS au début de ta feuille :
+            <code>* { box-sizing: border-box; margin: 0; padding: 0; }</code>
+          </p>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mon portfolio&lt;/title&gt;
+  &lt;link rel="stylesheet" href="flex.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header class="header"&gt;
+    &lt;span class="logo"&gt;Alex&lt;/span&gt;
+    &lt;nav class="nav"&gt;
+      &lt;a href="#"&gt;Projets&lt;/a&gt;
+      &lt;a href="#"&gt;À propos&lt;/a&gt;
+      &lt;a href="#"&gt;Contact&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;h1&gt;Mes projets&lt;/h1&gt;
+    &lt;section class="cards"&gt;
+
+      &lt;article class="card"&gt;
+        &lt;h3&gt;Projet 1&lt;/h3&gt;
+        &lt;p&gt;Une brève description de mon premier projet.&lt;/p&gt;
+        &lt;button&gt;Voir&lt;/button&gt;
+      &lt;/article&gt;
+
+      &lt;article class="card"&gt;
+        &lt;h3&gt;Projet 2&lt;/h3&gt;
+        &lt;p&gt;Un texte un peu plus long pour voir si les boutons s'alignent bien malgré des contenus différents.&lt;/p&gt;
+        &lt;button&gt;Voir&lt;/button&gt;
+      &lt;/article&gt;
+
+      &lt;article class="card"&gt;
+        &lt;h3&gt;Projet 3&lt;/h3&gt;
+        &lt;p&gt;Court.&lt;/p&gt;
+        &lt;button&gt;Voir&lt;/button&gt;
+      &lt;/article&gt;
+
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer class="footer"&gt;
+    &lt;p&gt;© 2026 — Alex&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <pre><code class="language-css">/* flex.css */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.logo {
+  font-weight: 800;
+  color: #38bdf8;
+  font-size: 1.1rem;
+}
+
+.nav {
+  display: flex;
+  gap: 12px;
+}
+
+.nav a {
+  color: #c4b5fd;
+  text-decoration: none;
+  font-weight: 600;
+  padding: .4rem .8rem;
+  border-radius: 6px;
+  transition: background .15s;
+}
+
+.nav a:hover {
+  background: rgba(168,85,247,.18);
+  color: #fff;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+  color: #fff;
+}
+
+.cards {
+  display: flex;
+  gap: 16px;
+}
+
+.card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.card h3 {
+  color: #38bdf8;
+  font-size: 1rem;
+}
+
+.card p {
+  flex: 1;
+  font-size: .9rem;
+  color: #cbd5e1;
+}
+
+.card button {
+  align-self: flex-start;
+  background: #38bdf8;
+  color: #0f172a;
+  border: none;
+  padding: .5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+  font-size: .85rem;
+  color: #94a3b8;
+}</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+  </body>
+</html>

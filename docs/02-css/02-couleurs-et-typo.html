@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Couleurs et typographie · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* --- Preview --- */
+      .preview {
+        background: #fff;
+        color: #111;
+        padding: 1.3rem 1.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        line-height: 1.6;
+      }
+      .preview h2 {
+        color: #111;
+        font-size: 1.15rem;
+        margin: 0 0 0.5rem;
+        font-family: inherit;
+      }
+      .preview p {
+        margin: 0.4rem 0;
+        font-size: 0.98rem;
+        color: #333;
+      }
+
+      /* --- Palette de noms CSS --- */
+      .palette {
+        display: grid;
+        gap: 0.6rem;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        margin: 1.2rem 0;
+      }
+      .swatch {
+        border-radius: 10px;
+        padding: 1rem 0.7rem;
+        text-align: center;
+        color: #fff;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        font-weight: 700;
+        box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .swatch small {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 400;
+        opacity: 0.85;
+        letter-spacing: 0.02em;
+      }
+
+      /* --- Formats couleur --- */
+      .formats {
+        display: grid;
+        gap: 0.8rem;
+        margin: 1rem 0;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+      .format-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .format-card .chip {
+        height: 52px;
+        border-radius: 8px;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+      .format-card code {
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        background: rgba(56, 189, 248, 0.1);
+        padding: 0.2em 0.5em;
+        border-radius: 5px;
+        font-family: "JetBrains Mono", monospace;
+        align-self: flex-start;
+      }
+
+      /* --- Typo : familles --- */
+      .font-family-demo {
+        display: grid;
+        gap: 0.6rem;
+        margin: 1rem 0;
+      }
+      .ff-row {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1.2rem;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: center;
+      }
+      .ff-row code {
+        font-size: 0.78rem;
+        color: #7dd3fc;
+        background: rgba(56, 189, 248, 0.12);
+        padding: 0.2em 0.5em;
+        border-radius: 5px;
+        font-family: "JetBrains Mono", monospace;
+        white-space: nowrap;
+      }
+      .ff-row .sample {
+        color: #e8ecff;
+        font-size: 1.05rem;
+      }
+      .ff-serif .sample {
+        font-family: Georgia, "Times New Roman", serif;
+      }
+      .ff-sans .sample {
+        font-family: "Space Grotesk", system-ui, sans-serif;
+      }
+      .ff-mono .sample {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .ff-playfair .sample {
+        font-family: "Playfair Display", serif;
+      }
+
+      /* --- Comparateur tailles --- */
+      .size-demo {
+        background: #fff;
+        color: #111;
+        border-radius: 12px;
+        padding: 1.3rem;
+        margin: 1rem 0;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+      }
+      .size-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: baseline;
+        border-bottom: 1px dashed #e5e5e5;
+        padding: 0.5rem 0;
+      }
+      .size-line:last-child {
+        border-bottom: none;
+      }
+      .size-line code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: #0ea5e9;
+        background: #e0f2fe;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        white-space: nowrap;
+      }
+
+      /* --- Contrôles interactifs --- */
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        align-items: center;
+      }
+      .controls label {
+        font-size: 0.75rem;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--muted);
+      }
+      .controls input[type="color"] {
+        width: 38px;
+        height: 32px;
+        padding: 2px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--bg-soft);
+        cursor: pointer;
+      }
+      .controls input[type="range"] {
+        width: 120px;
+        accent-color: var(--cyan);
+      }
+      .controls .val {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: #7dd3fc;
+        background: rgba(56, 189, 248, 0.12);
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        min-width: 52px;
+        text-align: center;
+      }
+
+      /* --- Preview générique pour les démos --- */
+      .live-card {
+        background: #fff;
+        color: #111;
+        border-radius: 12px;
+        padding: 1.4rem 1.6rem;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        line-height: 1.55;
+      }
+      .live-card h2 {
+        font-size: 1.4rem;
+        margin: 0 0 0.5rem;
+        color: #111;
+        font-family: inherit;
+      }
+      .live-card p {
+        margin: 0;
+        font-size: 1rem;
+        color: #444;
+      }
+
+      /* --- Anatomie --- */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* --- Tableau propriétés --- */
+      .prop-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.86rem;
+        background: var(--panel2);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .prop-table th,
+      .prop-table td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .prop-table th {
+        background: #141d47;
+        color: var(--cyan);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .prop-table td:first-child code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.82em;
+        white-space: nowrap;
+      }
+      .prop-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 2 · CSS</p>
+          <h1>Couleurs et typographie</h1>
+          <p class="lead">
+            Avec ces deux propriétés, tu vas transformer
+            <b>radicalement</b> l'aspect de tes pages. 80 % de l'effet visuel
+            d'un site vient de la <b>couleur</b> et de la <b>police</b>. On
+            apprend les deux aujourd'hui.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">1</span> La couleur du texte : <code>color</code>
+          </h3>
+          <p>
+            La propriété <code>color</code> change la couleur du <b>texte</b>.
+            Elle s'applique à l'élément ciblé et se
+            <b>transmet aux enfants</b> (héritage).
+          </p>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.color-demo p {
+  color: #0ea5e9;
+}
+.color-demo h2 {
+  color: #dc2626;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview color-demo">
+                <h2>Un titre en rouge</h2>
+                <p>Un paragraphe en bleu ciel.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Deux propriétés, ne pas confondre</span>
+            <code>color</code> → couleur <b>du texte</b>.<br />
+            <code>background-color</code> → couleur <b>du fond</b>.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> La couleur de fond :
+            <code>background-color</code>
+          </h3>
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.bg-demo p {
+  background-color: #fef3c7;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+.bg-demo .accent {
+  background-color: #7c3aed;
+  color: #fff;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview bg-demo">
+                <p>Un paragraphe avec un fond jaune pâle.</p>
+                <p class="accent">
+                  Un paragraphe avec un fond violet et un texte blanc.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Bon contraste = lisibilité</span>
+            La règle d'or : si tu mets un fond foncé, mets un texte clair (et
+            inversement). Un texte gris pâle sur fond blanc est illisible et
+            inaccessible.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">3</span> Les noms de couleurs CSS</h3>
+          <p>
+            Le CSS comprend <b>147 noms de couleurs</b> en anglais. Pratique
+            pour prototyper rapidement, mais on utilise plutôt les formats
+            techniques en production.
+          </p>
+
+          <div class="palette">
+            <div class="swatch" style="background: #dc2626">
+              red<small>#dc2626</small>
+            </div>
+            <div class="swatch" style="background: #2563eb">
+              blue<small>#2563eb</small>
+            </div>
+            <div class="swatch" style="background: #16a34a">
+              green<small>#16a34a</small>
+            </div>
+            <div class="swatch" style="background: #facc15; color: #111">
+              yellow<small>#facc15</small>
+            </div>
+            <div class="swatch" style="background: #111">
+              black<small>#000000</small>
+            </div>
+            <div class="swatch" style="background: #f472b6">
+              pink<small>#f472b6</small>
+            </div>
+            <div class="swatch" style="background: #fb923c">
+              orange<small>#fb923c</small>
+            </div>
+            <div class="swatch" style="background: #7c3aed">
+              purple<small>#7c3aed</small>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Le piège du nom de couleur</span>
+            <code>red</code> en CSS, c'est un rouge un peu terne (pas très
+            joli). <code>green</code>, c'est un vert moyen. Bref : les noms sont
+            pratiques pour tester, mais pas pour un vrai design.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">4</span> Les formats techniques</h3>
+          <p>
+            La même couleur peut s'écrire de plusieurs façons. Voici les 4
+            formats principaux :
+          </p>
+
+          <div class="formats">
+            <div class="format-card">
+              <div class="chip" style="background: #0ea5e9"></div>
+              <code>#0ea5e9</code>
+              <span style="font-size: 0.8rem; color: var(--muted)">
+                <b style="color: #fff">Hexadécimal.</b> Le plus courant. Six
+                caractères : rouge, vert, bleu (de 00 à ff).
+              </span>
+            </div>
+            <div class="format-card">
+              <div class="chip" style="background: rgb(14, 165, 233)"></div>
+              <code>rgb(14, 165, 233)</code>
+              <span style="font-size: 0.8rem; color: var(--muted)">
+                <b style="color: #fff">RGB.</b> Trois nombres de 0 à 255 : R, V,
+                B.
+              </span>
+            </div>
+            <div class="format-card">
+              <div
+                class="chip"
+                style="background: rgba(14, 165, 233, 0.45)"
+              ></div>
+              <code>rgba(14, 165, 233, .45)</code>
+              <span style="font-size: 0.8rem; color: var(--muted)">
+                <b style="color: #fff">RGBA.</b> Comme RGB + opacité (0 à 1).
+                .45 = 45 % transparent.
+              </span>
+            </div>
+            <div class="format-card">
+              <div class="chip" style="background: hsl(198, 88%, 48%)"></div>
+              <code>hsl(198, 88%, 48%)</code>
+              <span style="font-size: 0.8rem; color: var(--muted)">
+                <b style="color: #fff">HSL.</b> Teinte (0-360°), saturation,
+                luminosité. Très intuitif.
+              </span>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Lequel utiliser ?</span>
+            Pour un site pro, on utilise généralement :
+            <ul>
+              <li><b>Hex</b> pour les couleurs opaques (court, universel).</li>
+              <li>
+                <b>rgba()</b> ou <b>hsl()</b> quand on a besoin de transparence.
+              </li>
+              <li>
+                <b>HSL</b> quand on veut ajuster rapidement la luminosité d'une
+                couleur.
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> La police : <code>font-family</code>
+          </h3>
+          <p>
+            <code>font-family</code> définit la police utilisée pour le texte.
+            On donne <b>plusieurs polices</b> par ordre de préférence : si la
+            première n'est pas installée sur l'ordinateur, le navigateur essaie
+            la suivante.
+          </p>
+
+          <div class="font-family-demo">
+            <div class="ff-row ff-serif">
+              <code>Georgia, serif</code>
+              <div class="sample">
+                Le vif renard brun saute par-dessus le chien paresseux.
+              </div>
+            </div>
+            <div class="ff-row ff-sans">
+              <code>Space Grotesk, sans-serif</code>
+              <div class="sample">
+                Le vif renard brun saute par-dessus le chien paresseux.
+              </div>
+            </div>
+            <div class="ff-row ff-mono">
+              <code>JetBrains Mono, monospace</code>
+              <div class="sample">
+                Le vif renard brun saute par-dessus le chien paresseux.
+              </div>
+            </div>
+            <div class="ff-row ff-playfair">
+              <code>Playfair Display, serif</code>
+              <div class="sample">
+                Le vif renard brun saute par-dessus le chien paresseux.
+              </div>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Les 3 grandes familles</span>
+            <ul>
+              <li>
+                <b>Serif</b> — empattements aux extrémités des lettres (Georgia,
+                Times, Playfair). Classique, élégant.
+              </li>
+              <li>
+                <b>Sans-serif</b> — pas d'empattements (Arial, Helvetica, Space
+                Grotesk). Moderne, lisible à l'écran.
+              </li>
+              <li>
+                <b>Monospace</b> — largeur fixe (Courier, JetBrains Mono). Pour
+                le code, les terminaux.
+              </li>
+            </ul>
+            <br />
+            <b>Toujours</b> terminer la liste par un mot-clé de famille :
+            <code>serif</code>, <code>sans-serif</code>, <code>monospace</code>.
+            C'est le fallback si aucune police de la liste n'existe.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">6</span> La taille du texte :
+            <code>font-size</code>
+          </h3>
+          <p>
+            <code>font-size</code> accepte plusieurs unités. Les plus utilisées
+            :
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>px</code>
+              <p>
+                <b>Pixels.</b> Taille fixe, ne change pas selon le contexte.
+                Simple, mais respecte mal les préférences d'accessibilité.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>rem</code>
+              <p>
+                <b>Relative à la taille racine</b> (<code>1rem</code> = 16px par
+                défaut). Recommandée : elle s'adapte si l'utilisateur agrandit
+                sa police dans son navigateur.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>em</code>
+              <p>
+                <b>Relative au parent.</b> <code>1.5em</code> = 1,5 × la taille
+                du parent. Utile pour des tailles proportionnelles.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>%</code>
+              <p>Comme <code>em</code>, mais en pourcentage.</p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.size-demo-base { font-size: 16px; }
+
+.size-demo-base .small  { font-size: 0.8rem; }
+.size-demo-base .normal { font-size: 1rem; }
+.size-demo-base .big    { font-size: 1.5rem; }
+.size-demo-base .huge   { font-size: 2rem; }</code></pre>
+            </div>
+            <div class="stage">
+              <div class="size-demo size-demo-base">
+                <div class="size-line">
+                  <code>.8rem</code>
+                  <span class="small">Petit texte (12,8 px)</span>
+                </div>
+                <div class="size-line">
+                  <code>1rem</code>
+                  <span class="normal"
+                    >Texte normal (16 px) — la taille de référence</span
+                  >
+                </div>
+                <div class="size-line">
+                  <code>1.5rem</code>
+                  <span class="big">Texte plus grand (24 px)</span>
+                </div>
+                <div class="size-line">
+                  <code>2rem</code>
+                  <span class="huge">Grand texte (32 px)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Pratique courante</span>
+            On met <code>font-size: 16px;</code> sur <code>body</code> (ou rien,
+            c'est la valeur par défaut), puis on utilise
+            <b><code>rem</code> partout</b> ailleurs. Comme ça, tout le site
+            s'adapte si l'utilisateur change la taille de base.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">7</span> Le gras et l'italique</h3>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>font-weight</code>
+              <p>
+                <b>Graisse de la police.</b> <code>normal</code> (400) ou
+                <code>bold</code> (700). Peut aussi être un nombre de 100 à 900.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>font-style</code>
+              <p>
+                <b>Style de la police.</b> <code>normal</code> ou
+                <code>italic</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>text-decoration</code>
+              <p>
+                <b>Décoration du texte.</b> <code>none</code> (par défaut) ou
+                <code>underline</code>, <code>line-through</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>text-align</code>
+              <p>
+                <b>Alignement horizontal.</b> <code>left</code>,
+                <code>center</code>, <code>right</code>, <code>justify</code>.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>line-height</code>
+              <p>
+                <b>Hauteur de ligne.</b> L'espace vertical entre les lignes.
+                <code>1.5</code>
+                est une valeur confortable.
+              </p>
+            </div>
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.txt-demo h2 {
+  text-align: center;
+  text-decoration: underline;
+  color: #7c3aed;
+}
+.txt-demo .gras {
+  font-weight: 700;
+}
+.txt-demo .italique {
+  font-style: italic;
+  color: #dc2626;
+}
+.txt-demo p {
+  line-height: 1.8;
+  text-align: justify;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="preview txt-demo">
+                <h2>Un titre centré et souligné</h2>
+                <p>
+                  Ce paragraphe est <span class="gras">justifié</span>, avec un
+                  <span class="italique">interlignage plus généreux</span>.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Integer at arcu nec velit accumsan imperdiet.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">8</span> Jouer avec un color-picker</h3>
+          <p>
+            Change les deux couleurs ci-dessous et regarde la carte se mettre à
+            jour en direct. C'est exactement comme ça que tu choisiras tes
+            couleurs en vrai.
+          </p>
+
+          <div class="controls">
+            <label for="c-bg">Fond :</label>
+            <input type="color" id="c-bg" value="#0a1120" />
+            <label for="c-txt">Texte :</label>
+            <input type="color" id="c-txt" value="#38bdf8" />
+            <label for="c-size">Taille :</label>
+            <input type="range" id="c-size" min="14" max="36" value="22" />
+            <span class="val" id="c-size-val">22px</span>
+          </div>
+
+          <div
+            class="live-card"
+            id="picker-card"
+            style="background: #0a1120; color: #38bdf8"
+          >
+            <h2 id="picker-title" style="color: #38bdf8; font-size: 22px">
+              Bienvenue
+            </h2>
+            <p id="picker-text" style="color: #38bdf8">
+              Essaie de changer la couleur et la taille !
+            </p>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">9</span> Ajouter une police Google Fonts</h3>
+          <p>
+            Les polices par défaut du navigateur sont… correctes, mais banales.
+            Pour un vrai design, on utilise souvent des polices externes,
+            chargées depuis <b>Google Fonts</b>
+            (gratuit). Voici la méthode en 2 étapes.
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>&lt;link&gt;</code>
+              <p>
+                Dans le <code>&lt;head&gt;</code>, on colle un lien vers la
+                police choisie sur
+                <a
+                  href="https://fonts.google.com"
+                  target="_blank"
+                  rel="noopener"
+                  >fonts.google.com</a
+                >.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>font-family</code>
+              <p>
+                Dans le CSS, on écrit simplement le nom de la police en premier
+                dans la liste.
+              </p>
+            </div>
+          </div>
+
+          <pre><code class="language-markup">&lt;head&gt;
+  &lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+  &lt;link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"&gt;
+&lt;/head&gt;</code></pre>
+
+          <pre><code class="language-css">body {
+  font-family: 'Playfair Display', serif;
+}</code></pre>
+
+          <div class="box tip">
+            <span class="t">Limite-toi à 2-3 polices</span>
+            Une police pour les <b>titres</b>, une pour le <b>texte</b>. C'est
+            tout. Plus de 2-3 polices sur un site = chaos visuel. Et ça ralentit
+            le chargement.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Quelle propriété change la <b>couleur du texte</b> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>background-color</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>color</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>text-color</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">Que signifie <code>#0ea5e9</code> ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Un nom de police.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Une taille de texte.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Une couleur en hexadécimal.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Pourquoi écrit-on
+            <code>font-family: 'Space Grotesk', sans-serif;</code> avec
+            <b>deux</b> valeurs ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              La 2ᵉ est un fallback si la 1ʳᵉ n'existe pas sur la machine.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Il faut toujours deux polices en CSS.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              La 2ᵉ sert pour les titres, la 1ʳᵉ pour le texte.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">
+            Quelle unité est <b>recommandée</b> pour les tailles de texte
+            (respecte les préférences de l'utilisateur) ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>px</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>rem</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>cm</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi — Stylise ta carte de visite</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Crée <code>carte.html</code> et <code>carte.css</code> dans ton
+            dossier <code>02-css</code>. La carte doit contenir :
+          </p>
+          <ul>
+            <li>Un <code>&lt;h1&gt;</code> avec ton prénom.</li>
+            <li>
+              Un <code>&lt;p&gt;</code> avec ton rôle (ex. « Apprenti
+              développeur »).
+            </li>
+            <li>Un <code>&lt;p&gt;</code> de description.</li>
+            <li>Un lien <code>&lt;a&gt;</code> vers un site que tu aimes.</li>
+          </ul>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-top: 0.6rem">
+            En CSS, applique :
+          </p>
+          <ul>
+            <li>Une <b>couleur de fond</b> à la carte (pas blanche).</li>
+            <li>Une <b>couleur de texte contrastée</b>.</li>
+            <li>Une <b>police Google Fonts</b> pour le <code>h1</code>.</li>
+            <li>Une <b>autre police</b> pour le texte.</li>
+            <li>
+              Une <b>taille de police</b> en <code>rem</code> pour le titre (au
+              moins 2rem).
+            </li>
+            <li><code>text-align: center</code> sur le titre.</li>
+            <li><code>line-height: 1.6</code> sur les paragraphes.</li>
+            <li>
+              Le lien doit avoir <code>color</code> +
+              <code>text-decoration: none</code> + un <code>:hover</code> qui le
+              souligne.
+            </li>
+          </ul>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Ma carte&lt;/title&gt;
+  &lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+  &lt;link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet"&gt;
+  &lt;link rel="stylesheet" href="carte.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="carte"&gt;
+    &lt;h1&gt;Alex&lt;/h1&gt;
+    &lt;p class="role"&gt;Apprenti développeur&lt;/p&gt;
+    &lt;p&gt;Passionné par le web, j'apprends à créer mes propres sites.&lt;/p&gt;
+    &lt;a href="https://developer.mozilla.org"&gt;Ma ressource préférée&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <pre><code class="language-css">/* carte.css */
+body {
+  background: #0f172a;
+  font-family: 'Space Grotesk', sans-serif;
+  padding: 2rem;
+}
+
+.carte {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.carte h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #38bdf8;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.carte .role {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.carte p {
+  line-height: 1.6;
+}
+
+.carte a {
+  color: #a78bfa;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.carte a:hover {
+  text-decoration: underline;
+}</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+
+    <script>
+      /* Color-picker de démo (spécifique à ce chapitre) */
+      (function () {
+        const cBg = document.getElementById("c-bg");
+        const cTxt = document.getElementById("c-txt");
+        const cSize = document.getElementById("c-size");
+        const sizeVal = document.getElementById("c-size-val");
+        const card = document.getElementById("picker-card");
+        const title = document.getElementById("picker-title");
+        const text = document.getElementById("picker-text");
+
+        if (!cBg) return;
+
+        function update() {
+          card.style.background = cBg.value;
+          title.style.color = cTxt.value;
+          text.style.color = cTxt.value;
+          title.style.fontSize = cSize.value + "px";
+          sizeVal.textContent = cSize.value + "px";
+        }
+
+        cBg.addEventListener("input", update);
+        cTxt.addEventListener("input", update);
+        cSize.addEventListener("input", update);
+      })();
+    </script>
+  </body>
+</html>

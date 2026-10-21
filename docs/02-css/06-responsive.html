@@ -1,0 +1,1543 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive · Cours Web Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+      /* ============================================================
+       Simulateur de viewport (utilise container queries)
+       ============================================================ */
+      .viewport-sim {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      .viewport-controls {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 0.9rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+      }
+      .viewport-controls span {
+        color: var(--muted);
+      }
+      .viewport-controls button {
+        background: #151f48;
+        color: var(--text);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.3rem 0.8rem;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: 0.15s;
+      }
+      .viewport-controls button:hover {
+        border-color: var(--cyan);
+      }
+      .viewport-controls button.on {
+        background: var(--cyan);
+        color: #06121f;
+        border-color: var(--cyan);
+      }
+      .viewport-controls .size-val {
+        margin-left: auto;
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.25em 0.7em;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+
+      .viewport-frame {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        transition:
+          max-width 0.3s ease,
+          width 0.3s ease;
+        margin: 0 auto;
+        container-type: inline-size;
+        container-name: vsim;
+        border: 1px solid #1a2550;
+      }
+
+      /* Le contenu de la démo (comme un vrai site responsive) */
+      .vsim-content {
+        padding: 1rem;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        color: #111;
+      }
+
+      /* Navbar demo qui devient burger en mobile */
+      .vsim-navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.7rem 1rem;
+        background: #1e293b;
+        color: #fff;
+        border-radius: 8px;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+      }
+      .vsim-navbar .vlogo {
+        font-weight: 800;
+        color: #38bdf8;
+        font-size: 1rem;
+      }
+      .vsim-navbar .vlinks {
+        display: flex;
+        gap: 0.6rem;
+      }
+      .vsim-navbar .vlinks a {
+        color: #c4b5fd;
+        text-decoration: none;
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 0.25rem 0.55rem;
+        border-radius: 5px;
+      }
+      .vsim-navbar .vlinks a:hover {
+        background: rgba(168, 85, 247, 0.2);
+        color: #fff;
+      }
+      .vsim-navbar .vburger {
+        display: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: #c4b5fd;
+        background: transparent;
+        border: none;
+        padding: 0.2rem 0.5rem;
+      }
+
+      /* Quand le conteneur est étroit, on masque les liens et montre le burger */
+      @container vsim (max-width: 420px) {
+        .vsim-navbar .vlinks {
+          display: none;
+        }
+        .vsim-navbar .vburger {
+          display: block;
+        }
+      }
+
+      /* Grille de cartes responsive */
+      .vsim-grid {
+        display: grid;
+        gap: 0.6rem;
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .vsim-grid .vcard {
+        background: linear-gradient(160deg, #38bdf8, #0ea5e9);
+        color: #04121f;
+        font-weight: 700;
+        font-size: 0.82rem;
+        border-radius: 8px;
+        padding: 0.9rem 0.6rem;
+        text-align: center;
+      }
+      @container vsim (max-width: 460px) {
+        .vsim-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @container vsim (max-width: 300px) {
+        .vsim-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Colonnes qui s'empilent */
+      .vsim-columns {
+        display: grid;
+        gap: 0.8rem;
+        grid-template-columns: 2fr 1fr;
+        margin-top: 1rem;
+      }
+      .vsim-columns .col {
+        border-radius: 8px;
+        padding: 0.8rem;
+        font-size: 0.85rem;
+        color: #fff;
+      }
+      .vsim-columns .main {
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      }
+      .vsim-columns .aside {
+        background: linear-gradient(135deg, #fb923c, #ea580c);
+      }
+      @container vsim (max-width: 400px) {
+        .vsim-columns {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ============================================================
+       Dual comparaison
+       ============================================================ */
+      .dual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      @media (max-width: 640px) {
+        .dual {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dual > div {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      .dual-lbl {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .dual-lbl.ok {
+        color: var(--green);
+      }
+      .dual-lbl.ko {
+        color: #f43f5e;
+      }
+
+      /* ============================================================
+       Anatomie
+       ============================================================ */
+      .anatomy {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .anatomy-line {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+      }
+      .anatomy-line code {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        padding: 0.3em 0.6em;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        color: #7dd3fc;
+        white-space: nowrap;
+      }
+      .anatomy-line p {
+        font-size: 0.88rem;
+        color: #cdd6f8;
+        margin: 0;
+      }
+
+      /* ============================================================
+       Tableau des unités
+       ============================================================ */
+      .units-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.86rem;
+        background: var(--panel2);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .units-table th,
+      .units-table td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .units-table th {
+        background: #141d47;
+        color: var(--cyan);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .units-table td:first-child code {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        padding: 0.15em 0.5em;
+        border-radius: 5px;
+        font-size: 0.82em;
+        white-space: nowrap;
+      }
+      .units-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* ============================================================
+       Points de rupture (breakpoints) visuels
+       ============================================================ */
+      .breakpoints {
+        display: grid;
+        gap: 0.6rem;
+        margin: 1rem 0;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+      .bp {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        text-align: center;
+      }
+      .bp .device {
+        font-size: 1.6rem;
+        line-height: 1;
+        margin-bottom: 0.3rem;
+      }
+      .bp .name {
+        font-weight: 700;
+        color: #fff;
+        font-size: 0.85rem;
+        margin-bottom: 0.15rem;
+      }
+      .bp .w {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        color: var(--cyan);
+      }
+
+      kbd {
+        background: #0a1120;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 0.12em 0.5em;
+        font-size: 0.82em;
+        font-family: "JetBrains Mono", monospace;
+        color: #e8ecff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress"></div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <a class="brand" href="../">
+          <div class="logo"><i></i><i></i><i></i></div>
+          <div>
+            <b>Cours Web Fullstack</b>
+            <small>Du premier fichier HTML à l'app complète</small>
+          </div>
+        </a>
+        <nav id="nav"></nav>
+      </aside>
+
+      <main>
+        <header class="chap-hero">
+          <p class="eyebrow">Module 2 · CSS</p>
+          <h1>Responsive</h1>
+          <p class="lead">
+            Un site web, c'est fait pour être vu sur <b>un téléphone</b>, une
+            <b>tablette</b>, un <b>ordinateur</b>, une <b>TV</b>… On n'a pas le
+            choix : il doit s'adapter. Aujourd'hui, on apprend à construire des
+            pages qui fonctionnent <b>partout</b>.
+          </p>
+        </header>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">1</span> Le problème : un design figé</h3>
+          <p>
+            Une page conçue pour un écran de 1400px de large va
+            <b>casser</b> sur un téléphone de 375px. Soit elle déborde (scroll
+            horizontal), soit le texte est minuscule, soit les éléments se
+            chevauchent.
+          </p>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ko">❌ Sans responsive</div>
+              <div
+                style="
+                  background: #fff;
+                  border-radius: 8px;
+                  padding: 0.6rem;
+                  overflow: hidden;
+                "
+              >
+                <div
+                  style="
+                    font-family: &quot;Space Grotesk&quot;, sans-serif;
+                    color: #111;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      gap: 0.4rem;
+                      font-size: 0.7rem;
+                      color: #0ea5e9;
+                      font-weight: 700;
+                    "
+                  >
+                    <span>Logo</span><span>Accueil</span><span>Blog</span
+                    ><span>Contact</span><span>À propos</span>
+                  </div>
+                  <div
+                    style="
+                      margin-top: 0.5rem;
+                      font-size: 0.65rem;
+                      color: #444;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    "
+                  >
+                    Un long paragraphe qui ne s'adapte pas du tout à la largeur
+                    de l'écran et qui déborde…
+                  </div>
+                </div>
+              </div>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--muted);
+                  margin-top: 0.5rem;
+                "
+              >
+                Tout s'entasse, le texte sort de l'écran.
+              </p>
+            </div>
+            <div>
+              <div class="dual-lbl ok">✅ Avec responsive</div>
+              <div
+                style="
+                  background: #fff;
+                  border-radius: 8px;
+                  padding: 0.6rem;
+                  max-width: 280px;
+                "
+              >
+                <div
+                  style="
+                    font-family: &quot;Space Grotesk&quot;, sans-serif;
+                    color: #111;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      font-size: 0.7rem;
+                      color: #0ea5e9;
+                      font-weight: 700;
+                    "
+                  >
+                    <span>Logo</span><span>☰</span>
+                  </div>
+                  <div
+                    style="margin-top: 0.5rem; font-size: 0.65rem; color: #444"
+                  >
+                    Un paragraphe qui s'adapte à la largeur disponible.
+                  </div>
+                </div>
+              </div>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--muted);
+                  margin-top: 0.5rem;
+                "
+              >
+                Le menu devient un burger, le texte respire.
+              </p>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Le chiffre qui change tout</span>
+            Depuis 2016, plus de <b>50 % du trafic web mondial</b> vient du
+            mobile. Aujourd'hui c'est ~60 %. Concevoir « pour desktop puis
+            adapter » est une erreur. On conçoit <b>d'abord pour mobile</b>,
+            puis on enrichit.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">2</span> La balise meta viewport (indispensable)
+          </h3>
+          <p>
+            Avant tout CSS, il y a une ligne HTML <b>obligatoire</b> dans le
+            <code>&lt;head&gt;</code> de <b>chaque</b> page. Sans elle, rien ne
+            fonctionne sur mobile.
+          </p>
+
+          <pre><code class="language-markup">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></pre>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>width=device-width</code>
+              <p>
+                Le site doit faire la <b>largeur réelle de l'appareil</b>, pas
+                980px (valeur par défaut des vieux navigateurs mobiles).
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>initial-scale=1.0</code>
+              <p>
+                Le <b>niveau de zoom de départ</b> : 1.0 = 100 %. Pas de zoom
+                automatique qui rendrait tout bizarre.
+              </p>
+            </div>
+          </div>
+
+          <div class="box warn">
+            <span class="t">Si tu oublies cette balise…</span>
+            Ton site s'affichera comme si l'écran faisait 980px de large, puis
+            sera dézoomé pour rentrer dans le téléphone. Tout sera
+            <b>minuscule</b>. C'est
+            <b>la toute première chose à vérifier</b> quand « le responsive ne
+            marche pas ».
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">3</span> Les media queries</h3>
+          <p>
+            Une <b>media query</b> (requête média) dit au navigateur : «
+            applique ce CSS <b>seulement si</b> l'écran respecte cette condition
+            ». La plus utilisée : la largeur de l'écran.
+          </p>
+
+          <pre><code class="language-css">/* Styles de base (par défaut, pour tous les écrans) */
+.card {
+  padding: 20px;
+  font-size: 16px;
+}
+
+/* Quand l'écran est PLUS PETIT que 768px */
+@media (max-width: 768px) {
+  .card {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Quand l'écran est PLUS GRAND que 1200px */
+@media (min-width: 1200px) {
+  .card {
+    padding: 32px;
+  }
+}</code></pre>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>@media (max-width: 768px)</code>
+              <p>
+                <b>« Si l'écran fait 768px ou moins »</b>. C'est la syntaxe
+                <b>desktop-first</b> : on style pour grand écran, puis on
+                corrige pour petit.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>@media (min-width: 768px)</code>
+              <p>
+                <b>« Si l'écran fait 768px ou plus »</b>. C'est la syntaxe
+                <b>mobile-first</b> : on style pour petit écran, puis on
+                enrichit pour grand.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">D'autres conditions existent</span>
+            <ul style="margin: 0.4rem 0 0 1.2rem">
+              <li>
+                <code>@media (orientation: portrait)</code> — écran vertical
+              </li>
+              <li>
+                <code>@media (orientation: landscape)</code> — écran horizontal
+              </li>
+              <li>
+                <code>@media (prefers-color-scheme: dark)</code> — mode sombre
+              </li>
+              <li><code>@media print</code> — pour l'impression</li>
+            </ul>
+            Mais dans la pratique, 95 % du temps on utilise
+            <code>min-width</code> ou <code>max-width</code>.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">4</span> Mobile-first vs Desktop-first</h3>
+
+          <div class="dual">
+            <div>
+              <div class="dual-lbl ok">✅ Mobile-first (recommandé)</div>
+              <p
+                style="
+                  font-size: 0.88rem;
+                  color: #cdd6f8;
+                  margin-bottom: 0.6rem;
+                "
+              >
+                On écrit le CSS pour mobile, puis on <b>enrichit</b> avec
+                <code>min-width</code>.
+              </p>
+              <pre><code class="language-css">/* Base : mobile */
+.menu { display: none; }
+
+/* Tablette et + */
+@media (min-width: 768px) {
+  .menu { display: flex; }
+}</code></pre>
+            </div>
+            <div>
+              <div class="dual-lbl">Desktop-first (historique)</div>
+              <p
+                style="
+                  font-size: 0.88rem;
+                  color: #cdd6f8;
+                  margin-bottom: 0.6rem;
+                "
+              >
+                On écrit le CSS pour desktop, puis on <b>simplifie</b> avec
+                <code>max-width</code>.
+              </p>
+              <pre><code class="language-css">/* Base : desktop */
+.menu { display: flex; }
+
+/* Mobile et - */
+@media (max-width: 767px) {
+  .menu { display: none; }
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Pourquoi mobile-first ?</span>
+            <ul style="margin: 0.4rem 0 0 1.2rem">
+              <li>
+                On part du <b>cas le plus contraint</b> (petit écran) : ça force
+                à simplifier.
+              </li>
+              <li>
+                Le code de base est <b>plus léger</b> (pas de surcharge inutile
+                sur mobile).
+              </li>
+              <li>
+                Les styles par défaut d'un site sont
+                <b>souvent ceux du mobile</b>, donc moins de CSS.
+              </li>
+              <li>C'est la <b>convention actuelle</b> de l'industrie.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">5</span> Les points de rupture (breakpoints)
+          </h3>
+          <p>
+            Un « breakpoint », c'est une largeur où on décide que le design doit
+            changer. Il n'y a <b>pas de règles absolues</b> : ça dépend du
+            contenu.
+          </p>
+          <p>Voici des valeurs indicatives, assez universelles :</p>
+
+          <div class="breakpoints">
+            <div class="bp">
+              <div class="device">📱</div>
+              <div class="name">Mobile</div>
+              <div class="w">&lt; 480px</div>
+            </div>
+            <div class="bp">
+              <div class="device">📱</div>
+              <div class="name">Mobile large</div>
+              <div class="w">480 – 767px</div>
+            </div>
+            <div class="bp">
+              <div class="device">📱</div>
+              <div class="name">Tablette</div>
+              <div class="w">768 – 1023px</div>
+            </div>
+            <div class="bp">
+              <div class="device">💻</div>
+              <div class="name">Desktop</div>
+              <div class="w">1024 – 1439px</div>
+            </div>
+            <div class="bp">
+              <div class="device">🖥️</div>
+              <div class="name">Large</div>
+              <div class="w">≥ 1440px</div>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Le bon conseil pro</span>
+            <b>Ne copie pas les breakpoints.</b> Ouvre ta page, rétrécis la
+            fenêtre progressivement, et regarde <b>où</b> ton design devient
+            laid. <b>C'est ça</b>, ton breakpoint. Chaque projet a les siens.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">6</span> Le simulateur : adapte la largeur</h3>
+          <p>
+            Voici une démo qui simule trois appareils. Clique sur les boutons et
+            regarde la page se transformer <b>en direct</b>. C'est exactement ce
+            que tu verras sur un vrai téléphone.
+          </p>
+
+          <div class="viewport-sim">
+            <div class="viewport-controls">
+              <span>Simuler :</span>
+              <button data-width="100%" class="on">🖥️ Plein écran</button>
+              <button data-width="768px">📱 Tablette · 768</button>
+              <button data-width="480px">📱 Mobile large · 480</button>
+              <button data-width="360px">📱 Mobile · 360</button>
+              <span class="size-val" id="vsim-val">100%</span>
+            </div>
+            <div class="viewport-frame" id="vsim-frame">
+              <div class="vsim-content">
+                <div class="vsim-navbar">
+                  <span class="vlogo">MonSite</span>
+                  <nav class="vlinks">
+                    <a href="javascript:void(0)">Accueil</a>
+                    <a href="javascript:void(0)">Blog</a>
+                    <a href="javascript:void(0)">Contact</a>
+                  </nav>
+                  <button class="vburger" aria-label="Menu">☰</button>
+                </div>
+
+                <div class="vsim-grid">
+                  <div class="vcard">Carte 1</div>
+                  <div class="vcard">Carte 2</div>
+                  <div class="vcard">Carte 3</div>
+                  <div class="vcard">Carte 4</div>
+                  <div class="vcard">Carte 5</div>
+                  <div class="vcard">Carte 6</div>
+                </div>
+
+                <div class="vsim-columns">
+                  <div class="col main">Colonne principale</div>
+                  <div class="col aside">Colonne latérale</div>
+                </div>
+              </div>
+            </div>
+            <p
+              class="cap"
+              style="
+                margin-top: 0.8rem;
+                color: var(--muted);
+                font-size: 0.82rem;
+                text-align: center;
+              "
+            >
+              💡 Ces changements sont faits avec <code>@container</code> (qui
+              regarde la largeur du parent), mais le principe est le même
+              qu'avec <code>@media</code> (qui regarde la largeur de l'écran).
+            </p>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">7</span> Les unités relatives</h3>
+          <p>
+            En responsive, on évite les <code>px</code> figés. On utilise des
+            <b>unités relatives</b>
+            qui s'adaptent à leur contexte.
+          </p>
+
+          <table class="units-table">
+            <thead>
+              <tr>
+                <th>Unité</th>
+                <th>Relative à…</th>
+                <th>Utilité</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>%</code></td>
+                <td>La taille du parent</td>
+                <td>Largeurs, hauteurs proportionnelles.</td>
+              </tr>
+              <tr>
+                <td><code>rem</code></td>
+                <td>La taille de police racine (16px par défaut)</td>
+                <td>Textes, marges, espacements. <b>Recommandé.</b></td>
+              </tr>
+              <tr>
+                <td><code>em</code></td>
+                <td>La taille de police du parent</td>
+                <td>Rare, sauf cas très précis.</td>
+              </tr>
+              <tr>
+                <td><code>vw</code></td>
+                <td>1 % de la largeur du viewport</td>
+                <td>Grands titres qui s'adaptent à l'écran.</td>
+              </tr>
+              <tr>
+                <td><code>vh</code></td>
+                <td>1 % de la hauteur du viewport</td>
+                <td>Héros qui prennent tout l'écran.</td>
+              </tr>
+              <tr>
+                <td><code>vmin</code> / <code>vmax</code></td>
+                <td>Le plus petit / plus grand côté</td>
+                <td>Cas particuliers (formes carrées responsives).</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="box tip">
+            <span class="t">La fonction magique : <code>clamp()</code></span>
+            <code>clamp(min, idéal, max)</code> permet de définir une taille
+            <b>bornée</b>. Idéal pour un titre qui doit être grand sur desktop,
+            mais pas trop petit sur mobile : <br /><br />
+            <code>font-size: clamp(1.2rem, 4vw, 2.5rem);</code>
+            <br /><br />
+            <b>Lecture :</b> jamais moins de 1.2rem, jamais plus de 2.5rem, et
+            idéalement 4 % de la largeur de l'écran. Le navigateur choisit
+            automatiquement.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">8</span> Les images adaptatives</h3>
+          <p>
+            Deux règles simples à mettre dans ton reset CSS, et qui évitent 90 %
+            des problèmes d'images sur mobile :
+          </p>
+
+          <pre><code class="language-css">img {
+  max-width: 100%;    /* une image ne dépasse JAMAIS son conteneur */
+  height: auto;       /* conserve les proportions quand elle rétrécit */
+  display: block;     /* évite un petit espace fantôme sous l'image */
+}</code></pre>
+
+          <div class="box warn">
+            <span class="t">Le piège classique</span>
+            Sans <code>max-width: 100%;</code>, une image de 2000px de large
+            <b>casse</b> la mise en page sur mobile : elle force le conteneur à
+            faire 2000px, ce qui crée un <b>scroll horizontal</b> sur toute la
+            page. <br /><br />
+            C'est <b>l'erreur n°1</b> des sites mal responsive. Une seule ligne
+            de CSS la règle.
+          </div>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-css live">.img-demo {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.img-demo figure {
+  margin: 0;
+  flex: 1;
+  min-width: 0;   /* permet aux items flex de rétrécir sous leur contenu */
+}
+.img-demo img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+.img-demo figcaption {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: .4rem;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+}</code></pre>
+            </div>
+            <div class="stage">
+              <div class="img-demo">
+                <figure>
+                  <img
+                    src="https://picsum.photos/id/1015/400/250"
+                    alt="Paysage de montagne"
+                  />
+                  <figcaption>max-width: 100% → s'adapte</figcaption>
+                </figure>
+                <figure>
+                  <img
+                    src="https://picsum.photos/id/1025/400/250"
+                    alt="Un chien"
+                  />
+                  <figcaption>height: auto → proportions gardées</figcaption>
+                </figure>
+              </div>
+              <p class="cap">
+                ↔ Rétrécis la fenêtre : les images rétrécissent mais ne
+                débordent jamais.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">9</span> Cas pratique : navbar qui devient burger
+          </h3>
+          <p>
+            Le pattern le plus utilisé du web : sur desktop, le menu est
+            horizontal. Sur mobile, il devient un simple <b>burger</b> (☰) qui
+            déroule un menu.
+          </p>
+
+          <pre><code class="language-css">/* ===== BASE : MOBILE-FIRST ===== */
+
+/* Le menu est caché par défaut */
+.nav-links {
+  display: none;
+}
+
+/* Le burger est visible */
+.burger {
+  display: block;
+}
+
+/* ===== TABLETTE ET PLUS ===== */
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+    gap: 16px;
+  }
+  .burger {
+    display: none;
+  }
+}</code></pre>
+
+          <div class="try">
+            <div class="codes">
+              <pre><code class="language-markup">&lt;div class="nav"&gt;
+  &lt;span class="logo"&gt;MonSite&lt;/span&gt;
+  &lt;div class="links"&gt;
+    &lt;a href="#"&gt;Accueil&lt;/a&gt;
+    &lt;a href="#"&gt;Blog&lt;/a&gt;
+    &lt;a href="#"&gt;Contact&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;button class="burger"&gt;☰&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+            <div class="stage">
+              <div class="viewport-sim">
+                <div class="viewport-controls">
+                  <button data-width="100%">🖥️ Large</button>
+                  <button data-width="500px" class="on">📱 Mobile · 500</button>
+                  <span class="size-val" id="vsim-val2">500px</span>
+                </div>
+                <div
+                  class="viewport-frame"
+                  id="vsim-frame2"
+                  style="max-width: 500px"
+                >
+                  <div class="vsim-content">
+                    <div class="vsim-navbar">
+                      <span class="vlogo">MonSite</span>
+                      <nav class="vlinks">
+                        <a href="javascript:void(0)">Accueil</a>
+                        <a href="javascript:void(0)">Blog</a>
+                        <a href="javascript:void(0)">Contact</a>
+                      </nav>
+                      <button class="vburger" aria-label="Menu">☰</button>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="cap"
+                  style="
+                    text-align: center;
+                    color: var(--muted);
+                    font-size: 0.82rem;
+                    margin-top: 0.8rem;
+                  "
+                >
+                  En dessous de 420px → les liens disparaissent, le burger
+                  apparaît.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="box info">
+            <span class="t">Et pour ouvrir le menu ?</span>
+            Il faut du <b>JavaScript</b> ! On ajoute un écouteur de clic sur le
+            burger, et on fait apparaître le menu. C'est l'un des tout premiers
+            cas d'usage du JS qu'on verra dans le module suivant. Pour
+            l'instant, retiens juste la partie CSS.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3>
+            <span class="num">10</span> Cas pratique : grille de cartes fluide
+          </h3>
+          <p>
+            On a déjà vu ce pattern dans le cours Grid, mais c'est important de
+            le reposer ici : la <b>vraie</b> manière d'avoir une grille
+            responsive est souvent de
+            <b>ne pas utiliser de media query du tout</b>.
+          </p>
+
+          <pre><code class="language-css">.grille {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}</code></pre>
+
+          <div class="box tip">
+            <span class="t">Pourquoi c'est magique</span>
+            Le navigateur crée <b>automatiquement</b> autant de colonnes de
+            240px minimum que possible. Sur mobile → 1 colonne. Sur tablette →
+            2. Sur desktop → 3 ou 4.
+            <b>Sans écrire un seul <code>@media</code>.</b>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">11</span> Le test ultime : les DevTools</h3>
+          <p>
+            Tu n'as pas besoin d'un vrai téléphone pour tester ton site
+            responsive. Les DevTools du navigateur ont un
+            <b>mode responsive intégré</b>.
+          </p>
+
+          <div class="anatomy">
+            <div class="anatomy-line">
+              <code>F12</code>
+              <p>Ouvre les DevTools.</p>
+            </div>
+            <div class="anatomy-line">
+              <code>Ctrl + Shift + M</code>
+              <p>
+                Active le <b>mode appareil</b> (toggle device toolbar). Ton site
+                se redessine dans un cadre.
+              </p>
+            </div>
+            <div class="anatomy-line">
+              <code>Barre du haut</code>
+              <p>
+                Tu peux choisir un appareil (iPhone, iPad, Galaxy…) ou définir
+                une <b>largeur personnalisée</b>
+                en tirant les bords.
+              </p>
+            </div>
+          </div>
+
+          <div class="box tip">
+            <span class="t">Le test rapide à faire</span>
+            Ouvre <b>n'importe quel site</b> dans ton navigateur (Google,
+            Wikipedia…), puis fais <kbd>F12</kbd> +
+            <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>. Regarde comment le
+            site se transforme. C'est de cette manière que les développeurs
+            testent leurs pages, tous les jours.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <article class="lesson">
+          <h3><span class="num">12</span> Ton reset CSS complet</h3>
+          <p>
+            Voici la version finale de ce que tu mettras au début de
+            <b>tous</b> tes projets web à partir de maintenant :
+          </p>
+
+          <pre><code class="language-css">/* ============================================================
+   Reset CSS — à mettre au début de chaque projet
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Base de 1rem = 16px (défaut), utilisable partout */
+  font-size: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Les images ne dépassent jamais leur conteneur */
+img,
+picture,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Les liens héritent de la couleur du texte */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Les boutons ressemblent à des boutons */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Les listes non stylées (à activer si besoin) */
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}</code></pre>
+
+          <div class="box info">
+            <span class="t">Ce reset est le tien</span>
+            Il est <b>minimal</b> et <b>lisible</b>. Pas besoin de resets
+            obscurs trouvés en ligne. Ces quelques lignes couvrent 90 % des cas.
+            Tu peux le recopier tel quel dans chaque projet.
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <div class="quiz" data-answer="b">
+          <div class="quiz-head">Quiz · Question 1/4</div>
+          <p class="quiz-q">
+            Quelle balise HTML est <b>indispensable</b> pour que le responsive
+            fonctionne sur mobile ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>&lt;link&gt;</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code
+                >&lt;meta name="viewport" content="width=device-width,
+                initial-scale=1.0"&gt;</code
+              >
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>&lt;style&gt;</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 2/4</div>
+          <p class="quiz-q">
+            Que signifie <code>@media (min-width: 768px) { ... }</code> ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Les styles s'appliquent si l'écran fait moins de 768px.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Les styles s'appliquent sur mobile seulement.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Les styles s'appliquent si l'écran fait 768px ou plus.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="a">
+          <div class="quiz-head">Quiz · Question 3/4</div>
+          <p class="quiz-q">
+            Comment éviter qu'une grande image fasse déborder la page sur mobile
+            ?
+          </p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              <code>img { max-width: 100%; height: auto; }</code>
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              <code>img { width: 100%; height: 100%; }</code>
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              <code>img { position: absolute; }</code>
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <div class="quiz" data-answer="c">
+          <div class="quiz-head">Quiz · Question 4/4</div>
+          <p class="quiz-q">Qu'est-ce que le <b>mobile-first</b> ?</p>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-opt="a" data-l="A">
+              Concevoir uniquement pour mobile et ignorer le desktop.
+            </button>
+            <button class="quiz-opt" data-opt="b" data-l="B">
+              Concevoir d'abord pour desktop, puis adapter pour mobile.
+            </button>
+            <button class="quiz-opt" data-opt="c" data-l="C">
+              Concevoir d'abord pour mobile, puis enrichir pour les grands
+              écrans.
+            </button>
+          </div>
+          <div class="quiz-fb"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <div class="challenge">
+          <b>🎯 Défi final — Rends ton portfolio responsive</b>
+          <p style="font-size: 0.9rem; color: #cdd6f8; margin-bottom: 0.6rem">
+            Reprends le portfolio du chapitre Flexbox (<code>flex.html</code> +
+            <code>flex.css</code>) et rends-le <b>responsive</b>. Copie-le en
+            <code>responsive.html</code> + <code>responsive.css</code> dans ton
+            dossier <code>02-css</code>.
+          </p>
+          <ul>
+            <li>
+              Ajoute la balise <code>&lt;meta name="viewport"&gt;</code> dans le
+              <code>&lt;head&gt;</code>.
+            </li>
+            <li>
+              Mets à jour ton reset CSS avec la version complète du point 12.
+            </li>
+            <li>
+              En <b>mobile-first</b> :
+              <ul>
+                <li>
+                  La barre de navigation a le logo à gauche et un burger ☰ à
+                  droite (les liens sont cachés).
+                </li>
+                <li>
+                  Les 3 cartes sont <b>empilées verticalement</b> (une par
+                  ligne).
+                </li>
+              </ul>
+            </li>
+            <li>
+              Ajoute un <code>@media (min-width: 768px)</code> qui :
+              <ul>
+                <li>Affiche les liens et cache le burger.</li>
+                <li>
+                  Met les 3 cartes <b>côte à côte</b> (avec
+                  <code>display: flex; gap: 16px;</code> sur le parent, et
+                  <code>flex: 1</code> sur chaque carte).
+                </li>
+              </ul>
+            </li>
+            <li>
+              Teste avec <kbd>F12</kbd> + <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd
+                >M</kbd
+              >
+              en changeant la largeur.
+            </li>
+          </ul>
+
+          <details>
+            <summary>Voir une solution</summary>
+            <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Mon portfolio responsive&lt;/title&gt;
+  &lt;link rel="stylesheet" href="responsive.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header class="header"&gt;
+    &lt;span class="logo"&gt;Alex&lt;/span&gt;
+    &lt;nav class="nav"&gt;
+      &lt;a href="#"&gt;Projets&lt;/a&gt;
+      &lt;a href="#"&gt;À propos&lt;/a&gt;
+      &lt;a href="#"&gt;Contact&lt;/a&gt;
+    &lt;/nav&gt;
+    &lt;button class="burger"&gt;☰&lt;/button&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;h1&gt;Mes projets&lt;/h1&gt;
+    &lt;section class="cards"&gt;
+      &lt;article class="card"&gt;
+        &lt;h3&gt;Projet 1&lt;/h3&gt;
+        &lt;p&gt;Description courte.&lt;/p&gt;
+        &lt;button&gt;Voir&lt;/button&gt;
+      &lt;/article&gt;
+      &lt;article class="card"&gt;
+        &lt;h3&gt;Projet 2&lt;/h3&gt;
+        &lt;p&gt;Un texte un peu plus long pour tester l'alignement.&lt;/p&gt;
+        &lt;button&gt;Voir&lt;/button&gt;
+      &lt;/article&gt;
+      &lt;article class="card"&gt;
+        &lt;h3&gt;Projet 3&lt;/h3&gt;
+        &lt;p&gt;Court.&lt;/p&gt;
+        &lt;button&gt;Voir&lt;/button&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer class="footer"&gt;
+    &lt;p&gt;© 2026 — Alex&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <pre><code class="language-css">/* responsive.css */
+
+/* ============================================================
+   RESET
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  background: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img, picture, video { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ============================================================
+   BASE : MOBILE-FIRST
+   ============================================================ */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.logo {
+  font-weight: 800;
+  color: #38bdf8;
+  font-size: 1.1rem;
+}
+
+/* Liens cachés sur mobile */
+.nav { display: none; }
+
+/* Burger visible sur mobile */
+.burger {
+  background: transparent;
+  color: #c4b5fd;
+  border: none;
+  font-size: 1.5rem;
+  padding: .2rem .6rem;
+}
+
+main {
+  flex: 1;
+  padding: 1.5rem 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  color: #fff;
+}
+
+/* Cartes empilées sur mobile */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.card h3 { color: #38bdf8; font-size: 1rem; }
+.card p { flex: 1; font-size: .9rem; color: #cbd5e1; }
+
+.card button {
+  align-self: flex-start;
+  background: #38bdf8;
+  color: #0f172a;
+  border: none;
+  padding: .5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+  font-size: .85rem;
+  color: #94a3b8;
+}
+
+/* ============================================================
+   TABLETTE ET PLUS (≥ 768px)
+   ============================================================ */
+@media (min-width: 768px) {
+
+  .header { padding: 1rem 2rem; }
+
+  /* Liens affichés */
+  .nav {
+    display: flex;
+    gap: 12px;
+  }
+  .nav a {
+    color: #c4b5fd;
+    font-weight: 600;
+    padding: .4rem .8rem;
+    border-radius: 6px;
+    transition: background .15s;
+  }
+  .nav a:hover { background: rgba(168,85,247,.18); color: #fff; }
+
+  /* Burger caché */
+  .burger { display: none; }
+
+  main { padding: 2rem; }
+
+  h1 { font-size: 1.6rem; }
+
+  /* Cartes côte à côte */
+  .cards { flex-direction: row; }
+  .card { flex: 1; }
+}</code></pre>
+          </details>
+        </div>
+
+        <div class="mark-done" id="mark-done"></div>
+        <div class="chap-nav" id="chap-nav"></div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+      window.BASE_URL = window.location.hostname.includes("github.io")
+        ? "/CoursWebFullstack/"
+        : "../";
+    </script>
+    <script src="../assets/js/cours.js"></script>
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/resize.js"></script>
+    <script src="../assets/js/quiz.js"></script>
+    <script src="../assets/js/demo.js"></script>
+
+    <script>
+      /* Simulateur de viewport — chapitre responsive */
+      (function () {
+        function bindSimulator(controlsSel, frameId, valId) {
+          const controls = document.querySelector(controlsSel);
+          const frame = document.getElementById(frameId);
+          const val = document.getElementById(valId);
+          if (!controls || !frame || !val) return;
+
+          controls.querySelectorAll("button[data-width]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              // état visuel
+              controls
+                .querySelectorAll("button")
+                .forEach((b) => b.classList.remove("on"));
+              btn.classList.add("on");
+              // applique la largeur
+              const w = btn.dataset.width;
+              frame.style.maxWidth = w;
+              frame.style.width = w;
+              val.textContent = w === "100%" ? "100%" : w;
+            });
+          });
+        }
+
+        // Simulateur principal du point 6
+        bindSimulator(
+          ".viewport-sim .viewport-controls",
+          "vsim-frame",
+          "vsim-val",
+        );
+
+        // Simulateur du point 9 (navbar burger)
+        (function () {
+          const controls = document
+            .querySelectorAll(".viewport-sim")[1]
+            ?.querySelector(".viewport-controls");
+          const frame = document.getElementById("vsim-frame2");
+          const val = document.getElementById("vsim-val2");
+          if (!controls || !frame || !val) return;
+
+          controls.querySelectorAll("button[data-width]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              controls
+                .querySelectorAll("button")
+                .forEach((b) => b.classList.remove("on"));
+              btn.classList.add("on");
+              const w = btn.dataset.width;
+              frame.style.maxWidth = w;
+              frame.style.width = w;
+              val.textContent = w === "100%" ? "100%" : w;
+            });
+          });
+        })();
+      })();
+    </script>
+  </body>
+</html>
