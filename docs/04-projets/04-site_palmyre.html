@@ -48,15 +48,6 @@
       </section>
     </header>
     <main>
-      <!--<section class="banner">
-            <div>
-                <img src="https://lesultan.fr/wp-content/uploads/2025/07/ASSIETTE_FALAFEL_1-2-1.jpg">
-            </div>
-            <div>
-                <h1>Le Palmyre</h1>
-                <p>Le meilleur restaurant Syrien de Genève</p>
-            </div>
-        </section>-->
       <section class="main-menu">
         <aside>
           <nav>
@@ -229,7 +220,77 @@
       <p>© 2026 - Tous droits réservés</p>
     </footer>
     <script>
+      console.log("Hello !");
+      const salut = "Hello depuis une constante";
+      console.log(salut);
+      const x = 3;
+      const y = 5;
+      let a = x + y;
+      console.log(a);
+      const xx = "3";
+      const yy = "5";
+      let aa = xx + yy;
+      console.log(aa);
+
+      function addition() {
+        const x = 3;
+        const y = 5;
+        let a = x + y;
+        console.log(a);
+      }
+      const res = addition();
+      console.log(res);
+
+      function addition1() {
+        const x = 3;
+        const y = 5;
+        let a = x + y;
+        return a;
+      }
+      const res1 = addition1();
+      console.log(res1);
+
+      function addition2(x, y) {
+        let a = x + y;
+        return a;
+      }
+      const res2 = addition2(10, 20);
+      console.log(res2);
+
+      function addition3(x, y) {
+        return x + y;
+      }
+      const xxx = 12;
+      const yyy = 23;
+      console.log(addition3(xxx, yyy));
+
+      function log(el) {
+        console.log("****************\n" + el + "\n****************");
+      }
+      log("resalut!");
+
+      const maintenant = new Date();
+      console.log(maintenant.toLocaleString("fr-FR"));
+      const annee = maintenant.getFullYear(); // 2026
+      const mois = maintenant.getMonth() + 1; // 10 (attention : de 0 à 11, d'où le +1)
+      const jour = maintenant.getDate(); // 28
+      const jourSemaine = maintenant.getDay(); // 0 = dimanche … 6 = samedi
+      const heures = maintenant.getHours();
+      const minutes = maintenant.getMinutes();
+      console.log("Il est " + heures + " heures  et " + minutes + " minutes.");
+
+      function rouge(e) {
+        console.log(e);
+        const but = e.target;
+        but.classList.add("active-color");
+      }
+
+      const mainView = document.querySelector(".menu-view");
+      console.log(mainView);
+      mainView.addEventListener("click", rouge);
+
       const mainMenu = document.querySelector(".main-menu");
+      console.log(mainMenu);
       mainMenu.addEventListener("click", (event) => {
         const button = event.target.closest("[data-action]");
         if (!button) return;
